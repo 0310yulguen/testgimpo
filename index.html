@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스펙트럼 원소 분석기 - AI RLHF Edition</title>
+    <style>
+        body {
+            background-color: #2c2c2c;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Malgun Gothic', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            transform: translateY(-2%); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 1. 업로드 영역 */
+        .upload-box {
+            width: 35vw; height: 20vh; background-color: #e0e0e0; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s; overflow: hidden; 
+        }
+        .upload-box:hover { transform: scale(1.02); }
+
+        .upload-inner-dashed {
+            width: 90%; height: 85%; border: 3px dashed #7a7a7a; border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;
+        }
+        .upload-icon { width: 40px; height: 40px; fill: #7a7a7a; margin-bottom: 5px; margin-top: -5px; }
+        .upload-text { color: #7a7a7a; font-weight: bold; font-size: 1.1rem; }
+        #preview-img { display: none; width: 100%; height: 100%; object-fit: contain; background-color: #000; }
+
+        #close-btn {
+            display: none; position: absolute; top: 10px; right: 10px; width: 30px; height: 30px;
+            background-color: #e0e0e0; border: 2px solid #000000; border-radius: 50%;
+            color: #000000; font-size: 16px; font-weight: bold; display: flex;
+            align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+        }
+        #close-btn:hover { background-color: #c0c0c0; }
+
+        /* 2. 드롭다운 선택 영역 */
+        .dropdown-container {
+            width: 35vw; margin-top: 15px; margin-bottom: 10px; position: relative; display: flex; justify-content: flex-start; 
+        }
+        .dropdown-btn {
+            background-color: #4a4a4a; color: #ffffff; border: none; padding: 8px 15px; 
+            border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); 
+        }
+        .arrow-icon { font-size: 0.5em; }
+        .dropdown-menu {
+            position: absolute; top: 110%; left: 0; background-color: #e0e0e0; border-radius: 8px; 
+            overflow: hidden; display: none; flex-direction: column; width: 120px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 10; 
+        }
+        .dropdown-item { padding: 10px; color: #2c2c2c; font-weight: bold; text-align: center; cursor: pointer; }
+        .dropdown-item:hover { background-color: #c0c0c0; }
+
+        /* 3. 결과 영역 */
+        .result-box {
+            width: 35vw; min-height: 40vh; height: auto; padding-bottom: 20px; background-color: #4a4a4a; border-radius: 20px;
+            display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .result-header { padding-top: 15px; padding-bottom: 5px; display: flex; align-items: flex-end; justify-content: center; }
+        .result-title { color: #ffd700; font-weight: bold; font-size: 1.2rem; margin: 0; }
+        .divider { border-bottom: 2px dashed #e0e0e0; width: 90%; margin: 5px auto 10px auto; }
+
+        /* 그리드(Grid) 레이아웃 적용 */
+        .bars-container { 
+            flex: 1; display: grid; grid-template-columns: 1fr; gap: 15px; padding: 5px 20px 5px 20px; 
+        }
+        .bar-wrapper { display: flex; flex-direction: column; gap: 4px; }
+        .bar-info { display: flex; justify-content: space-between; color: #ffffff; font-weight: bold; font-size: 0.9rem; }
+        .bar-bg { width: 100%; height: 12px; background-color: #2c2c2c; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background-color: #4caf50; width: 0%; border-radius: 10px; transition: width 1s ease-out; }
+
+        .spectrum-box { width: 100%; height: 18px; border-radius: 4px; position: relative; overflow: hidden; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); background-color: #222; }
+        .mode-emission { background-color: #000000; }
+        .mode-absorption { background: linear-gradient(to right, #3b0082 0%, #4b0082 10%, #0000ff 25%, #00ff00 50%, #ffff00 70%, #ff7f00 85%, #ff0000 100%); }
+        .spectrum-line { position: absolute; top: 0; bottom: 0; width: 2px; }
+
+        /* 4. 강화학습(피드백) 영역 디자인 */
+        .feedback-box {
+            width: 35vw; margin-top: 15px; display: none; flex-direction: column; align-items: center; text-align: center;
+        }
+        .feedback-text {
+            color: #ffd700; font-weight: bold; font-size: 1.05rem; margin-bottom: 12px; margin-top: 0;
+        }
+        .feedback-buttons {
+            display: flex; width: 100%; justify-content: space-between; gap: 15px;
+        }
+        .fb-btn {
+            flex: 1; height: 50px; border-radius: 15px; border: none; cursor: pointer;
+            display: flex; align-items: center; position: relative; transition: transform 0.1s;
+        }
+        .fb-btn:active { transform: scale(0.97); }
+        .btn-correct { background-color: #e6f4ea; } 
+        .btn-incorrect { background-color: #fce8e8; } 
+        
+        .fb-icon {
+            position: absolute; left: 16.66%; font-size: 35px; 
+            line-height: 50px; font-weight: 900;
+        }
+        .btn-correct .fb-icon, .btn-correct .fb-label { color: #2e7d32; } 
+        .btn-incorrect .fb-icon, .btn-incorrect .fb-label { color: #c62828; } 
+        
+        .fb-label { margin-left: calc(16.66% + 35px); font-size: 0.9rem; font-weight: bold; }
+
+        /* 5. 제작자 서명 텍스트 */
+        .footer-text {
+            color: #666666; /* 진한 회색 */
+            font-size: 0.75rem; /* 작게 */
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* 반응형 웹 디자인 */
+        @media (max-width: 900px), (max-height: 800px) {
+            .upload-box, .result-box, .dropdown-container, .feedback-box { width: 90vw; }
+            .bars-container { grid-template-columns: 1fr 1fr; } 
+        }
+        
+        #file-input { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="upload-box" id="upload-box" onclick="triggerUpload(event)">
+            <div id="close-btn" style="display: none;" onclick="clearImage(event)">X</div>
+            <div class="upload-inner-dashed" id="upload-dashed">
+                <svg class="upload-icon" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                <div class="upload-text">사진 올리기</div>
+            </div>
+            <img id="preview-img" src="" alt="업로드된 스펙트럼">
+        </div>
+        <input type="file" id="file-input" accept="image/*" onchange="handleImageUpload(event)">
+
+        <div class="dropdown-container">
+            <button class="dropdown-btn" onclick="toggleDropdown()">
+                <span id="current-mode-text">방출선</span>
+                <span id="dropdown-arrow" class="arrow-icon">▼</span>
+            </button>
+            <div class="dropdown-menu" id="dropdown-menu">
+                <div class="dropdown-item" onclick="selectMode('absorption')">흡수선</div>
+                <div class="dropdown-item" onclick="selectMode('emission')">방출선</div>
+            </div>
+        </div>
+
+        <div class="result-box" id="main-result-box">
+            <div class="result-header">
+                <p class="result-title">해당 스펙트럼의 원소 정확도 (Gemini AI)</p>
+            </div>
+            <div class="divider"></div>
+            <div class="bars-container" id="bars-container"></div>
+        </div>
+
+        <div class="feedback-box" id="feedback-box">
+            <p class="feedback-text" id="feedback-text">사진의 결과가 정확한가요? (답변을 할수록 AI는 더 정확해집니다!)</p>
+            <div class="feedback-buttons" id="feedback-buttons">
+                <button class="fb-btn btn-correct" onclick="sendFeedback(true)">
+                    <span class="fb-icon">O</span>
+                    <span class="fb-label">정확합니다!</span>
+                </button>
+                <button class="fb-btn btn-incorrect" onclick="sendFeedback(false)">
+                    <span class="fb-icon">X</span>
+                    <span class="fb-label">차이가 있습니다!</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer-text">made by 10616 송율근</div>
+    </div>
+
+    <script>
+        let currentMode = 'emission'; 
+        let currentResults = [];
+        let aiLearningMemory = ""; 
+
+        function nmToRGB(wavelength) {
+            let R, G, B;
+            if (wavelength >= 380 && wavelength < 440) { R = -(wavelength - 440) / (440 - 380); G = 0.0; B = 1.0; } 
+            else if (wavelength >= 440 && wavelength < 490) { R = 0.0; G = (wavelength - 440) / (490 - 440); B = 1.0; } 
+            else if (wavelength >= 490 && wavelength < 510) { R = 0.0; G = 1.0; B = -(wavelength - 510) / (510 - 490); } 
+            else if (wavelength >= 510 && wavelength < 580) { R = (wavelength - 510) / (580 - 510); G = 1.0; B = 0.0; } 
+            else if (wavelength >= 580 && wavelength < 645) { R = 1.0; G = -(wavelength - 645) / (645 - 580); B = 0.0; } 
+            else if (wavelength >= 645 && wavelength <= 780) { R = 1.0; G = 0.0; B = 0.0; } 
+            else { R = 0.0; G = 0.0; B = 0.0; }
+
+            let factor = 1.0;
+            if (wavelength >= 380 && wavelength < 420) factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+            else if (wavelength >= 701 && wavelength <= 780) factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+
+            return { r: Math.round(255 * Math.pow(R * factor, 0.8)), g: Math.round(255 * Math.pow(G * factor, 0.8)), b: Math.round(255 * Math.pow(B * factor, 0.8)) };
+        }
+
+        const elementDatabase = {
+            "1. H (수소)": [{nm: 410.2, i: 0.6}, {nm: 434.0, i: 0.8}, {nm: 486.1, i: 1.0}, {nm: 656.3, i: 1.0}],
+            "2. He (헬륨)": [{nm: 388.9, i: 0.4}, {nm: 447.1, i: 0.7}, {nm: 501.5, i: 0.6}, {nm: 587.6, i: 1.0}, {nm: 667.8, i: 0.6}, {nm: 706.5, i: 0.5}],
+            "3. Li (리튬)": [{nm: 427, i: 0.5}, {nm: 460, i: 0.6}, {nm: 497, i: 0.5}, {nm: 548, i: 0.5}, {nm: 610, i: 0.8}, {nm: 670, i: 1.0}],
+            "4. Be (베릴륨)": [{nm: 440, i: 0.6}, {nm: 455, i: 0.6}, {nm: 482, i: 0.7}, {nm: 527, i: 0.8}, {nm: 536, i: 0.7}, {nm: 640, i: 0.9}],
+            "5. B (붕소)": [{nm: 440, i: 0.5}, {nm: 460, i: 0.6}, {nm: 480, i: 0.5}, {nm: 500, i: 0.6}, {nm: 520, i: 0.7}, {nm: 540, i: 0.7}, {nm: 550, i: 0.8}, {nm: 650, i: 0.9}, {nm: 660, i: 0.9}],
+            "6. C (탄소)": [{nm: 445, i: 0.6}, {nm: 450, i: 0.5}, {nm: 475, i: 0.6}, {nm: 495, i: 0.7}, {nm: 505, i: 0.6}, {nm: 535, i: 0.7}, {nm: 545, i: 0.8}, {nm: 565, i: 0.7}, {nm: 595, i: 0.9}, {nm: 600, i: 0.8}, {nm: 615, i: 0.7}, {nm: 665, i: 1.0}],
+            "7. N (질소)": [{nm: 460, i: 0.6}, {nm: 500, i: 0.7}, {nm: 540, i: 0.6}, {nm: 550, i: 0.7}, {nm: 560, i: 0.8}, {nm: 570, i: 0.7}, {nm: 600, i: 0.9}, {nm: 620, i: 0.8}, {nm: 640, i: 0.9}, {nm: 660, i: 1.0}],
+            "8. O (산소)": [{nm: 435, i: 0.6}, {nm: 465, i: 0.7}, {nm: 495, i: 0.6}, {nm: 515, i: 0.7}, {nm: 520, i: 0.8}, {nm: 530, i: 0.7}, {nm: 540, i: 0.7}, {nm: 550, i: 0.8}, {nm: 590, i: 0.9}, {nm: 600, i: 0.8}, {nm: 615, i: 0.9}, {nm: 645, i: 0.8}, {nm: 700, i: 0.7}],
+            "9. F (플루오린)": [{nm: 505, i: 0.7}, {nm: 515, i: 0.8}, {nm: 520, i: 0.7}, {nm: 530, i: 0.6}, {nm: 540, i: 0.8}, {nm: 590, i: 0.9}, {nm: 630, i: 0.8}, {nm: 650, i: 0.9}, {nm: 690, i: 0.7}],
+            "10. Ne (네온)": [{nm: 540, i: 0.5}, {nm: 585, i: 1.0}, {nm: 588, i: 0.9}, {nm: 594, i: 0.9}, {nm: 610, i: 0.9}, {nm: 614, i: 1.0}, {nm: 626, i: 0.9}, {nm: 633, i: 0.8}, {nm: 640, i: 0.9}, {nm: 650, i: 0.8}, {nm: 668, i: 0.9}, {nm: 672, i: 0.8}, {nm: 693, i: 0.7}, {nm: 703, i: 0.8}, {nm: 720, i: 0.6}, {nm: 740, i: 0.5}],
+            "11. Na (나트륨)": [{nm: 589.0, i: 1.0}, {nm: 589.6, i: 0.9}],
+            "12. Mg (마그네슘)": [{nm: 430, i: 0.5}, {nm: 445, i: 0.6}, {nm: 460, i: 0.7}, {nm: 470, i: 0.6}, {nm: 500, i: 0.7}, {nm: 516.7, i: 0.9}, {nm: 517.2, i: 1.0}, {nm: 518.3, i: 0.9}, {nm: 550, i: 0.6}, {nm: 575, i: 0.7}],
+            "13. Al (알루미늄)": [{nm: 440, i: 0.6}, {nm: 455, i: 0.7}, {nm: 500, i: 0.6}, {nm: 555, i: 0.8}, {nm: 625, i: 0.9}],
+            "14. Si (규소)": [{nm: 440, i: 0.6}, {nm: 455, i: 0.7}, {nm: 480, i: 0.6}, {nm: 490, i: 0.7}, {nm: 500, i: 0.6}, {nm: 510, i: 0.8}, {nm: 540, i: 0.7}, {nm: 550, i: 0.8}, {nm: 570, i: 0.7}, {nm: 590, i: 0.8}, {nm: 615, i: 0.9}, {nm: 620, i: 0.8}, {nm: 650, i: 1.0}],
+            "15. P (인)": [{nm: 440, i: 0.6}, {nm: 460, i: 0.7}, {nm: 490, i: 0.6}, {nm: 510, i: 0.8}, {nm: 530, i: 0.7}, {nm: 540, i: 0.8}, {nm: 580, i: 0.7}, {nm: 600, i: 0.8}, {nm: 640, i: 0.9}, {nm: 650, i: 0.8}],
+            "16. S (황)": [{nm: 460, i: 0.6}, {nm: 500, i: 0.7}, {nm: 530, i: 0.6}, {nm: 545, i: 0.7}, {nm: 560, i: 0.8}, {nm: 575, i: 0.9}, {nm: 590, i: 0.8}, {nm: 600, i: 0.7}, {nm: 610, i: 0.8}, {nm: 620, i: 0.7}, {nm: 660, i: 0.9}],
+            "17. Cl (염소)": [{nm: 440, i: 0.6}, {nm: 460, i: 0.7}, {nm: 480, i: 0.6}, {nm: 520, i: 0.8}, {nm: 540, i: 0.7}, {nm: 560, i: 0.8}, {nm: 575, i: 0.9}, {nm: 600, i: 0.8}, {nm: 610, i: 0.7}, {nm: 620, i: 0.8}, {nm: 630, i: 0.7}, {nm: 680, i: 0.9}],
+            "18. Ar (아르곤)": [{nm: 430, i: 0.6}, {nm: 450, i: 0.7}, {nm: 470, i: 0.6}, {nm: 480, i: 0.7}, {nm: 490, i: 0.6}, {nm: 520, i: 0.8}, {nm: 550, i: 0.7}, {nm: 570, i: 0.8}, {nm: 590, i: 0.7}, {nm: 610, i: 0.8}, {nm: 630, i: 0.7}, {nm: 640, i: 0.8}, {nm: 670, i: 0.9}, {nm: 690, i: 0.8}],
+            "19. K (칼륨)": [{nm: 405, i: 0.5}, {nm: 415, i: 0.6}, {nm: 425, i: 0.5}, {nm: 480, i: 0.7}, {nm: 510, i: 0.6}, {nm: 580, i: 0.8}, {nm: 610, i: 0.7}, {nm: 620, i: 0.8}, {nm: 630, i: 0.7}, {nm: 640, i: 0.8}, {nm: 650, i: 0.7}, {nm: 660, i: 0.9}, {nm: 690, i: 0.8}],
+            "20. Ca (칼슘)": [{nm: 393.4, i: 0.8}, {nm: 396.8, i: 0.8}, {nm: 422.7, i: 1.0}, {nm: 442.5, i: 0.6}, {nm: 518.9, i: 0.9}, {nm: 558.9, i: 0.8}, {nm: 610.3, i: 0.7}, {nm: 616.2, i: 0.8}, {nm: 640, i: 0.7}, {nm: 650, i: 0.6}, {nm: 670, i: 0.7}, {nm: 680, i: 0.6}, {nm: 730, i: 0.5}]
+        };
+
+        function triggerUpload(event) { document.getElementById('file-input').click(); }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-img').src = e.target.result;
+                    document.getElementById('preview-img').style.display = 'block';
+                    document.getElementById('upload-dashed').style.display = 'none';
+                    document.getElementById('close-btn').style.display = 'flex';
+                    
+                    document.getElementById('feedback-box').style.display = 'none';
+                    document.getElementById('feedback-buttons').style.display = 'flex';
+                    document.getElementById('feedback-text').innerText = '사진의 결과가 정확한가요? (답변을 할수록 AI는 더 정확해집니다!)';
+                    
+                    analyzeSpectrumWithGemini(file);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImage(event) {
+            event.stopPropagation(); 
+            document.getElementById('preview-img').src = '';
+            document.getElementById('preview-img').style.display = 'none';
+            document.getElementById('upload-dashed').style.display = 'flex';
+            document.getElementById('close-btn').style.display = 'none';
+            document.getElementById('file-input').value = ''; 
+            document.getElementById('feedback-box').style.display = 'none';
+            initBars();
+        }
+
+        function initBars() {
+            const container = document.getElementById('bars-container');
+            container.innerHTML = '';
+            for(let i=0; i<5; i++) {
+                container.innerHTML += `
+                    <div class="bar-wrapper">
+                        <div class="bar-info"><span>대기 중...</span><span>0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                        <div class="spectrum-box mode-${currentMode}"></div>
+                    </div>`;
+            }
+        }
+
+        function sendFeedback(isCorrect) {
+            document.getElementById('feedback-buttons').style.display = 'none';
+            document.getElementById('feedback-text').innerText = '질문에 답변해주셔서 감사합니다!';
+            
+            if(isCorrect) {
+                aiLearningMemory += " [학습메모: 사용자가 이전 분석을 정확하다고 평가함. 현재 패턴 인식 방식을 긍정적으로 유지할 것.]";
+            } else {
+                aiLearningMemory += " [학습메모: 사용자가 이전 분석에 오류가 있다고 지적함. 노이즈에 속지 말고 선의 두께와 핵심 파장 위치를 훨씬 더 엄격하게 구별할 것.]";
+            }
+        }
+
+        async function analyzeSpectrumWithGemini(file) {
+            const container = document.getElementById('bars-container');
+            
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; height: 100%; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                    <div style="color: #4caf50; font-weight: bold; font-size: 1.2rem;">
+                        Gemini AI가 빅데이터를 바탕으로 사진을 분석 중입니다...
+                    </div>
+                    <div style="font-size: 0.9rem; color: #aaa; margin-top: 8px;">
+                        (약 30초 ~ 1분 정도 걸릴 수 있습니다)
+                    </div>
+                    <div id="retry-status" style="font-size: 0.85rem; color: #ffd700; margin-top: 8px;"></div>
+                </div>
+            `;
+
+            const API_KEY = "AQ.Ab8RN6Ktt48rVq_1iTnAh2JPqxQBq6GaNO_7mAYj9_1SPnOR6g"; 
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+            const reader = new FileReader();
+            reader.onload = async function() {
+                const base64Data = reader.result.split(',')[1];
+                const mimeType = file.type;
+
+                const promptText = `너는 세계 최고의 분광학 전문가이자 빅데이터 기반 스펙트럼 분석 AI야. 첨부된 스펙트럼 사진의 선의 위치(파장), 굵기, 패턴을 종합적으로 분석해서 가장 가능성 높은 원소 5개를 찾아줘.
+                가장 유력한 1위 원소의 정확도(percent)는 반드시 80 이상이 되도록 확실하게 판별해줘.
+                
+                ${aiLearningMemory}
+                
+                반드시 아래 제공된 20개의 원소 이름 목록 중에서만 선택해야 해:
+                ["1. H (수소)", "2. He (헬륨)", "3. Li (리튬)", "4. Be (베릴륨)", "5. B (붕소)", "6. C (탄소)", "7. N (질소)", "8. O (산소)", "9. F (플루오린)", "10. Ne (네온)", "11. Na (나트륨)", "12. Mg (마그네슘)", "13. Al (알루미늄)", "14. Si (규소)", "15. P (인)", "16. S (황)", "17. Cl (염소)", "18. Ar (아르곤)", "19. K (칼륨)", "20. Ca (칼슘)"]
+                
+                응답은 이유나 설명 절대 없이, 오직 아래와 같은 JSON 배열 형식으로만 해. 5개 원소의 percent의 합은 무조건 100이 되어야 해.
+                [
+                  {"name": "2. He (헬륨)", "percent": 85},
+                  {"name": "1. H (수소)", "percent": 10},
+                  {"name": "10. Ne (네온)", "percent": 3},
+                  {"name": "3. Li (리튬)", "percent": 1},
+                  {"name": "11. Na (나트륨)", "percent": 1}
+                ]`;
+
+                let success = false;
+                let attempts = 0;
+                const maxAttempts = 15; 
+
+                while (!success && attempts < maxAttempts) {
+                    attempts++;
+                    
+                    if(attempts > 1) {
+                        const statusEl = document.getElementById('retry-status');
+                        if(statusEl) statusEl.innerText = `최고 정확도 80% 미만으로 재분석을 시도합니다... (시도 횟수: ${attempts}회)`;
+                    }
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [
+                                        { text: promptText },
+                                        { inlineData: { mimeType: mimeType, data: base64Data } }
+                                    ]
+                                }]
+                            })
+                        });
+
+                        const result = await response.json();
+                        
+                        if(!result.candidates) { throw new Error("API 거절 또는 응답 없음"); }
+
+                        let aiText = result.candidates[0].content.parts[0].text;
+                        aiText = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
+                        
+                        currentResults = JSON.parse(aiText);
+                        currentResults.sort((a, b) => b.percent - a.percent);
+
+                        if (currentResults.length > 0 && currentResults[0].percent >= 80) {
+                            success = true; 
+                            renderResults();
+                            document.getElementById('feedback-box').style.display = 'flex';
+                        } else {
+                            await new Promise(r => setTimeout(r, 1500)); 
+                        }
+
+                    } catch (error) {
+                        console.error("AI 분석 오류:", error);
+                        if (attempts >= maxAttempts) {
+                            container.innerHTML = `
+                                <div style="grid-column: 1 / -1; color:#ff5555; font-weight:bold; text-align:center; padding:30px;">
+                                    AI 서버 통신 오류 또는 80% 이상 결과를 도출하지 못했습니다.<br>
+                                    <span style="font-size: 0.9rem; color: #aaa;">다른 사진으로 시도해주시거나 잠시 후 다시 시도해주세요.</span>
+                                </div>
+                            `;
+                            return;
+                        }
+                        await new Promise(r => setTimeout(r, 1500));
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderResults() {
+            const container = document.getElementById('bars-container');
+            if (currentResults.length === 0) return; 
+
+            container.innerHTML = ''; 
+
+            for(let i = 0; i < 5; i++) {
+                const item = currentResults[i];
+                const lines = elementDatabase[item.name] || [];
+                
+                let linesHTML = '';
+                lines.forEach(line => {
+                    let posPercent = ((line.nm - 380) / (750 - 380)) * 100;
+                    if(posPercent < 0) posPercent = 0; if(posPercent > 100) posPercent = 100;
+                    let rgb = nmToRGB(line.nm);
+                    let colorString = (currentMode === 'absorption') ? `rgba(0,0,0,${line.i})` : `rgba(${rgb.r},${rgb.g},${rgb.b},${line.i})`; 
+                    linesHTML += `<div class="spectrum-line" style="left: ${posPercent}%; background-color: ${colorString}; box-shadow: 0 0 ${line.i * 2}px ${colorString};"></div>`;
+                });
+
+                const bgClass = (currentMode === 'absorption') ? 'mode-absorption' : 'mode-emission';
+
+                container.innerHTML += `
+                    <div class="bar-wrapper">
+                        <div class="bar-info"><span>${item.name}</span><span>${item.percent}%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar-fill-${i}" style="width: 0%;"></div></div>
+                        <div class="spectrum-box ${bgClass}">${linesHTML}</div>
+                    </div>`;
+            }
+            
+            setTimeout(() => {
+                for(let i = 0; i < 5; i++) {
+                    const el = document.getElementById(`bar-fill-${i}`);
+                    if(el) el.style.width = currentResults[i].percent + '%';
+                }
+            }, 50);
+        }
+
+        function toggleDropdown() {
+            const menu = document.getElementById('dropdown-menu');
+            const arrow = document.getElementById('dropdown-arrow');
+            if (menu.style.display === 'flex') { menu.style.display = 'none'; arrow.innerText = '▼'; } 
+            else { menu.style.display = 'flex'; arrow.innerText = '▲'; }
+        }
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.getElementById('current-mode-text').innerText = (mode === 'absorption') ? '흡수선' : '방출선';
+            document.getElementById('dropdown-menu').style.display = 'none';
+            document.getElementById('dropdown-arrow').innerText = '▼';
+            renderResults();
+        }
+
+        window.onload = initBars;
+    </script>
+</body>
+</html>
