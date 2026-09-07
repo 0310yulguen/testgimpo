@@ -53,7 +53,7 @@
         
         * { box-sizing: border-box; }
         
-        /* 채팅창 및 문의 입력칸은 글씨 복사/입력 허용 */
+        /* 채팅창 및 문의 입력칸, 선택박스는 조작 허용 */
         input, textarea, select {
             -webkit-user-select: auto !important;
             -moz-user-select: auto !important;
@@ -217,85 +217,34 @@
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: bold; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 
         /* 🥚 이스터에그 스타일 */
-        .easter-egg-wrap {
-            margin-top: auto; 
-            padding: 40px 12px 20px 12px; 
-            text-align: left;
-            width: 100%;
-        }
-        .easter-egg {
-            display: inline-block; 
-            font-size: 10px;       
-            color: var(--text-light-gray); 
-            font-weight: bold;     
-            text-decoration: none; 
-            cursor: pointer;
-        }
+        .easter-egg-wrap { margin-top: auto; padding: 40px 12px 20px 12px; text-align: left; width: 100%; }
+        .easter-egg { display: inline-block; font-size: 10px; color: var(--text-light-gray); font-weight: bold; text-decoration: none; cursor: pointer; }
 
         /* 📢 업데이트 팝업창 스타일 (반응형 모달) */
         .update-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 99999;
-            display: none; 
-            justify-content: center; align-items: center;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
         }
         .update-modal {
-            width: 100%; max-width: 420px;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column;
+            width: 100%; max-width: 420px; background-color: white; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column;
         }
-        .update-modal-header {
-            background-color: var(--primary-dark);
-            color: white;
-            padding: 14px 16px;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 15px; font-weight: bold;
-        }
-        .update-modal-close {
-            background-color: #FFFFFF; color: #191F28;
-            border: none; border-radius: 4px;
-            width: 24px; height: 24px;
-            font-size: 13px; font-weight: bold;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; padding: 0;
-        }
-        .update-modal-body {
-            padding: 30px 20px 40px 20px;
-            display: flex; flex-direction: column; gap: 12px;
-            text-align: left;
-        }
-        .update-modal-title {
-            font-size: 22px; font-weight: 900; color: #000000;
-            word-break: keep-all; line-height: 1.3; margin-bottom: 4px;
-        }
-        .update-modal-desc {
-            font-size: 15px; color: #000000; line-height: 1.5; word-break: keep-all; font-weight: 500;
-        }
-        .middle-asterisk {
-            display: inline-block; transform: translateY(4px); font-size: 16px;
-        }
-        .update-modal-footer {
-            background-color: #222222; color: white;
-            text-align: center; padding: 14px;
-            font-size: 14px; font-weight: bold;
-            cursor: pointer; letter-spacing: 0.5px;
-        }
+        .update-modal-header { background-color: var(--primary-dark); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: bold; }
+        .update-modal-close { background-color: #FFFFFF; color: #191F28; border: none; border-radius: 4px; width: 24px; height: 24px; font-size: 13px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; }
+        .update-modal-body { padding: 30px 20px 40px 20px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+        .update-modal-title { font-size: 22px; font-weight: 900; color: #000000; word-break: keep-all; line-height: 1.3; margin-bottom: 4px; }
+        .update-modal-desc { font-size: 15px; color: #000000; line-height: 1.5; word-break: keep-all; font-weight: 500; }
+        .middle-asterisk { display: inline-block; transform: translateY(4px); font-size: 16px; }
+        .update-modal-footer { background-color: #222222; color: white; text-align: center; padding: 14px; font-size: 14px; font-weight: bold; cursor: pointer; letter-spacing: 0.5px; }
 
         /* 🔥 Auth (로그인/회원가입/학생정보설정) 모달 스타일 */
         .auth-screen-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color); z-index: 100000;
-            display: none; justify-content: center; align-items: center; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color);
+            z-index: 100000; display: none; justify-content: center; align-items: center; padding: 20px;
         }
         .auth-box {
-            background: white; padding: 30px 24px; border-radius: 16px;
-            width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-            display: flex; flex-direction: column; gap: 14px;
+            background: white; padding: 30px 24px; border-radius: 16px; width: 100%; max-width: 400px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 14px;
         }
         .auth-box h2 { margin: 0 0 10px 0; text-align: center; color: var(--text-black); font-size: 22px; font-weight: 900; }
         .auth-input { width: 100%; padding: 14px; border: 1px solid #E5E8EB; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; }
@@ -310,65 +259,22 @@
         .auth-error { color: var(--dark-red); font-size: 12px; font-weight: bold; text-align: center; display: none; background: var(--light-red); padding: 8px; border-radius: 6px; word-break: keep-all; line-height: 1.4; }
 
         /* 대시보드 로그인 알림 배너 */
-        .dashboard-banner {
-            background-color: var(--light-blue);
-            color: var(--dark-blue);
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 8px;
-            display: none;
-            width: 100%;
-        }
+        .dashboard-banner { background-color: var(--light-blue); color: var(--dark-blue); text-align: center; font-size: 12px; font-weight: bold; padding: 8px; display: none; width: 100%; }
 
         /* 🔥 데스크탑-모바일 반응형 완벽 최적화 */
         @media (min-width: 800px) {
             body { background-color: var(--bg-color); } 
-            #app { 
-                max-width: 100%; 
-                border: none; 
-                box-shadow: none; 
-            }
+            #app { max-width: 100%; border: none; box-shadow: none; }
             .tab-content { padding: 0 5% 12px 5%; } 
             .warning-banner { margin-top: 12px; }
-
-            /* 학점 박스 한 줄 정렬 (자동 배치) */
-            .stats-box { 
-                flex-direction: row; 
-                flex-wrap: wrap; 
-                padding: 16px 24px;
-                gap: 12px;
-            }
+            .stats-box { flex-direction: row; flex-wrap: wrap; padding: 16px 24px; gap: 12px; }
             .stats-grid-2, .stats-grid-3 { display: contents; } 
-            .stat-item { 
-                flex: 1 1 12%; 
-                min-width: 110px;
-                padding: 12px 8px; 
-            }
+            .stat-item { flex: 1 1 12%; min-width: 110px; padding: 12px 8px; }
             .stat-title { font-size: 11px; margin-bottom: 4px; }
             .stat-value { font-size: 16px; }
-
-            /* 과목 리스트 그리드 배치 */
             .accordion-header { padding: 16px 24px; font-size: 15px; }
-            .accordion-inner {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 16px;
-                padding: 0 24px 24px 24px;
-            }
-            
-            /* 선택 택 4 등 라벨 박스 데스크탑에서 가운데 정렬 */
-            .special-select-label { 
-                grid-column: 1 / -1; 
-                width: 100%; 
-                max-width: none;
-                text-align: center; 
-                margin-top: 10px; 
-                margin-bottom: 4px; 
-                box-sizing: border-box;
-            }
-            
-            /* AI 채팅창 최적화 */
+            .accordion-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 24px 24px 24px; }
+            .special-select-label { grid-column: 1 / -1; width: 100%; max-width: none; text-align: center; margin-top: 10px; margin-bottom: 4px; box-sizing: border-box; }
             .chat-bubble { font-size: 15px; padding: 14px 20px; max-width: 60%; }
         }
     </style>
@@ -382,10 +288,8 @@
     <form id="loginBox" class="auth-box" onsubmit="handleLogin(event)">
         <h2>로그인</h2>
         <div id="loginError" class="auth-error"></div>
-        
         <input type="email" id="loginEmail" placeholder="이메일 (예: user@example.com)" class="auth-input" autocomplete="username" required>
         <input type="password" id="loginPw" placeholder="비밀번호" class="auth-input" autocomplete="current-password" required>
-        
         <button type="submit" class="auth-btn auth-btn-primary">로그인</button>
         <button type="button" onclick="handleGoogleAuth()" class="auth-btn auth-btn-google">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -401,6 +305,7 @@
         <div id="signupError" class="auth-error"></div>
         <input type="email" id="signupEmail" placeholder="사용할 이메일" class="auth-input" autocomplete="username" required>
         
+        <!-- 🔥 이름/반/번호 입력부로 교체 -->
         <input type="text" id="signupName" placeholder="이름 (실명 입력)" class="auth-input" autocomplete="off" required>
         <div class="auth-row">
             <select id="signupClass" class="auth-input" required></select>
@@ -409,7 +314,6 @@
 
         <input type="password" id="signupPw" placeholder="비밀번호 (6자리 이상)" class="auth-input" autocomplete="new-password" required>
         <input type="password" id="signupPwConfirm" placeholder="비밀번호 확인" class="auth-input" autocomplete="new-password" required>
-        
         <button type="submit" class="auth-btn auth-btn-primary">가입하기</button>
         <button type="button" onclick="handleGoogleAuth()" class="auth-btn auth-btn-google">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -425,6 +329,7 @@
         <div style="font-size:13px; color:var(--text-dark-gray); text-align:center; line-height:1.4;">
             환영합니다! 원활한 문의 및 저장을 위해<br>이름, 반, 번호를 설정해주세요.
         </div>
+        <!-- 🔥 이름/반/번호 입력부로 교체 -->
         <input type="text" id="infoName" placeholder="이름 (실명 입력)" class="auth-input" required>
         <div class="auth-row">
             <select id="infoClass" class="auth-input" required></select>
@@ -575,7 +480,7 @@
             </div>
         </div>
 
-        <!-- 🔥 문의 탭(Tab 2) 1:1 채팅방 -->
+        <!-- 🔥 문의 탭(Tab 2) 1:1 채팅방 (텍스트 수정됨) -->
         <div id="tab-2" class="tab-content tab-hidden-right">
             <div class="chat-container" id="inquiryChatContainer">
                 <div class="chat-bubble chat-ai">
@@ -620,8 +525,9 @@
     const auth = firebase.auth();
 
     let userIP = "local_storage_only";
-    let currentUserInfo = ""; // 형식: 1반 15번 홍길동
+    let currentUserInfo = ""; 
 
+    // 🔥 100% 완전한 전체 과목 데이터
     const db = [
         { id:'11_01', sem:'1-1', name:'공통국어 1', type:'공통', cat:'국어', grade:'5단계/등급O', req:true, cred:4 },
         { id:'11_02', sem:'1-1', name:'공통수학 1', type:'공통', cat:'수학', grade:'5단계/등급O', req:true, cred:4 },
@@ -749,7 +655,7 @@
     let currentTabIndex = 1;
     let chatHistory = []; 
 
-    // 동적으로 반/번호 셀렉트 옵션 생성
+    // 🔥 동적으로 반/번호 셀렉트 옵션 생성
     function populateSelects() {
         let classHTML = '<option value="" disabled selected>반 선택</option>';
         for(let i=1; i<=12; i++) classHTML += `<option value="${i}">${i}반</option>`;
@@ -764,7 +670,27 @@
     }
 
     async function init() {
-        populateSelects();
+        populateSelects(); // 반/번호 초기화 필수
+        
+        // 📢 업데이트 팝업 관리
+        const APP_VERSION = "1.03";
+        const savedVersion = localStorage.getItem('gimpo_update_version');
+        const closedDate = localStorage.getItem('gimpo_update_closed_date');
+        const todayStr = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
+        
+        window.closeUpdateModalToday = function() {
+            localStorage.setItem('gimpo_update_closed_date', todayStr);
+            document.getElementById('updateModalOverlay').style.display = 'none';
+        }
+        window.closeUpdateModalAlways = function() {
+            localStorage.setItem('gimpo_update_version', APP_VERSION);
+            document.getElementById('updateModalOverlay').style.display = 'none';
+        }
+
+        if (savedVersion !== APP_VERSION && closedDate !== todayStr) {
+            document.getElementById('updateModalOverlay').style.display = 'flex';
+        }
+
         handleRouting(); 
 
         try {
@@ -867,7 +793,8 @@
         loadInquiryChat();
     }
 
-    function saveGoogleInfo(e) {
+    // 전역 함수로 지정
+    window.saveGoogleInfo = function(e) {
         e.preventDefault();
         const nm = document.getElementById('infoName').value.trim();
         const cn = document.getElementById('infoClass').value;
@@ -904,9 +831,9 @@
     window.addEventListener('hashchange', handleRouting);
 
     function showAuthError(box, msg) { const errDiv = document.getElementById(box + 'Error'); errDiv.innerText = msg; errDiv.style.display = 'block'; }
-    function handleGoogleAuth() { const provider = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(err => alert(err.message)); }
+    window.handleGoogleAuth = function() { const provider = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(err => alert(err.message)); }
 
-    function handleLogin(e) {
+    window.handleLogin = function(e) {
         e.preventDefault(); 
         const email = document.getElementById('loginEmail').value;
         const pw = document.getElementById('loginPw').value;
@@ -918,7 +845,7 @@
         }).catch(err => { showAuthError('login', '로그인 오류: 정보를 다시 확인해주세요.'); });
     }
 
-    function handleSignup(e) {
+    window.handleSignup = function(e) {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value;
         const name = document.getElementById('signupName').value.trim();
@@ -983,14 +910,14 @@
 
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyIsvs49HBMqYVjV0XPH5rMBWYNaIRYbOlWy-z4Bv0cOXh1Fp6oOGDW1S_b9vyXIffiEA/exec";
     
-    function sendInquiryMsg() {
+    window.sendInquiryMsg = function() {
         if(!auth.currentUser) return showToast("로그인이 필요합니다.");
         const input = document.getElementById('inquiryInput');
         const text = input.value.trim();
         if(!text) return;
         
         const uid = auth.currentUser.uid;
-        // Firebase에 즉시 저장. 에러 시 알림을 띄웁니다.
+        // Firebase에 저장
         database.ref('inquiries/' + uid).push({
             role: 'user',
             text: text,
@@ -999,19 +926,20 @@
         
         input.value = '';
 
-        // 이메일 알림
+        // 이메일 알림 (Google Apps Script)
         fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${currentUserInfo}]님의 새로운 문의 채팅: ${text}` }) });
     }
 
     // ----------------------------------------------------
-    // 기존 기능 유지 (수강신청 화면, 통계 연산 등)
+    // 기존 기능 (수강신청 화면, 통계 연산 등)
     // ----------------------------------------------------
     function saveData() {
         localStorage.setItem('gimpo_courses', JSON.stringify([...selectedCourses])); localStorage.setItem('gimpo_scitrack', isSciTrack);
         let saveKey = userIP; if (auth.currentUser) saveKey = auth.currentUser.uid;
         if (saveKey !== "local_storage_only") { try { database.ref('user_data/' + saveKey).update({ courses: [...selectedCourses], sciTrack: isSciTrack }); } catch(e) {} }
     }
-    function switchTab(newIndex) {
+    
+    window.switchTab = function(newIndex) {
         if(currentTabIndex === newIndex) return;
         const oldTab = document.getElementById(`tab-${currentTabIndex}`);
         const newTab = document.getElementById(`tab-${newIndex}`);
@@ -1029,6 +957,232 @@
         }
         currentTabIndex = newIndex;
     }
+
+    window.toggleAccordion = function(acc) {
+        acc.classList.toggle('open');
+        const icon = acc.querySelector('.icon');
+        const contentWrap = acc.querySelector('.accordion-content');
+        if (acc.classList.contains('open')) { icon.innerText = '▲'; contentWrap.style.maxHeight = contentWrap.scrollHeight + "px"; } 
+        else { icon.innerText = '▼'; contentWrap.style.maxHeight = "0px"; }
+    }
+
+    window.toggleScienceTrack = function() {
+        isSciTrack = !isSciTrack;
+        const cb = document.getElementById('scTrackCheck');
+        if(isSciTrack) cb.classList.add('checked'); else cb.classList.remove('checked');
+
+        const sciReqs = db.filter(c => c.sciReq);
+        if(isSciTrack) {
+            sciReqs.forEach(c => selectedCourses.add(c.id));
+            let count21 = countSelectedInSem('2-1');
+            if (count21 > 5) {
+                let toRemove = count21 - 5;
+                let arr = Array.from(selectedCourses).reverse();
+                for(let id of arr) {
+                    if(toRemove <= 0) break;
+                    let c = db.find(x => x.id === id);
+                    if(c && c.sem === '2-1' && !c.req && !c.sciReq) { selectedCourses.delete(id); toRemove--; }
+                }
+                showToast("과학 중점 필수 지정으로 인해 기존 선택 과목이 취소되었습니다.");
+            }
+        } else { sciReqs.forEach(c => selectedCourses.delete(c.id)); }
+        saveData(); applyConstraints(); updateStats(); updateCircles();
+    }
+
+    window.handleCourseClick = function(id) {
+        const c = db.find(x => x.id === id);
+        if(!c) return;
+        const isChecked = selectedCourses.has(id);
+        if(c.req) { showToast("지정된 과목은 취소할 수 없습니다."); return; }
+        if(isSciTrack && c.sciReq && isChecked) { showToast("과학 중점 과정 필수 과목입니다."); return; }
+
+        if(!isChecked) {
+            if(c.sem === '3-2') {
+                const limit = (c.g === 0) ? 4 : 1;
+                if(countSelectedIn32Group(c.g) >= limit) { showToast("이미 선택 과목을 다 선택했습니다."); return; }
+            } else {
+                const sem = semesters.find(s => s.key === c.sem);
+                if(sem.limit > 0 && countSelectedInSem(c.sem) >= sem.limit) { showToast("이미 선택 과목을 다 선택했습니다."); return; }
+            }
+            if(c.pair) {
+                const hasPair = Array.from(selectedCourses).some(sid => {
+                    const sc = db.find(x => x.id === sid);
+                    return sc && sc.pair === c.pair && sc.id !== c.id;
+                });
+                if(hasPair) { showToast("이미 다른 학기에 선택했습니다."); return; }
+            }
+            selectedCourses.add(id);
+        } else { selectedCourses.delete(id); }
+        saveData(); applyConstraints(); updateStats(); updateCircles();
+    }
+
+    function countSelectedInSem(semKey) {
+        let cnt = 0; selectedCourses.forEach(id => { const c = db.find(x => x.id === id); if(c && c.sem === semKey && !c.req) cnt++; }); return cnt;
+    }
+    
+    function countSelectedIn32Group(gValue) {
+        let cnt = 0; selectedCourses.forEach(id => { const c = db.find(x => x.id === id); if(c && c.sem === '3-2' && !c.req && c.g === gValue) cnt++; }); return cnt;
+    }
+
+    function applyConstraints() {
+        db.forEach(c => {
+            const card = document.getElementById(`card-${c.id}`); const cb = document.getElementById(`check-${c.id}`);
+            if(!card || !cb) return;
+
+            let disabled = false; let isChecked = selectedCourses.has(c.id);
+            if(c.req) disabled = true; if(isSciTrack && c.sciReq) disabled = true;
+
+            if(!isChecked && !disabled) {
+                if(c.sem === '3-2') { const limit = (c.g === 0) ? 4 : 1; if(countSelectedIn32Group(c.g) >= limit) disabled = true; } 
+                else { const sem = semesters.find(s => s.key === c.sem); if(sem.limit > 0 && countSelectedInSem(c.sem) >= sem.limit) disabled = true; }
+                if(c.pair) { const hasPair = Array.from(selectedCourses).some(sid => { const sc = db.find(x => x.id === sid); return sc && sc.pair === c.pair; }); if(hasPair) disabled = true; }
+            }
+
+            if(isChecked) cb.classList.add('checked'); else cb.classList.remove('checked');
+            if(disabled && !isChecked) { card.classList.add('disabled-card'); cb.classList.add('disabled'); } 
+            else { card.classList.remove('disabled-card'); if(!c.req && !(isSciTrack && c.sciReq)) cb.classList.remove('disabled'); else cb.classList.add('disabled'); }
+        });
+    }
+
+    function updateCircles() {
+        semesters.forEach(sem => {
+            const el = document.getElementById(`circle-${sem.key}`); if(!el) return;
+            if(sem.limit === 0) { el.className = 'sem-circle circle-green'; return; }
+            let isFull = false;
+            if(sem.key === '3-2') isFull = (countSelectedIn32Group(0) === 4 && countSelectedIn32Group(1) === 1 && countSelectedIn32Group(2) === 1);
+            else isFull = (countSelectedInSem(sem.key) === sem.limit);
+            el.className = isFull ? 'sem-circle circle-green' : 'sem-circle circle-red';
+        });
+    }
+
+    function updateStats() {
+        let total = 0, kor = 0, math = 0, eng = 0, his = 0, soc = 0, sci = 0, pe = 0, art = 0, info = 0, etc = 0;
+        selectedCourses.forEach(id => {
+            const c = db.find(x => x.id === id); if(!c) return;
+            total += c.cred;
+            if(c.cat === '국어') kor += c.cred; else if(c.cat === '수학') math += c.cred; else if(c.cat === '영어') eng += c.cred;
+            else if(c.cat === '한국사') his += c.cred; else if(c.cat === '사회') soc += c.cred; else if(c.cat === '과학') sci += c.cred;
+            else if(c.cat === '체육') pe += c.cred; else if(c.cat === '예술') art += c.cred;
+            else { etc += c.cred; if(c.cat === '정보') info += c.cred; }
+        });
+        const kys = kor + math + eng; const msi = math + sci + info; 
+
+        updateStatUI('total', total, 174, false); updateStatUI('kys', kys, 81, true);
+        updateStatUI('kor', kor, 8, false); updateStatUI('math', math, 8, false); updateStatUI('eng', eng, 8, false);
+        updateStatUI('his', his, 6, false); updateStatUI('soc', soc, 8, false); updateStatUI('sci', sci, 10, false);
+        updateStatUI('pe', pe, 10, false); updateStatUI('art', art, 6, false); updateStatUI('info', info, 0, false); 
+        
+        const msiRightEl = document.getElementById('val-msi').nextElementSibling;
+        if (isSciTrack) { msiRightEl.innerText = ' / 79'; updateStatUI('msi', msi, 79, false); } 
+        else { msiRightEl.innerText = ''; updateStatUI('msi', msi, 0, false); }
+        updateStatUI('etc', etc, 15, false); 
+    }
+
+    function updateStatUI(id, val, target, isLimit) {
+        const el = document.getElementById(`val-${id}`); if(!el) return;
+        el.innerText = val;
+        if(target === 0) { el.classList.remove('color-red'); el.classList.add('color-green'); return; }
+        el.classList.remove('color-green', 'color-red');
+        if(isLimit) { if(val <= target) el.classList.add('color-green'); else el.classList.add('color-red'); } 
+        else { if(val >= target) el.classList.add('color-green'); else el.classList.add('color-red'); }
+    }
+
+    window.runValidation = function() {
+        const resBox = document.getElementById('validationResult'); resBox.innerHTML = ''; let msgs = []; let isFail = false;
+        if(countSelectedInSem('2-1') < 5 || countSelectedInSem('2-2') < 5 || countSelectedInSem('3-1') < 6 || countSelectedIn32Group(0) < 4 || countSelectedIn32Group(1) < 1 || countSelectedIn32Group(2) < 1) {
+            msgs.push(`<div class="msg-error">선택 과목을 모두 선택하지 않았습니다.</div>`); isFail = true;
+        }
+        let sums = {국어:0, 수학:0, 영어:0, 한국사:0, 사회:0, 과학:0, 체육:0, 예술:0, '정보/제2외국어/한문/교양':0};
+        selectedCourses.forEach(id => {
+            const c = db.find(x => x.id === id);
+            if(c.cat === '국어') sums['국어']+=c.cred; else if(c.cat === '수학') sums['수학']+=c.cred; else if(c.cat === '영어') sums['영어']+=c.cred;
+            else if(c.cat === '한국사') sums['한국사']+=c.cred; else if(c.cat === '사회') sums['사회']+=c.cred; else if(c.cat === '과학') sums['과학']+=c.cred;
+            else if(c.cat === '체육') sums['체육']+=c.cred; else if(c.cat === '예술') sums['예술']+=c.cred; else sums['정보/제2외국어/한문/교양']+=c.cred; 
+        });
+
+        const reqs = {국어:8, 수학:8, 영어:8, 한국사:6, 사회:8, 과학:10, 체육:10, 예술:6, '정보/제2외국어/한문/교양':15};
+        for(let k in reqs) { if(sums[k] < reqs[k]) { msgs.push(`<div class="msg-error">${k}의 필수 학점을 넘기지 않았습니다.</div>`); isFail = true; } }
+
+        const hasPhy = selectedCourses.has('21_s09'); const hasChem = selectedCourses.has('21_s10'); const hasBio = selectedCourses.has('21_s11'); const hasEarth = selectedCourses.has('21_s12');
+        if (!hasPhy && selectedCourses.has('22_s09')) msgs.push(`<div class="msg-warn">역학과 에너지는 물리학과 연계되므로 물리학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasChem && selectedCourses.has('22_s10')) msgs.push(`<div class="msg-warn">물질과 에너지는 화학과 연계되므로 화학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasBio && selectedCourses.has('22_s11')) msgs.push(`<div class="msg-warn">세포와 물질대사는 생명과학과 연계되므로 생명과학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasEarth && selectedCourses.has('22_s12')) msgs.push(`<div class="msg-warn">지구시스템 과학은 지구과학과 연계되므로 지구과학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasPhy && (selectedCourses.has('31_s09') || selectedCourses.has('32_s08'))) msgs.push(`<div class="msg-warn">전자기와 양자는 물리학과 연계되므로 물리학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasChem && (selectedCourses.has('31_s10') || selectedCourses.has('32_s09'))) msgs.push(`<div class="msg-warn">화학 반응의 세계는 화학과 연계되므로 화학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasBio && (selectedCourses.has('31_s11') || selectedCourses.has('32_s10'))) msgs.push(`<div class="msg-warn">생물의 유전은 생명과학과 연계되므로 생명과학을 듣는 것을 권장드립니다.</div>`);
+        if (!hasEarth && (selectedCourses.has('31_s12') || selectedCourses.has('32_s11'))) msgs.push(`<div class="msg-warn">행성우주과학은 지구과학과 연계되므로 지구과학을 듣는 것을 권장드립니다.</div>`);
+
+        if(isSciTrack) {
+            let advCount = 0; selectedCourses.forEach(id => { const c = db.find(x => x.id === id); if(c && c.sciAdv) advCount++; });
+            if(advCount < 6) { msgs.push(`<div class="msg-error">과학 중점 과정의 필수 6과목 이상을 선택하지 않았습니다. (2학년 2학기 + 3학년 전체)</div>`); isFail = true; }
+            let msiSum = 0; selectedCourses.forEach(id => { const c = db.find(x => x.id === id); if(c && (c.cat === '과학' || c.cat === '수학' || c.cat === '정보')) { msiSum += c.cred; } });
+            if(msiSum < 79) { msgs.push(`<div class="msg-error">과학 중점 과정에서 과학, 수학, 정보 교과 이수 학점의 79학점을 넘지 않았습니다.</div>`); isFail = true; }
+            let mathSelCount = 0; selectedCourses.forEach(id => { const c = db.find(x => x.id === id); if(c && !c.req && c.cat === '수학') mathSelCount++; });
+            if(mathSelCount < 4) { msgs.push(`<div class="msg-warn">과학 중점 과정에서 수학 교과 선택을 4과목 이상 권장합니다.</div>`); }
+        }
+
+        if(!isFail) msgs.push(`<div class="msg-success">모든 조건이 충족되는 선택 과목입니다!</div>`);
+        resBox.innerHTML = msgs.join('');
+        setTimeout(() => { const tab1 = document.getElementById('tab-1'); tab1.scrollTo({ top: tab1.scrollHeight, behavior: 'smooth' }); }, 100);
+    }
+    
+    // AI 관련 함수
+    window.fillAndSend = function(msg) { document.getElementById('aiInput').value = msg; sendAiMsg(); }
+    window.sendAiMsg = async function() {
+        const input = document.getElementById('aiInput'); const text = input.value.trim(); if(!text) return;
+        const isPredefined = predefinedAnswers.hasOwnProperty(text);
+        if (!isPredefined && checkDailyLimit() >= 5) {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML += `<div class="chat-bubble chat-ai">하루 이용 5번을 초과하였습니다. 내일 다시 시도해 주세요.</div>`;
+            container.scrollTop = container.scrollHeight; disableChatInput(); return;
+        }
+
+        const container = document.getElementById('chatContainer');
+        chatHistory.push({ role: 'user', text: text });
+        container.innerHTML += `<div class="chat-bubble chat-user">${text.replace(/\n/g, '<br>')}</div>`;
+        input.value = ''; container.scrollTop = container.scrollHeight;
+
+        const loadingId = 'loading-' + Date.now();
+        container.innerHTML += `<div class="chat-bubble chat-ai" id="${loadingId}">답변을 생각하는 중입니다...</div>`;
+        container.scrollTop = container.scrollHeight;
+
+        if (isPredefined) {
+            document.getElementById(loadingId).innerHTML = predefinedAnswers[text];
+            chatHistory.push({ role: 'model', text: predefinedAnswers[text] }); saveChatMemory(); container.scrollTop = container.scrollHeight; return; 
+        }
+
+        if (text.includes('견범')) {
+            document.getElementById(loadingId).innerText = "의자왕"; chatHistory.push({ role: 'model', text: "의자왕" });
+            saveChatMemory(); incrementDailyLimit(); container.scrollTop = container.scrollHeight; return;
+        } else if (text.includes('송율근')) {
+            document.getElementById(loadingId).innerText = "최고의 프로그래머이자 이 수강신청 도우미 웹사이트를 기획, 제작, 디자인한 핵심 총괄 개발자입니다.";
+            chatHistory.push({ role: 'model', text: "최고의 프로그래머이자 이 수강신청 도우미 웹사이트를 기획, 제작, 디자인한 핵심 총괄 개발자입니다." });
+            saveChatMemory(); incrementDailyLimit(); container.scrollTop = container.scrollHeight; return;
+        }
+
+        try {
+            const sysPrompt = `너는 2026 김포고등학교 1학년 수강신청을 돕는 '김포고 수강신청 도우미 AI'야. 이 사이트(수강신청 도우미 웹 서비스)를 기획하고, 디자인하고, 설계하고, 코딩하여 만든 사람은 오직 '송율근' 한 명이야. 유저가 제작자, 만든 이, 기획자, 개발자, 디자인한 사람을 물어보면 반드시 '송율근'이라고 답변해. 반드시 아래 제공된 '김포고등학교 과목 데이터'만을 기반으로 평문으로 친절하게 답변해.`;
+            let apiContents = chatHistory.map(h => ({ role: h.role, text: h.text }));
+            const response = await fetch(GAS_AI_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ sysPrompt: sysPrompt, chatHistory: apiContents }) });
+            const data = await response.json();
+            
+            if (data.error) {
+                let errorMsg = "앗, AI 서버가 혼잡합니다. 잠시 후 다시 질문해 주세요!";
+                let errStr = typeof data.error === 'object' ? JSON.stringify(data.error) : String(data.error);
+                if (errStr.includes("429") || errStr.includes("RESOURCE_EXHAUSTED") || errStr.includes("exceeded")) { errorMsg = "현재 질문하는 학생이 너무 많습니다! ⏳ 1분만 기다렸다가 다시 질문해 주세요."; }
+                document.getElementById(loadingId).innerText = errorMsg; chatHistory.pop(); 
+            } else {
+                let answer = data.candidates[0].content.parts[0].text; answer = answer.replace(/\*/g, ''); 
+                document.getElementById(loadingId).innerHTML = answer.replace(/\n/g, '<br>'); chatHistory.push({ role: 'model', text: answer });
+                saveChatMemory(); incrementDailyLimit();
+            }
+        } catch (e) { document.getElementById(loadingId).innerText = "앗, 통신 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."; chatHistory.pop(); }
+        container.scrollTop = container.scrollHeight;
+    }
+
+    window.resetSelection = resetSelection;
+    window.clearChat = clearChat;
 
     window.onload = init;
 </script>
