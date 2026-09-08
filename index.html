@@ -84,18 +84,16 @@
             white-space: nowrap; 
             overflow: hidden; 
             text-overflow: ellipsis; 
-            padding: 0 85px; /* 양옆 버튼과 겹치지 않게 안전 공간 확보 */
+            padding: 0 85px; 
             text-align: center;
         }
 
-        /* 좌측 버튼 (로그인 등) */
         .header-btn-left { 
             position: absolute; left: 12px; top: 50%; transform: translateY(-50%); 
             background-color: var(--primary-mid); color: white; border: 1px solid white; border-radius: 14px; 
             padding: 6px 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; white-space: nowrap; 
         }
         
-        /* 우측 버튼 (초기화, 대화 삭제 등) */
         .header-btn-right { 
             position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
             background-color: var(--primary-mid); color: white; border: 1px solid white; border-radius: 14px; 
@@ -104,26 +102,23 @@
 
         .header-btn-left:active, .header-btn-right:active { background-color: var(--primary-light); }
 
-        /* 화면이 극단적으로 좁을 경우 제목 완전 숨김 (버튼 확보용) */
         @media (max-width: 360px) {
             .header-title { display: none; }
         }
 
-        /* 대시보드 로그인 알림 배너 (파란색 풀사이즈 직사각형) */
+        /* 🔥 대시보드 로그인 알림 배너 (밝은 하늘색 복구) */
         .dashboard-banner { 
-            background-color: var(--primary-mid); 
-            color: white; 
+            background-color: var(--light-blue); 
+            color: var(--dark-blue); 
             text-align: center; 
             font-size: 12px; 
-            font-weight: 500; 
+            font-weight: bold; 
             padding: 10px 16px; 
             display: none; 
             width: 100%; 
-            border-top: 1px solid rgba(255,255,255,0.15); 
             box-sizing: border-box; 
         }
 
-        /* 실시간 접속자 수 UI */
         .live-counter-wrap { text-align: right; padding: 8px 16px 8px; background-color: var(--bg-color); font-size: 10px; color: var(--text-light-gray); font-weight: bold; z-index: 100; position: relative; }
 
         .tab-wrapper { flex: 1; position: relative; overflow: hidden; background-color: var(--bg-color); width: 100%; z-index: 10; }
@@ -139,7 +134,6 @@
             padding: 8px 0; border-top: 1px solid #E5E8EB; z-index: 1000; 
             padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
         }
-        /* 파란색 슬라이드 배경 */
         .nav-indicator {
             position: absolute;
             top: 8px;
@@ -147,18 +141,16 @@
             width: 33.333%;
             background-color: var(--primary-dark);
             border-radius: 12px;
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); /* 빠르게 시작해서 천천히 감속 */
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             z-index: 0;
-            transform: translateX(100%); /* 기본값 수강연습(가운데) 기준 */
+            transform: translateX(100%);
         }
         .nav-item { 
             position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
             font-size: 12px; color: var(--text-light-gray); cursor: pointer; padding: 6px 0; 
             transition: color 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .nav-item.active { 
-            color: white; font-weight: bold; 
-        }
+        .nav-item.active { color: white; font-weight: bold; }
         .nav-icon { font-size: 20px; margin-bottom: 4px; transition: filter 0.5s; }
 
         /* --- [AI 채팅 탭 & 문의 탭 공통 레이아웃] --- */
@@ -209,17 +201,15 @@
         .accordion.open .accordion-header { background-color: var(--light-blue); color: var(--dark-blue); }
         
         .accordion-content { max-height: 0px; overflow: hidden; transition: max-height 0.3s ease-in-out; width: 100%; }
-        .accordion-inner { padding: 0 12px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+        /* 🔥 아코디언 헤더와 내부 과목 사이의 위쪽 패딩을 늘려 공백 확보 */
+        .accordion-inner { padding: 16px 12px 16px 12px; display: flex; flex-direction: column; gap: 16px; }
 
         .sem-circle { font-size: 12px; margin-left: 6px; transition: color 0.3s; }
         .circle-red { color: var(--dark-red); }
         .circle-green { color: var(--dark-green); }
 
-        .course-card { 
-            display: flex; align-items: center; padding: 12px 14px; 
-            border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; /* 🔥 체크박스와 텍스트 공백 비율 확대 */
-            transition: all 0.2s; position: relative; cursor: pointer; width: 100%; 
-        }
+        /* 🔥 체크박스와 텍스트 공백 비율 확대 유지 */
+        .course-card { display: flex; align-items: center; padding: 12px 14px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; transition: all 0.2s; position: relative; cursor: pointer; width: 100%; }
         .course-card.disabled-card { opacity: 0.5; filter: grayscale(80%); } 
         
         .course-main { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -254,15 +244,22 @@
         .msg-warn { color: var(--dark-orange); }
         .msg-success { color: var(--dark-green); }
 
-        /* 🔥 저장 슬롯 관련 스타일 */
+        /* 🔥 저장 슬롯 리스트 CSS 그리드 레이아웃 */
         .custom-save-section { width: 100%; padding-bottom: 20px; }
-        .save-slot {
-            display: flex; justify-content: space-between; align-items: center;
-            background: white; border: 1px solid #E5E8EB; border-radius: 12px;
-            padding: 12px 16px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        .save-slot-list-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
-        .save-slot-name { font-size: 14px; font-weight: bold; color: var(--text-black); }
-        .save-slot-actions { display: flex; gap: 6px; align-items: center; }
+        
+        .save-slot {
+            display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 12px;
+            background: white; border: 1px solid #E5E8EB; border-radius: 12px;
+            padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); width: 100%; box-sizing: border-box;
+        }
+        .save-slot-name { font-size: 15px; font-weight: bold; color: var(--text-black); word-break: break-all; width: 100%; border-bottom: 1px solid #F2F4F6; padding-bottom: 8px; }
+        .save-slot-actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; width: 100%; }
+        
         /* 🔥 회색 모던 SVG 아이콘 버튼 스타일 */
         .icon-btn { 
             background: none; border: none; cursor: pointer; padding: 6px; 
@@ -274,40 +271,30 @@
         .icon-btn svg { stroke: var(--text-light-gray); transition: stroke 0.2s; }
         .icon-btn:hover svg { stroke: var(--text-dark-gray); }
         
-        .load-btn { background: var(--primary-mid); color: white; font-size: 12px; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; margin-left: 4px; }
+        .load-btn { flex: 1; background: var(--primary-mid); color: white; font-size: 13px; font-weight: bold; padding: 8px; border-radius: 8px; border: none; cursor: pointer; text-align: center; margin-left: 4px; }
         .load-btn:active { background: var(--primary-dark); transform: scale(0.96); }
 
-        /* 🔥 라벨 박스 공통 디자인 */
+        /* 🔥 라벨 박스 "선택 택 N" 디자인 비율 최적화 */
         .special-select-label { 
             background-color: var(--light-blue); color: var(--primary-dark); 
             padding: 8px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; 
-            margin-top: 8px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; 
+            display: flex; justify-content: center; align-items: center; 
             width: 100%; box-sizing: border-box; 
+            margin-top: 4px; margin-bottom: 0px; /* Grid gap이 16px이므로 위아래 간격 완벽 매칭 */
         }
         
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: bold; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 
-        /* 🥚 이스터에그 스타일 */
         .easter-egg-wrap { margin-top: auto; padding: 20px 12px 20px 12px; text-align: left; width: 100%; }
         .easter-egg { display: inline-block; font-size: 10px; color: var(--text-light-gray); font-weight: bold; text-decoration: none; cursor: pointer; }
 
-        /* 📢 업데이트 & 미리보기 팝업창 스타일 (반응형 모달) */
+        /* 📢 업데이트 & 미리보기 팝업창 스타일 */
         .update-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 99999;
-            display: none; 
-            justify-content: center; align-items: center;
-            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.6); z-index: 99999;
+            display: none; justify-content: center; align-items: center; padding: 20px;
         }
-        .update-modal {
-            width: 100%; max-width: 420px;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column;
-        }
+        .update-modal { width: 100%; max-width: 420px; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .update-modal-header { background-color: var(--primary-dark); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: bold; }
         .update-modal-close { background-color: #FFFFFF; color: #191F28; border: none; border-radius: 4px; width: 24px; height: 24px; font-size: 13px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; }
         .update-modal-body { padding: 30px 20px 40px 20px; display: flex; flex-direction: column; gap: 12px; text-align: left; max-height: 70vh; overflow-y: auto; }
@@ -316,7 +303,7 @@
         .middle-asterisk { display: inline-block; transform: translateY(4px); font-size: 16px; }
         .update-modal-footer { background-color: #222222; color: white; text-align: center; padding: 14px; font-size: 14px; font-weight: bold; cursor: pointer; letter-spacing: 0.5px; }
 
-        /* 🔥 Auth (로그인/회원가입/학생정보설정) 모달 스타일 */
+        /* 🔥 Auth 모달 스타일 */
         .auth-screen-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-color); z-index: 100000;
@@ -325,12 +312,7 @@
         .auth-box { background: white; padding: 30px 24px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 14px; }
         .auth-box h2 { margin: 0 0 10px 0; text-align: center; color: var(--text-black); font-size: 22px; font-weight: 900; }
         
-        .auth-input { 
-            width: 100%; padding: 14px; border: 1px solid #E5E8EB; 
-            border-radius: 8px; font-size: 14px; outline: none; 
-            transition: border 0.2s; 
-            background-color: #FFFFFF; 
-        }
+        .auth-input { width: 100%; padding: 14px; border: 1px solid #E5E8EB; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; background-color: #FFFFFF; }
         .auth-input:focus { border-color: var(--primary-dark); }
         .auth-row { display: flex; gap: 8px; }
         .auth-row > select { flex: 1; }
@@ -354,16 +336,19 @@
             .stat-value { font-size: 16px; }
             .accordion-header { padding: 16px 24px; font-size: 15px; }
             
-            /* 🔥 가로 길이를 1/4(4개 컬럼)로 완벽히 분할 */
-            .accordion-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 0 24px 24px 24px; }
+            /* 🔥 가로 길이를 1/4(4개 컬럼)로 완벽히 분할 (상하 여백 24px 확대) */
+            .accordion-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px 24px 24px 24px; }
             .special-select-label { grid-column: 1 / -1; }
+            
+            /* 🔥 데스크탑에서 세이브 슬롯 1/4 반응형 그리드 배열 */
+            .save-slot-list-container { grid-template-columns: repeat(4, 1fr); }
+            
             .chat-bubble { font-size: 15px; padding: 14px 20px; max-width: 60%; }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔥 로그인/회원가입 오버레이 스크린 -->
 <div id="authScreenOverlay" class="auth-screen-overlay">
     
     <!-- 로그인 폼 -->
@@ -421,7 +406,6 @@
 </div>
 
 <div id="app">
-    <!-- 📢 업데이트 알림 모달 -->
     <div id="updateModalOverlay" class="update-modal-overlay">
         <div class="update-modal">
             <div class="update-modal-header">
@@ -429,12 +413,12 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.04</div>
+                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.05</div>
                 <div class="update-modal-desc">
-                    <span class="middle-asterisk">*</span> 모바일, 패드, PC에서 자연스럽게 보이도록 비율을 구성했습니다.<br>
-                    <span class="middle-asterisk">*</span> 0, 0, 0으로 표기되는 데이터 증발 버그를 수정했습니다.<br>
-                    <span class="middle-asterisk">*</span> 내가 원하는 과목 구성을 저장하고 관리할 수 있습니다.<br>
-                    <span class="middle-asterisk">*</span> 화면 하단 메뉴바에 부드러운 애니메이션을 적용했습니다.
+                    <span class="middle-asterisk">*</span> 데스크탑 환경에서 과목 저장 슬롯이 1/4 크기로 반응형 적용되었습니다.<br>
+                    <span class="middle-asterisk">*</span> 회원가입 시 바로 자동 로그인이 되도록 개선되었습니다.<br>
+                    <span class="middle-asterisk">*</span> 각 학기별로 고정(필수) 과목이 먼저 배치되고 이어서 선택 과목이 배치됩니다.<br>
+                    <span class="middle-asterisk">*</span> 화면 하단 메뉴바에 부드러운 애니메이션이 적용되었습니다.
                 </div>
             </div>
             <div class="update-modal-footer" onclick="closeUpdateModalAlways()">
@@ -464,7 +448,7 @@
         <button id="resetSelectionBtn" class="header-btn-right" onclick="resetSelection()" style="display: block;">선택 초기화</button>
     </div>
     
-    <!-- 대시보드 상태 알림 -->
+    <!-- 대시보드 상태 알림 (하늘색 직사각형 꽉 차게 변경) -->
     <div id="dashboardBanner" class="dashboard-banner">
         <span id="userEmailSpan"></span> (과목/대화 자동저장)
     </div>
@@ -474,7 +458,7 @@
     </div>
 
     <div class="tab-wrapper">
-        <!-- AI 채팅 탭 -->
+        <!-- 🔥 AI 채팅 탭 (이름 변경 완료) -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
                 <div class="chat-bubble chat-ai">
@@ -579,7 +563,8 @@
                 <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
                     <button class="submit-btn" style="width: 33.33%; min-width: 140px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
                 </div>
-                <div id="saveSlotList"></div>
+                <!-- 🔥 저장 슬롯 리스트 컨테이너 -->
+                <div id="saveSlotList" class="save-slot-list-container"></div>
             </div>
 
             <div class="easter-egg-wrap">
@@ -591,7 +576,7 @@
         <div id="tab-2" class="tab-content tab-hidden-right">
             <div class="chat-container" id="inquiryChatContainer">
                 <div class="chat-bubble chat-ai">
-                    개발자(송율근)와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!
+                    개발자와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!
                 </div>
             </div>
             
@@ -625,7 +610,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.04"; 
+    const APP_VERSION = "1.05"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -661,6 +646,7 @@
 
     let userIP = "local_storage_only";
     let currentUserInfo = ""; // 이름,반,번호 조합 문자열 저장용
+    let currentRawName = ""; // 문의 시 전송할 순수 이름
 
     // 🔥 수강신청 전체 과목 DB
     const db = [
@@ -1008,6 +994,7 @@
         return div;
     }
 
+    // 🔥 고정 과목 다음 "선택 택 [N]" 배치 및 공백 처리
     function renderCourseList() {
         const container = document.getElementById('courseListContainer');
         container.innerHTML = '';
@@ -1017,16 +1004,10 @@
             const acc = document.createElement('div');
             acc.className = 'accordion';
             
-            // 타이틀 부분에 (선택 택 N) 포함
-            let titleText = sem.title;
-            if(sem.limit > 0) {
-                titleText += ` (선택 택 ${sem.limit})`;
-            }
-
             const header = document.createElement('div');
             header.className = 'accordion-header';
             header.innerHTML = `
-                <div><span>${titleText}</span><span class="sem-circle" id="circle-${sem.key}">●</span></div>
+                <div><span>${sem.title}</span><span class="sem-circle" id="circle-${sem.key}">●</span></div>
                 <span class="icon">▼</span>
             `;
             header.onclick = () => toggleAccordion(acc);
@@ -1037,11 +1018,11 @@
             const inner = document.createElement('div');
             inner.className = 'accordion-inner';
 
-            // 고정 과목(req) 무조건 먼저 렌더링
+            // 고정(req) 과목 우선 배치
             const reqs = coursesInSem.filter(c => c.req);
             reqs.forEach(c => inner.appendChild(createCourseCard(c)));
 
-            // 선택 과목 렌더링 및 라벨 분리
+            // 선택(elec) 과목 및 라벨 배치
             if(sem.key === '3-2') {
                 const g0 = coursesInSem.filter(c => !c.req && c.g === 0);
                 const g1 = coursesInSem.filter(c => c.g === 1);
@@ -1801,20 +1782,18 @@
         const dashBanner = document.getElementById('dashboardBanner');
         
         if (user) {
-            // 로그인 상태
             loginBtn.innerText = '로그아웃';
             loginBtn.onclick = handleLogout;
             dashBanner.style.display = 'block';
 
-            // 유저 데이터 (이름/반/번호) 있는지 확인
+            // 유저 데이터 (이름/반/번호) 있는지 확인 (새로고침 없이 즉시 로드)
             database.ref('user_data/' + user.uid).once('value', (snap) => {
                 const data = snap.val() || {};
-                // 이름, 반, 번호가 모두 존재하는 경우 정상 통과
                 if(data.name && data.classNum && data.studentNum) {
+                    currentRawName = data.name; // 순수 이름 저장
                     currentUserInfo = `${data.classNum}반 ${data.studentNum}번 ${data.name}`;
-                    completeLoginFlow(user);
+                    completeLoginFlow(user, data); // 바로 데이터 넘겨서 딜레이 제거
                 } else {
-                    // 정보가 없으면 (구글 로그인 최초 등) 입력창 띄우기
                     document.getElementById('loginBox').style.display = 'none';
                     document.getElementById('signupBox').style.display = 'none';
                     document.getElementById('infoBox').style.display = 'flex';
@@ -1823,11 +1802,11 @@
             });
 
         } else {
-            // 로그아웃 상태
             loginBtn.innerText = '로그인';
             loginBtn.onclick = () => { window.location.hash = '#login'; };
             dashBanner.style.display = 'none';
             currentUserInfo = "";
+            currentRawName = "";
 
             if (window.location.hash === '#dashboard') {
                 window.location.hash = ''; 
@@ -1837,7 +1816,7 @@
     });
 
     // 🔥 즉각적인 UI 연동 (await로 딜레이 제거)
-    async function completeLoginFlow(user) {
+    function completeLoginFlow(user, immediateData = null) {
         document.getElementById('authScreenOverlay').style.display = 'none';
         document.getElementById('userEmailSpan').innerText = `[${user.email}] ${currentUserInfo}`;
         
@@ -1845,14 +1824,14 @@
             window.location.hash = '#dashboard';
         }
 
-        try {
-            const snap = await database.ref('user_data/' + user.uid).once('value');
-            syncDBData(snap.val()); // 새로고침 없이 즉시 적용됨
-        } catch(e) {
-            console.error("데이터 로드 실패", e);
+        if (immediateData) {
+            syncDBData(immediateData);
+        } else {
+            database.ref('user_data/' + user.uid).once('value').then((snap) => {
+                syncDBData(snap.val());
+            });
         }
-
-        // 1:1 채팅방(Tab 2) 로드
+        
         loadInquiryChat();
     }
 
@@ -1867,6 +1846,7 @@
         database.ref('user_data/' + auth.currentUser.uid).update({
             name: nm, classNum: cn, studentNum: sn
         }).then(() => {
+            currentRawName = nm;
             currentUserInfo = `${cn}반 ${sn}번 ${nm}`;
             completeLoginFlow(auth.currentUser);
             showToast("환영합니다!");
@@ -1933,7 +1913,6 @@
         auth.signInWithEmailAndPassword(email, pw)
             .then(() => { 
                 document.getElementById('loginPw').value = '';
-                window.location.hash = '#dashboard'; 
                 showToast("로그인 성공!"); 
             })
             .catch(err => { showAuthError('login', translateAuthError(err)); });
@@ -1958,14 +1937,14 @@
                 document.getElementById('signupPw').value = '';
                 document.getElementById('signupPwConfirm').value = '';
                 
-                // 가입과 동시에 이름/반/번호 저장
+                // 가입과 동시에 이름/반/번호 저장 및 즉시 로그인 플로우 연결
                 database.ref('user_data/' + cred.user.uid).update({
                     name: name, classNum: cn, studentNum: sn
                 }).then(() => {
-                    auth.signOut().then(() => {
-                        window.location.hash = '#login'; 
-                        showToast("회원가입 완료! 로그인 해주세요."); 
-                    });
+                    currentRawName = name;
+                    currentUserInfo = `${cn}반 ${sn}번 ${name}`;
+                    showToast("회원가입이 완료되어 자동 로그인되었습니다.");
+                    completeLoginFlow(cred.user); 
                 });
             })
             .catch(err => { showAuthError('signup', translateAuthError(err)); });
@@ -1975,7 +1954,6 @@
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider)
             .then(() => { 
-                window.location.hash = '#dashboard'; 
                 showToast("Google 계정으로 로그인했습니다.");
             })
             .catch(err => {
@@ -2001,6 +1979,7 @@
                 
                 // 다른 사람이나 게스트가 접근 시 잔여 데이터가 안남게 비우기
                 currentUserInfo = ""; 
+                currentRawName = "";
                 savedSlots = []; 
                 renderSavedSlots();
 
@@ -2024,7 +2003,7 @@
 
     function loadInquiryChat() {
         const container = document.getElementById('inquiryChatContainer');
-        container.innerHTML = `<div class="chat-bubble chat-ai">개발자(송율근)와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!</div>`;
+        container.innerHTML = `<div class="chat-bubble chat-ai">개발자와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!</div>`;
         
         if(!auth.currentUser) {
             container.innerHTML += `<div class="chat-bubble chat-ai"><b>로그인이 필요한 서비스입니다.</b><br>홈 화면 우측 상단의 로그인 버튼을 이용해주세요.</div>`;
@@ -2056,16 +2035,17 @@
         
         const uid = auth.currentUser.uid;
         
-        // Firebase에 메시지 저장
+        // Firebase에 메시지 저장 (시스템상으로 실제 본명 저장)
         database.ref('inquiries/' + uid).push({
             role: 'user',
             text: text,
+            senderName: currentRawName, // DB 시스템상으로만 본명 저장
             timestamp: firebase.database.ServerValue.TIMESTAMP
         });
         
         input.value = '';
 
-        // 이메일 알림 발송 (이름/반/번호 정보 포함)
+        // 이메일 알림 발송
         fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${currentUserInfo}]님의 새로운 문의 채팅: ${text}` }) });
     }
 
