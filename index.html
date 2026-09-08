@@ -253,7 +253,14 @@
         }
         .auth-box { background: white; padding: 30px 24px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 14px; }
         .auth-box h2 { margin: 0 0 10px 0; text-align: center; color: var(--text-black); font-size: 22px; font-weight: 900; }
-        .auth-input { width: 100%; padding: 14px; border: 1px solid #E5E8EB; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; }
+        
+        /* 🔥 input과 select 요소 모두 배경색을 명시적으로 흰색으로 지정 */
+        .auth-input { 
+            width: 100%; padding: 14px; border: 1px solid #E5E8EB; 
+            border-radius: 8px; font-size: 14px; outline: none; 
+            transition: border 0.2s; 
+            background-color: #FFFFFF; 
+        }
         .auth-input:focus { border-color: var(--primary-dark); }
         .auth-row { display: flex; gap: 8px; }
         .auth-row > select { flex: 1; }
@@ -305,7 +312,7 @@
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
-    <!-- 회원가입 폼 (이름/반/번호 반영 완료) -->
+    <!-- 회원가입 폼 -->
     <form id="signupBox" class="auth-box" style="display: none;" onsubmit="handleSignup(event)">
         <h2>회원가입</h2>
         <div id="signupError" class="auth-error"></div>
@@ -329,7 +336,7 @@
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
-    <!-- 구글 로그인 시 학생정보 설정 폼 (이름/반/번호 반영 완료) -->
+    <!-- 구글 로그인 시 학생정보 설정 폼 -->
     <form id="infoBox" class="auth-box" style="display: none;" onsubmit="saveGoogleInfo(event)">
         <h2>학생 정보 설정</h2>
         <div style="font-size:13px; color:var(--text-dark-gray); text-align:center; line-height:1.4;">
@@ -702,13 +709,17 @@
 
     // 동적으로 반/번호 셀렉트 옵션 생성
     function populateSelects() {
+        // 🔥 #반과 번호 (아래 maxClass와 maxNum 숫자를 수정하여 최대 반과 번호를 조절하세요)
+        const maxClass = 12; // 최대 반 설정
+        const maxNum = 35;   // 최대 번호 설정
+
         let classHTML = '<option value="" disabled selected>반 선택</option>';
-        for(let i=1; i<=12; i++) {
+        for(let i=1; i<=maxClass; i++) {
             classHTML += `<option value="${i}">${i}반</option>`;
         }
         
         let numHTML = '<option value="" disabled selected>번호 선택</option>';
-        for(let i=1; i<=35; i++) {
+        for(let i=1; i<=maxNum; i++) {
             numHTML += `<option value="${i}">${i}번</option>`;
         }
         
