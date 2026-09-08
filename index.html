@@ -109,6 +109,20 @@
             .header-title { display: none; }
         }
 
+        /* 대시보드 로그인 알림 배너 (파란색 풀사이즈 직사각형) */
+        .dashboard-banner { 
+            background-color: var(--primary-mid); 
+            color: white; 
+            text-align: center; 
+            font-size: 12px; 
+            font-weight: 500; 
+            padding: 10px 16px; 
+            display: none; 
+            width: 100%; 
+            border-top: 1px solid rgba(255,255,255,0.15); 
+            box-sizing: border-box; 
+        }
+
         /* 실시간 접속자 수 UI */
         .live-counter-wrap { text-align: right; padding: 8px 16px 8px; background-color: var(--bg-color); font-size: 10px; color: var(--text-light-gray); font-weight: bold; z-index: 100; position: relative; }
 
@@ -147,7 +161,7 @@
         }
         .nav-icon { font-size: 20px; margin-bottom: 4px; transition: filter 0.5s; }
 
-        /* --- [AI 추천 탭 & 문의 탭 공통 레이아웃] --- */
+        /* --- [AI 채팅 탭 & 문의 탭 공통 레이아웃] --- */
         #tab-0, #tab-2 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
         .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; font-size: 14px; line-height: 1.5; word-break: break-word; }
@@ -201,7 +215,11 @@
         .circle-red { color: var(--dark-red); }
         .circle-green { color: var(--dark-green); }
 
-        .course-card { display: flex; align-items: center; padding: 10px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 8px; transition: all 0.2s; position: relative; cursor: pointer; width: 100%; }
+        .course-card { 
+            display: flex; align-items: center; padding: 12px 14px; 
+            border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; /* 🔥 체크박스와 텍스트 공백 비율 확대 */
+            transition: all 0.2s; position: relative; cursor: pointer; width: 100%; 
+        }
         .course-card.disabled-card { opacity: 0.5; filter: grayscale(80%); } 
         
         .course-main { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -244,13 +262,28 @@
             padding: 12px 16px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
         .save-slot-name { font-size: 14px; font-weight: bold; color: var(--text-black); }
-        .save-slot-actions { display: flex; gap: 8px; align-items: center; }
-        .icon-btn { background: none; border: none; font-size: 16px; cursor: pointer; padding: 4px; transition: transform 0.2s; }
+        .save-slot-actions { display: flex; gap: 6px; align-items: center; }
+        /* 🔥 회색 모던 SVG 아이콘 버튼 스타일 */
+        .icon-btn { 
+            background: none; border: none; cursor: pointer; padding: 6px; 
+            transition: transform 0.2s, background 0.2s; border-radius: 6px; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .icon-btn:hover { background: #F2F4F6; }
         .icon-btn:active { transform: scale(0.9); }
-        .load-btn { background: var(--primary-mid); color: white; font-size: 12px; font-weight: bold; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; }
-        .load-btn:active { background: var(--primary-dark); }
+        .icon-btn svg { stroke: var(--text-light-gray); transition: stroke 0.2s; }
+        .icon-btn:hover svg { stroke: var(--text-dark-gray); }
+        
+        .load-btn { background: var(--primary-mid); color: white; font-size: 12px; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; margin-left: 4px; }
+        .load-btn:active { background: var(--primary-dark); transform: scale(0.96); }
 
-        .special-select-label { background-color: var(--light-blue); color: var(--dark-blue); padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 6px; margin-bottom: 2px; display: inline-block; width: max-content; }
+        /* 🔥 라벨 박스 공통 디자인 */
+        .special-select-label { 
+            background-color: var(--light-blue); color: var(--primary-dark); 
+            padding: 8px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; 
+            margin-top: 8px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; 
+            width: 100%; box-sizing: border-box; 
+        }
         
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: bold; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 
@@ -292,12 +325,11 @@
         .auth-box { background: white; padding: 30px 24px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 14px; }
         .auth-box h2 { margin: 0 0 10px 0; text-align: center; color: var(--text-black); font-size: 22px; font-weight: 900; }
         
-        /* 🔥 input과 select 요소 모두 배경색을 명시적으로 흰색으로 지정 */
         .auth-input { 
             width: 100%; padding: 14px; border: 1px solid #E5E8EB; 
             border-radius: 8px; font-size: 14px; outline: none; 
             transition: border 0.2s; 
-            background-color: #FFFFFF; /* 흰색 변경 확인 */
+            background-color: #FFFFFF; 
         }
         .auth-input:focus { border-color: var(--primary-dark); }
         .auth-row { display: flex; gap: 8px; }
@@ -308,9 +340,6 @@
         .auth-btn-google { background: white; color: var(--text-black); border: 1px solid #D1D6DB; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .auth-link { text-align: center; font-size: 13px; color: var(--primary-dark); cursor: pointer; font-weight: bold; margin-top: 5px; }
         .auth-error { color: var(--dark-red); font-size: 12px; font-weight: bold; text-align: center; display: none; background: var(--light-red); padding: 8px; border-radius: 6px; word-break: keep-all; line-height: 1.4; }
-
-        /* 대시보드 로그인 알림 배너 */
-        .dashboard-banner { background-color: var(--light-blue); color: var(--dark-blue); text-align: center; font-size: 12px; font-weight: bold; padding: 8px; display: none; width: 100%; }
 
         /* 🔥 데스크탑-모바일 반응형 완벽 최적화 */
         @media (min-width: 800px) {
@@ -324,8 +353,10 @@
             .stat-title { font-size: 11px; margin-bottom: 4px; }
             .stat-value { font-size: 16px; }
             .accordion-header { padding: 16px 24px; font-size: 15px; }
-            .accordion-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 24px 24px 24px; }
-            .special-select-label { grid-column: 1 / -1; width: 100%; max-width: none; text-align: center; margin-top: 10px; margin-bottom: 4px; box-sizing: border-box; }
+            
+            /* 🔥 가로 길이를 1/4(4개 컬럼)로 완벽히 분할 */
+            .accordion-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 0 24px 24px 24px; }
+            .special-select-label { grid-column: 1 / -1; }
             .chat-bubble { font-size: 15px; padding: 14px 20px; max-width: 60%; }
         }
     </style>
@@ -398,14 +429,12 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.03</div>
+                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.04</div>
                 <div class="update-modal-desc">
                     <span class="middle-asterisk">*</span> 모바일, 패드, PC에서 자연스럽게 보이도록 비율을 구성했습니다.<br>
-                    <span class="middle-asterisk">*</span> 정보 과목 학점과 수학/과학/정보 과목의 총 학점을 추가했습니다.<br>
-                    <span class="middle-asterisk">*</span> 과목을 전체 초기화 할 수 있는 버튼을 추가했습니다.<br>
-                    <span class="middle-asterisk">*</span> 텍스트 복사 방지 기능 및 로그인 버튼을 추가했습니다.<br>
                     <span class="middle-asterisk">*</span> 0, 0, 0으로 표기되는 데이터 증발 버그를 수정했습니다.<br>
-                    <span class="middle-asterisk">*</span> 내가 원하는 과목 구성을 저장하고 관리할 수 있습니다.
+                    <span class="middle-asterisk">*</span> 내가 원하는 과목 구성을 저장하고 관리할 수 있습니다.<br>
+                    <span class="middle-asterisk">*</span> 화면 하단 메뉴바에 부드러운 애니메이션을 적용했습니다.
                 </div>
             </div>
             <div class="update-modal-footer" onclick="closeUpdateModalAlways()">
@@ -445,7 +474,7 @@
     </div>
 
     <div class="tab-wrapper">
-        <!-- AI 추천 탭 -->
+        <!-- AI 채팅 탭 -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
                 <div class="chat-bubble chat-ai">
@@ -544,9 +573,12 @@
             
             <div id="validationResult" class="validation-results"></div>
             
-            <!-- 🔥 저장하기 및 불러오기 UI 영역 추가 -->
+            <!-- 🔥 저장하기 및 불러오기 UI 영역 -->
             <div class="custom-save-section">
-                <button class="submit-btn" style="width: 100%; background-color: var(--primary-dark); color: white; margin-bottom: 12px;" onclick="promptSave()">현재 과목 구성 저장하기</button>
+                <!-- 가로 길이 1/3로 축소 & 좌측 정렬 -->
+                <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
+                    <button class="submit-btn" style="width: 33.33%; min-width: 140px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
+                </div>
                 <div id="saveSlotList"></div>
             </div>
 
@@ -577,7 +609,7 @@
         <div class="nav-indicator" id="navIndicator"></div>
         <div class="nav-item" id="nav-0" onclick="switchTab(0)">
             <div class="nav-icon">⚙️</div>
-            AI 추천
+            AI 채팅
         </div>
         <div class="nav-item active" id="nav-1" onclick="switchTab(1)">
             <div class="nav-icon">📊</div>
@@ -593,7 +625,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.04"; // 버전 상승
+    const APP_VERSION = "1.04"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -630,7 +662,7 @@
     let userIP = "local_storage_only";
     let currentUserInfo = ""; // 이름,반,번호 조합 문자열 저장용
 
-    // 🔥 수강신청 전체 과목 DB 원상 복구
+    // 🔥 수강신청 전체 과목 DB
     const db = [
         { id:'11_01', sem:'1-1', name:'공통국어 1', type:'공통', cat:'국어', grade:'5단계/등급O', req:true, cred:4 },
         { id:'11_02', sem:'1-1', name:'공통수학 1', type:'공통', cat:'수학', grade:'5단계/등급O', req:true, cred:4 },
@@ -750,10 +782,10 @@
     const semesters = [
         { key:'1-1', title:'1학년 1학기', limit:0 },
         { key:'1-2', title:'1학년 2학기', limit:0 },
-        { key:'2-1', title:'2학년 1학기 (선택 택 5)', limit:5 },
-        { key:'2-2', title:'2학년 2학기 (선택 택 5)', limit:5 },
-        { key:'3-1', title:'3학년 1학기 (선택 택 6)', limit:6 },
-        { key:'3-2', title:'3학년 2학기 (선택 택 6)', limit:6 }
+        { key:'2-1', title:'2학년 1학기', limit:5 },
+        { key:'2-2', title:'2학년 2학기', limit:5 },
+        { key:'3-1', title:'3학년 1학기', limit:6 },
+        { key:'3-2', title:'3학년 2학기', limit:6 }
     ];
 
     let selectedCourses = new Set();
@@ -985,10 +1017,16 @@
             const acc = document.createElement('div');
             acc.className = 'accordion';
             
+            // 타이틀 부분에 (선택 택 N) 포함
+            let titleText = sem.title;
+            if(sem.limit > 0) {
+                titleText += ` (선택 택 ${sem.limit})`;
+            }
+
             const header = document.createElement('div');
             header.className = 'accordion-header';
             header.innerHTML = `
-                <div><span>${sem.title}</span><span class="sem-circle" id="circle-${sem.key}">●</span></div>
+                <div><span>${titleText}</span><span class="sem-circle" id="circle-${sem.key}">●</span></div>
                 <span class="icon">▼</span>
             `;
             header.onclick = () => toggleAccordion(acc);
@@ -999,13 +1037,16 @@
             const inner = document.createElement('div');
             inner.className = 'accordion-inner';
 
+            // 고정 과목(req) 무조건 먼저 렌더링
+            const reqs = coursesInSem.filter(c => c.req);
+            reqs.forEach(c => inner.appendChild(createCourseCard(c)));
+
+            // 선택 과목 렌더링 및 라벨 분리
             if(sem.key === '3-2') {
-                const reqs = coursesInSem.filter(c => c.req);
                 const g0 = coursesInSem.filter(c => !c.req && c.g === 0);
                 const g1 = coursesInSem.filter(c => c.g === 1);
                 const g2 = coursesInSem.filter(c => c.g === 2);
 
-                reqs.forEach(c => inner.appendChild(createCourseCard(c)));
                 inner.appendChild(createLabel('선택 택 4'));
                 g0.forEach(c => inner.appendChild(createCourseCard(c)));
                 inner.appendChild(createLabel('선택 택 1 (1)'));
@@ -1013,7 +1054,11 @@
                 inner.appendChild(createLabel('선택 택 1 (2)'));
                 g2.forEach(c => inner.appendChild(createCourseCard(c)));
             } else {
-                coursesInSem.forEach(c => inner.appendChild(createCourseCard(c)));
+                const elecs = coursesInSem.filter(c => !c.req);
+                if (elecs.length > 0) {
+                    inner.appendChild(createLabel(`선택 택 ${sem.limit}`));
+                    elecs.forEach(c => inner.appendChild(createCourseCard(c)));
+                }
             }
 
             contentWrap.appendChild(inner);
@@ -1474,9 +1519,15 @@
             div.innerHTML = `
                 <div class="save-slot-name">${slot.name}</div>
                 <div class="save-slot-actions">
-                    <button class="icon-btn" onclick="previewSave('${slot.id}')" title="미리보기">👁️</button>
-                    <button class="icon-btn" onclick="renameSave('${slot.id}')" title="이름 바꾸기">✏️</button>
-                    <button class="icon-btn" onclick="deleteSave('${slot.id}')" title="삭제">🗑️</button>
+                    <button class="icon-btn" onclick="previewSave('${slot.id}')" title="미리보기">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <button class="icon-btn" onclick="renameSave('${slot.id}')" title="이름 바꾸기">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="icon-btn" onclick="deleteSave('${slot.id}')" title="삭제">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
                     <button class="load-btn" onclick="loadSave('${slot.id}')">불러오기</button>
                 </div>
             `;
@@ -1528,18 +1579,24 @@
         const slot = savedSlots.find(s => s.id === id);
         if(!slot) return;
         
-        let previewText = `<div style="font-weight:900; font-size:18px; margin-bottom:12px; color:var(--text-black);">[${slot.name}] 과목 요약</div>`;
+        let previewText = `<div style="font-weight:900; font-size:18px; margin-bottom:12px; color:var(--text-black);">[${slot.name}] 선택 과목 요약</div>`;
         previewText += `<div style="margin-bottom:14px; font-size:14px; color:var(--primary-dark); font-weight:bold;">과학 중점 과정: ${slot.sciTrack ? '신청 O' : '신청 X'}</div>`;
         
-        // 1학년 필수는 길어지니 제외하고, 선택 과목만 간단히 노출
-        let courseNames = slot.courses.map(cId => {
+        // 🔥 고정 과목(req) 제외, 사용자가 직접 선택한 '선택 과목'만 필터링
+        let elecCourses = slot.courses.filter(cId => {
             let course = db.find(x => x.id === cId);
-            // 필수 지정과목(공통/필수)은 미리보기에서 너무 길어지므로 2,3학년 선택과목 위주로 보여줄 수도 있음
-            // 여기서는 심플하게 모든 과목을 예쁘게 나열
-            return course ? `${course.name} <span style="font-size:10px; color:#888;">(${course.sem})</span>` : '';
-        }).filter(x => x).join('<br> • ');
+            return course && !course.req; 
+        });
 
-        previewText += `<div style="font-size:14px; line-height:1.6; color:#444;"> • ${courseNames}</div>`;
+        if(elecCourses.length === 0) {
+            previewText += `<div style="font-size:14px; color:#444;">선택한 과목이 없습니다.</div>`;
+        } else {
+            let courseNames = elecCourses.map(cId => {
+                let course = db.find(x => x.id === cId);
+                return `<span style="display:inline-block; background:#F2F4F6; padding:6px 12px; border-radius:8px; margin:4px 4px 0 0; font-size:13px; font-weight:bold; border: 1px solid #E5E8EB; color:#191F28;">${course.name} <span style="font-size:11px; color:#8B95A1;">(${course.sem})</span></span>`;
+            }).join('');
+            previewText += `<div style="line-height:1.8;">${courseNames}</div>`;
+        }
 
         document.getElementById('previewModalContent').innerHTML = previewText;
         document.getElementById('previewModalOverlay').style.display = 'flex';
@@ -1779,19 +1836,21 @@
         handleRouting();
     });
 
-    function completeLoginFlow(user) {
+    // 🔥 즉각적인 UI 연동 (await로 딜레이 제거)
+    async function completeLoginFlow(user) {
         document.getElementById('authScreenOverlay').style.display = 'none';
-        
-        // 요구하신 이메일 + 학생정보(반 번호 이름) 텍스트 형식
         document.getElementById('userEmailSpan').innerText = `[${user.email}] ${currentUserInfo}`;
         
         if(window.location.hash === '#login' || window.location.hash === '#signup') {
             window.location.hash = '#dashboard';
         }
 
-        database.ref('user_data/' + user.uid).once('value', (snap) => {
-            syncDBData(snap.val());
-        });
+        try {
+            const snap = await database.ref('user_data/' + user.uid).once('value');
+            syncDBData(snap.val()); // 새로고침 없이 즉시 적용됨
+        } catch(e) {
+            console.error("데이터 로드 실패", e);
+        }
 
         // 1:1 채팅방(Tab 2) 로드
         loadInquiryChat();
