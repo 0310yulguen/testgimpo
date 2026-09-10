@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2A52BE">
     <title>2026 김포고 수강신청 도우미(1학년)</title>
-    <!-- 🔥 파이어베이스 및 각종 라이브러리 탑재 (Storage 추가) -->
+    <!-- 🔥 파이어베이스 및 PDF 생성 라이브러리 탑재 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <!-- 🔥 다크모드 초기화 스크립트 (화면 깜빡임 방지) -->
@@ -52,7 +51,7 @@
             --light-gray-box: #F2F4F6;
         }
 
-        /* 🔥 다크 모드 색상 맵핑 */
+        /* 🔥 다크 모드 색상 맵핑 (눈 보호용 부드러운 다크 테마) */
         :root[data-theme="dark"] {
             --bg-color: #121212;
             --box-bg: #1E1E1E;
@@ -147,6 +146,7 @@
             .header-btn-left, .header-btn-right { padding: 5px 8px; font-size: 10px; }
         }
 
+        /* 🔥 대시보드 배너 (relative 속성 추가하여 우측 끝 버튼 배치 최적화) */
         .dashboard-banner { 
             position: relative;
             background-color: var(--light-blue); color: var(--dark-blue); 
@@ -163,16 +163,20 @@
         }
         .edit-profile-btn:active { background-color: var(--primary-dark); }
 
+        /* 🔥 다크 모드 전환 버튼 디자인 (배너의 가장 우측으로 고정) */
         .theme-toggle-btn {
             position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
             padding: 4px 8px; font-size: 10px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
             background-color: #4E5968; color: #FFFFFF; 
         }
-        :root[data-theme="dark"] .theme-toggle-btn { background-color: #E5E8EB; color: #191F28; }
+        :root[data-theme="dark"] .theme-toggle-btn {
+            background-color: #E5E8EB; color: #191F28;
+        }
 
         .live-counter-wrap { text-align: right; padding: 8px 16px 8px; background-color: var(--bg-color); font-size: 10px; color: var(--text-light-gray); font-weight: bold; z-index: 100; position: relative; }
 
         .tab-wrapper { flex: 1; position: relative; overflow: hidden; background-color: var(--bg-color); width: 100%; z-index: 10; }
+        
         .tab-content { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; padding: 0 16px 12px 16px; background-color: var(--bg-color); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; }
         
         .tab-hidden-left { transform: translateX(-100%); }
@@ -191,49 +195,19 @@
         .nav-icon { font-size: 18px; margin-bottom: 4px; transition: filter 0.3s; }
 
         #tab-0, #tab-4 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
-        .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 14px; }
-        
-        /* 🔥 날짜 및 타임스탬프 (신규) */
-        .date-separator { align-self: center; background-color: var(--light-blue); color: var(--dark-blue); font-size: 12px; font-weight: bold; padding: 6px 16px; border-radius: 20px; margin: 16px 0; display: flex; align-items: center; gap: 6px; }
-        .date-separator svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-        
-        .msg-container-wrap { display: flex; flex-direction: column; width: 100%; margin-bottom: 4px; }
-        .msg-row { display: flex; flex-direction: row; align-items: flex-end; gap: 6px; width: 100%; }
-        .msg-row.user { justify-content: flex-end; }
-        .msg-row.ai { justify-content: flex-start; }
-        
-        .msg-time { font-size: 10px; color: var(--text-light-gray); flex-shrink: 0; margin-bottom: 2px; font-weight: bold; }
-        
-        .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; font-size: 14px; line-height: 1.5; word-break: break-word; }
-        .chat-ai { background-color: var(--box-bg); color: var(--text-black); border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .chat-user { background-color: var(--primary-dark); color: white; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        
-        /* 채팅방 전송된 이미지 디자인 */
-        .chat-image { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 6px; cursor: pointer; border: 1px solid var(--border-color); }
-        .img-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-
-        /* 문의칸 채팅 인풋 및 이미지 첨부 영역 */
-        .chat-bottom-wrapper { flex-shrink: 0; background-color: var(--box-bg); border-top: 1px solid var(--border-color); width: 100%; display: flex; flex-direction: column; }
-        
-        .preview-area { display: flex; gap: 10px; padding: 12px 16px 0 16px; overflow-x: auto; }
-        .preview-img-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; border: 1px solid var(--border-color); border-radius: 8px; }
-        .preview-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-        .preview-del { position: absolute; top: -6px; right: -6px; background: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; font-weight: bold; }
-        
-        .attach-btn { background-color: var(--light-gray-box); border: none; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dark-gray); transition: 0.2s; flex-shrink: 0; }
-        .attach-btn:hover { background-color: var(--border-color); }
-        .attach-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
-        .chat-examples { display: flex; flex-wrap: wrap; gap: 8px; max-height: 160px; overflow-y: auto; padding: 12px 16px 4px 16px; width: 100%; align-content: flex-start; }
+        .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
+        .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; font-size: 14px; line-height: 1.5; word-break: break-word; }
+        .chat-ai { background-color: var(--box-bg); color: var(--text-black); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .chat-user { background-color: var(--primary-dark); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-bottom-wrapper { flex-shrink: 0; padding: 12px 16px 16px 16px; background-color: var(--box-bg); border-top: 1px solid var(--border-color); width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .chat-examples { display: flex; flex-wrap: wrap; gap: 8px; max-height: 160px; overflow-y: auto; padding-bottom: 4px; width: 100%; align-content: flex-start; }
         .chat-examples::-webkit-scrollbar { width: 5px; }
         .chat-examples::-webkit-scrollbar-thumb { background: #D1D6DB; border-radius: 4px; }
         .example-chip { padding: 8px 12px; background-color: var(--light-blue); color: var(--primary-dark); border-radius: 16px; font-size: 13px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; word-break: keep-all; text-align: center; }
         .example-chip:active { background-color: var(--primary-light); color: white; }
-        
-        .chat-input-area { display: flex; gap: 8px; align-items: center; width: 100%; padding: 12px 16px 16px 16px; }
+        .chat-input-area { display: flex; gap: 8px; align-items: center; width: 100%; }
         .chat-input { flex: 1; border: 1px solid var(--border-color); border-radius: 24px; padding: 12px 16px; outline: none; font-size: 14px; background-color: var(--bg-color); color: var(--text-black); width: 100%; transition: opacity 0.2s; }
         .chat-send { background-color: var(--primary-dark); color: white; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; transition: background-color 0.2s; }
-        .chat-send:disabled { background-color: var(--text-light-gray); cursor: not-allowed; }
 
         #tab-2 { padding-bottom: 10px; } 
         .warning-banner { background-color: var(--light-orange); color: var(--dark-orange); padding: 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; margin-bottom: 12px; font-weight: 600; flex-shrink: 0; word-break: keep-all; }
@@ -408,6 +382,7 @@
 <body>
 
 <div id="authScreenOverlay" class="auth-screen-overlay">
+    <!-- 로그인 폼 -->
     <form id="loginBox" class="auth-box" onsubmit="handleLogin(event)">
         <h2>로그인</h2>
         <div id="loginError" class="auth-error"></div>
@@ -435,6 +410,7 @@
         <div class="auth-link" onclick="window.location.hash='#login'" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">로그인으로 돌아가기</div>
     </form>
 
+    <!-- 회원가입 폼 -->
     <form id="signupBox" class="auth-box" style="display: none;" onsubmit="handleSignup(event)">
         <h2>회원가입</h2>
         <div id="signupError" class="auth-error"></div>
@@ -455,6 +431,7 @@
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
+    <!-- 구글 로그인 시 학생정보 설정 폼 -->
     <form id="infoBox" class="auth-box" style="display: none;" onsubmit="saveGoogleInfo(event)">
         <h2>학생 정보 설정</h2>
         <div style="font-size:13px; color:var(--text-dark-gray); text-align:center; line-height:1.4;">
@@ -469,6 +446,7 @@
     </form>
 </div>
 
+<!-- 🔥 프로필 수정 모달 -->
 <div id="editProfileOverlay" class="update-modal-overlay">
     <div class="update-modal" onclick="event.stopPropagation()">
         <div class="update-modal-header">
@@ -479,6 +457,7 @@
             <div style="font-size:14px; margin-bottom:10px; line-height:1.4;">
                 변경할 이름, 반, 번호를 설정해주세요.
             </div>
+            <!-- 엔터키 연동 -->
             <input type="text" id="editProfileName" placeholder="이름 (실명 입력)" class="auth-input" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveEditProfile();}" required>
             <div class="auth-row" style="margin-top: 8px;">
                 <select id="editProfileClass" class="auth-input" required></select>
@@ -489,6 +468,7 @@
     </div>
 </div>
 
+<!-- 🔥 익명 아이디 설정 모달 -->
 <div id="anonNameOverlay" class="update-modal-overlay">
     <div class="update-modal" onclick="event.stopPropagation()">
         <div class="update-modal-header">
@@ -513,12 +493,11 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">Ver. 1.14 핵심 업데이트</div>
+                <div class="update-modal-title">Ver. 1.13 핵심 업데이트</div>
                 <div class="update-modal-desc">
-                    <span class="middle-asterisk">*</span> <b>채팅 타임스탬프 & 날짜:</b> 말풍선 아래 전송 시간과 날짜가 변경될 때 구분선이 표시됩니다.<br>
-                    <span class="middle-asterisk">*</span> <b>다중 이미지 전송:</b> 문의 채팅 탭에서 <code>[+]</code> 버튼을 눌러 사진을 첨부하고 전송할 수 있습니다.<br>
-                    <span class="middle-asterisk">*</span> <b>다크 모드 & PDF:</b> 우측 상단 다크모드 지원 및 PDF 다운로드 양식이 최적화되었습니다.<br>
-                    <span class="middle-asterisk">*</span> 채팅 전송 시 간헐적으로 2번씩 전송되던 중복 입력 버그를 완벽하게 차단했습니다.
+                    <span class="middle-asterisk">*</span> <b>다크 모드 추가:</b> 눈이 편안한 다크 모드 테마가 지원됩니다. 우측 상단 배너 끝에서 전환하세요.<br>
+                    <span class="middle-asterisk">*</span> <b>PDF 출력 최적화:</b> PDF 생성 시 빈 종이(2페이지)가 출력되던 현상을 원천 차단하고 이름 옆의 이메일을 제거했습니다.<br>
+                    <span class="middle-asterisk">*</span> <b>채팅 중복 전송 해결:</b> 엔터키를 빠르게 눌러도 메시지가 중복으로 전송되지 않도록 버그를 수정했습니다.
                 </div>
             </div>
             <div class="update-modal-footer" onclick="closeUpdateModalAlways()">
@@ -545,14 +524,17 @@
         <button id="loginBtn" class="header-btn-left" onclick="window.location.hash='#login'" style="display: block;">로그인</button>
         <div class="header-title">2026 김포고 수강신청 도우미(1학년)</div>
         <button id="clearChatBtn" class="header-btn-right" onclick="clearChat()" style="display: none;">대화 삭제</button>
+        <!-- 🔥 수강연습 탭 로드 시 선택 초기화 버튼 즉시 출력 수정 -->
         <button id="resetSelectionBtn" class="header-btn-right" onclick="resetSelection()" style="display: block;">선택 초기화</button>
     </div>
     
+    <!-- 🔥 대시보드 알림창 (다크 모드 버튼 배너 우측 끝 고정) -->
     <div id="dashboardBanner" class="dashboard-banner">
         <div class="banner-inner">
             <span><span id="userEmailSpan"></span> (자동저장)</span>
             <button class="edit-profile-btn" onclick="openEditProfile()">프로필 수정</button>
         </div>
+        <!-- 🌗 다크 모드 토글 버튼 (가장 오른쪽 고정) -->
         <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">다크 모드</button>
     </div>
     
@@ -564,7 +546,12 @@
         <!-- 🔥 AI 채팅 탭 (Tab 0) -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
-                <!-- Javascript에서 렌더링 -->
+                <div class="chat-bubble chat-ai">
+                    안녕하세요! 김포고 수강신청 AI 도우미입니다.<br><br>
+                    💡 <b>안내 사항</b><br>
+                    수강신청과 관련된 궁금한 점을 <b>자유롭게 질문해 주세요!</b><br>
+                    아래의 <b>자주 묻는 질문(30개)</b>을 선택하시거나 직접 입력하셔도 됩니다.
+                </div>
             </div>
             
             <div class="chat-bottom-wrapper">
@@ -709,7 +696,7 @@
             </div>
         </div>
 
-        <!-- 🔥 문의 탭(Tab 4) - 이미지 전송 가능 -->
+        <!-- 🔥 문의 탭(Tab 4) -->
         <div id="tab-4" class="tab-content tab-hidden-right">
             <div class="chat-container" id="inquiryChatContainer">
                 <div class="chat-bubble chat-ai">
@@ -717,16 +704,10 @@
                 </div>
             </div>
             
-            <div class="chat-bottom-wrapper" style="padding: 0;">
-                <div id="previewArea" class="preview-area" style="display: none;"></div>
-                <div class="chat-input-area" style="padding: 12px 16px 16px 16px;">
-                    <label for="imgUpload" class="attach-btn" title="이미지 첨부">
-                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                    </label>
-                    <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-                    
-                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요." onkeydown="if(event.key==='Enter'){event.preventDefault(); sendInquiryMsg();}">
-                    <button class="chat-send" id="inquirySendBtn" onclick="sendInquiryMsg()">➤</button>
+            <div class="chat-bottom-wrapper">
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요. (사람입니다. 최대한 빨리 답변하겠습니다.)" onkeydown="if(event.key==='Enter'){event.preventDefault(); sendInquiryMsg();}">
+                    <button class="chat-send" onclick="sendInquiryMsg()">➤</button>
                 </div>
             </div>
         </div>
@@ -757,7 +738,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.14"; 
+    const APP_VERSION = "1.13"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -790,7 +771,6 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const auth = firebase.auth();
-    const storage = firebase.storage();
 
     const GAS_AI_URL = "https://script.google.com/macros/s/AKfycbxR1hXKaq-LHKmUptx5eHIm98VMfzf5B9-lNiUyBM7_kEIvPQt6s9odbO_rqCcP1z7T/exec";
 
@@ -801,9 +781,6 @@
     let anonName = localStorage.getItem('gimpo_anon_name') || null;
 
     let globalStats = { totalUsers: 0, courses: {} };
-
-    // 🔥 벡터 달력 아이콘 (채팅 날짜 구분용)
-    const calendarIcon = `<svg width="14" height="14" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
 
     // 🔥 전체 과목 DB
     const db = [
@@ -937,8 +914,6 @@
     let currentTabIndex = 2; // 초기 탭 수강연습 (Index 2)
     let chatHistory = []; 
     let savedSlots = []; 
-    
-    let selectedInquiryFiles = []; // 문의방 첨부 이미지 보관용 배열
 
     // 🔥 다크 모드 토글 함수
     window.toggleTheme = function() {
@@ -966,22 +941,6 @@
     function getTodayStr() {
         const d = new Date();
         return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-    }
-    
-    // 🔥 날짜 및 시간 포맷 함수 추가
-    function formatDate(ts) {
-        if(!ts) return '';
-        const d = new Date(ts);
-        const days = ['일', '월', '화', '수', '목', '금', '토'];
-        return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
-    }
-
-    function formatTime(ts) {
-        if(!ts) return '';
-        const d = new Date(ts);
-        const h = String(d.getHours()).padStart(2, '0');
-        const m = String(d.getMinutes()).padStart(2, '0');
-        return `${h}:${m}`;
     }
 
     function populateSelects() {
@@ -1221,56 +1180,15 @@
         }
     }
 
-    // 🔥 AI 채팅 렌더링 (날짜/타임스탬프 적용)
     function renderChatHistory() {
         const container = document.getElementById('chatContainer');
-        container.innerHTML = `
-            <div class="msg-container-wrap" style="align-self: flex-start; margin-bottom: 16px;">
-                <div class="msg-row ai">
-                    <div class="chat-bubble chat-ai">
-                        안녕하세요! 김포고 수강신청 AI 도우미입니다.<br><br>
-                        💡 <b>안내 사항</b><br>
-                        수강신청과 관련된 궁금한 점을 <b>자유롭게 질문해 주세요!</b><br>
-                        아래의 <b>자주 묻는 질문(30개)</b>을 선택하시거나 직접 입력하셔도 됩니다.
-                    </div>
-                </div>
-            </div>
-        `;
+        const welcomeBubble = container.firstElementChild.outerHTML; 
+        container.innerHTML = welcomeBubble;
 
-        let lastDate = "";
-        
         chatHistory.forEach(chat => {
-            const ts = chat.timestamp || Date.now();
-            const msgDate = formatDate(ts);
-            
-            if (msgDate !== lastDate) {
-                container.innerHTML += `<div class="date-separator">${calendarIcon} ${msgDate}</div>`;
-                lastDate = msgDate;
-            }
-
-            const timeStr = formatTime(ts);
-            const isUser = chat.role === 'user';
-            const roleClass = isUser ? 'chat-user' : 'chat-ai';
-            
-            let rowHtml = '';
-            if (isUser) {
-                rowHtml = `
-                    <div class="msg-row user">
-                        <div class="msg-time">${timeStr}</div>
-                        <div class="chat-bubble ${roleClass}">${chat.text.replace(/\n/g, '<br>')}</div>
-                    </div>
-                `;
-            } else {
-                rowHtml = `
-                    <div class="msg-row ai">
-                        <div class="chat-bubble ${roleClass}">${chat.text.replace(/\n/g, '<br>')}</div>
-                        <div class="msg-time">${timeStr}</div>
-                    </div>
-                `;
-            }
-            container.innerHTML += `<div class="msg-container-wrap">${rowHtml}</div>`;
+            const roleClass = chat.role === 'user' ? 'chat-user' : 'chat-ai';
+            container.innerHTML += `<div class="chat-bubble ${roleClass}">${chat.text.replace(/\n/g, '<br>')}</div>`;
         });
-        
         container.scrollTop = container.scrollHeight;
     }
 
@@ -2184,143 +2102,600 @@
         showToast("진로와 조건에 맞는 과목을 완벽하게 추천했습니다!");
     }
 
-    // 🔥 AI 채팅 전송 로직 업데이트 (타임스탬프 기록 추가)
-    function fillAndSend(msg) {
-        document.getElementById('aiInput').value = msg;
-        sendAiMsg();
+    function getPdfCategoryName(cat) {
+        if (cat === '제2외국어') return '제2외국어/<br>한문';
+        if (cat === '정보') return '기술·가정/정<br>보';
+        if (cat === '사회') return '사회(역사/도<br>덕 포함)';
+        return cat;
     }
 
-    async function sendAiMsg() {
-        const input = document.getElementById('aiInput');
-        const text = input.value.trim();
-        if(!text) return;
-
-        const predefinedAnswers = {
-            '공대 희망하는데 2학년 과목 추천해줘': '공학 계열 진학을 희망하신다면 수학과 과학 역량이 매우 중요합니다.<br><br>2학년 선택 과목으로 <b>물리학, 화학</b>을 필수로 이수하시고, 수학에서는 <b>기하</b>나 <b>인공지능 수학</b>을 선택하는 것을 강력히 추천합니다!',
-            '의약계열/생명공학 필수 과목이 뭐야?': '의약 및 생명공학 계열은 생명 현상과 화학적 지식이 기초가 됩니다.<br><br>2학년 과목 중 <b>화학, 생명과학</b>은 필수적으로 선택하시고, 여유가 된다면 진로 과목으로 관련 탐구 과목을 선택해보세요.',
-            '경영학과 가고 싶은데 뭘 들어야 해?': '경영/경제 계열은 수학적 사고력과 사회 현상에 대한 이해가 필요합니다.<br><br>2학년 과목으로 <b>경제, 세계사</b> 등의 사회 과목과 함께 수학 과목(대수, 미적분 등)에 집중하는 것을 추천합니다.',
-            '문과(인문학) 추천 과목 알려줘': '인문학/어문계열 진학을 목표로 하신다면 다양한 언어와 문화, 역사에 대한 이해가 중요합니다.<br><br>2학년 선택 과목으로 <b>세계사, 세계 시민과 지리</b>, 그리고 <b>제2외국어(일본어/중국어)</b>를 추천합니다.',
-            '사범대/교육학과 지망생 추천 과목은?': '교육 계열은 가르치고자 하는 전공 과목을 깊이 있게 이수하는 것이 최우선 초점입니다.<br><br>공통적으로는 <b>현대사회와 윤리</b>와 같은 과목을 추천하며, 본인의 세부 전공(국어교육, 수학교육 등)에 맞춰 관련 심화 과목을 선택하세요.',
-            '미대나 체대 등 예체능 과목 추천해줘': '예체능 계열은 실기 역량이 가장 중요하므로 <b>기초 체육 전공 실기</b> 등 관련된 진로 과목을 최우선으로 선택하세요.<br><br>예술 계열은 3학년 때 개설되는 심화 예술 과목들을 미리 계획해두는 삼는 것이 좋습니다.',
-            '컴퓨터공학과/소프트웨어 추천 과목': '소프트웨어 및 컴공 계열은 논리적 사고력과 컴퓨터적 사고가 필수입니다.<br><br>2학년 때 <b>인공지능 기초</b>와 <b>물리학</b>, 그리고 수학 과목을 선택하시면 큰 도움이 됩니다.',
-            '간호학과 가려면 과학 뭐 선택해?': '간호학과는 인체와 화학 반응에 대한 이해가 필요하므로 <b>생명과학</b>과 <b>화학</b>을 필수적으로 이수하시는 것이 입시에 유리합니다.',
-            '미디어 커뮤니케이션/언론 지망생 추천': '언론/미디어 분야는 사회를 바라보는 비판적 시각과 소통 능력이 필요합니다.<br><br><b>현대사회와 윤리, 정치</b> 등의 사회 과목과 국어/영어 심화 과목을 골고루 추천합니다.',
-            '심리학과 가려면 뭐 들어야 해?': '심리학은 인문학과 자연과학의 융합적 성격을 띱니다.<br><br><b>생명과학</b>과 함께 <b>현대사회와 윤리, 정치</b> 등의 사회 과목을 골고루 수강하는 것을 추천합니다.',
-            '과학중점과정이 뭐야?': '과학중점과정이란 일반계 고등학교에서 수학과 과학 교육을 강화하여 심도 있는 학습을 제공하는 교육과정입니다.<br><br>3년간 <b>수학/과학/정보 교과를 총 이수 학점의 45% 이상(79학점 이상)</b> 이수해야 합니다.',
-            '과중반 필수 조건이 어떻게 돼?': '김포고 과학중점과정의 필수 조건은 다음과 같습니다.<br><br>1) 2학년 때 <b>물/화/생/지 4과목 모두 이수</b><br>2) 3학년 때 <b>과학 진로(심화) 과목 6개 이상</b> 이수<br>3) 3년간 수/과/정 총합 <b>79학점 이상</b>',
-            '과중반 수학 선택은 어떻게 권장해?': '과학중점과정 학생은 탄탄한 수학적 기초가 필수이므로, 3학년간 개설되는 수학 교과 중 <b>4과목 이상</b>을 이수하는 것을 강력히 권장합니다.',
-            '과중반 3학년 심화과목은 몇 개 들어야 해?': '과학중점과정을 이수하려면 3학년 때 개설되는 과학 진로(심화) 과목(예: 전자기와 양자, 화학 반응의 세계 등)을 <b>최소 6과목 이상</b> 필수로 이수해야 합니다.',
-            '국영수 제한 81학점이 무슨 뜻이야?': '교육부 지침에 따라 고등학교 3년간 <b>국어, 영어, 수학 교과의 총 이수 학점 합이 81학점을 초과할 수 없습니다.</b> 수강 신청 시 이 세 과목이 과도하게 몰리지 않도록 주의해야 합니다.',
-            '2학년 때 선택과목 몇 개 골라야 해?': '2학년 때는 1학기와 2학기 모두 지정된 필수 과목 외에 <b>각 학기당 5과목</b>을 학생 본인의 진로와 흥미에 맞춰 선택해야 합니다.',
-            '3학년 때는 선택과목 몇 개 골라?': '3학년 때는 1학기와 2학기 모두 <b>각 학기당 총 6과목</b>의 선택 과목을 골라야 합니다. (3학년 2학기는 그룹별 선택 제한이 있으니 모의 제출을 통해 확인해 보세요!)',
-            '수강신청은 어떻게 하고 언제까지야?': '수강신청은 학교에서 안내하는 지정된 기간 내에 전용 시스템에 접속하여 진행됩니다. 정확한 날짜는 추후 <b>학교 가정통신문 및 공지사항</b>을 반드시 확인해 주세요.',
-            '총 이수 학점이 174학점이야?': '네, 맞습니다. 고등학교 3년간 교과 수업을 통해 이수해야 하는 <b>총 교과 학점은 174학점</b>입니다. (창의적 체험활동을 포함하면 192학점입니다.)',
-            '각 교과군별 필수 학점이 뭐야?': '졸업을 위한 교과별 필수 이수 학점입니다.<br>▶ 국어 8, 수학 8, 영어 8, 한국사 6, 사회 8, 과학 10, 체육 10, 예술 6, 생활/교양 15학점',
-            '등급(9등급제) 안 나오는 과목도 있어?': '네, 있습니다. <b>진로 선택 과목</b> 대부분과 <b>교양, P/F 과목</b> 등은 1~9등급으로 산출되지 않고, A/B/C 성취도나 이수 여부만으로 평가됩니다.',
-            'P/F 과목이 무슨 뜻이야?': 'P/F는 Pass(이수) / Fail(미이수)의 약자입니다. 성적이나 등급이 나오지 않고, 수업을 성실히 들어 필수 요건을 채웠는지 여부만으로 이수를 인정받는 과목입니다.',
-            '경제 수학이랑 전문 수학 차이가 뭐야?': '<b>경제 수학</b>은 경제 현상을 수학으로 이해하여 상경계열 진학에 유리하며, <b>전문 수학</b>은 이공계열 심화 학습을 위한 고난도 수학 과목입니다.',
-            '물리학 꼭 들어야 할까?': '공과대학이나 자연과학대학 진학을 희망한다면 <b>물리학 이수는 사실상 필수</b>입니다. 하지만 인문사회나 예체능 계열의 경우 본인의 진로에 따라 선택하지 않아도 무방합니다.',
-            '제2외국어 꼭 들어야 돼? 중국어/일본어 추천': '어문계열이나 인문계열 진학 시 제2외국어 이수 기록이 긍정적으로 작용할 수 있습니다. 중국어와 일본어 중 본인이 평소 관심 있던 언어를 선택하는 가장 좋습니다.',
-            '사회문제 탐구는 어떤 과목이야?': '현실 사회에서 발생하는 다양한 문제(환경, 인권 등)를 스스로 탐구하고 토론하는 과목입니다. <b>사회/언론/행정 계열 지망생에게 매우 추천</b>합니다.',
-            '진로 과목이랑 일반 과목 차이가 뭐야?': '<b>일반 선택 과목</b>은 주로 9등급제로 평가되며 수능 출제 범위에 포함됩니다. 반면 <b>진로 선택 과목</b>은 학생의 진로에 맞춘 심화 과목으로 대부분 A/B/C 절대평가로 산출됩니다.',
-            '기후변화나 환경 관련 과목 추천해줘': '환경 문제에 관심이 많다면 3학년 과목 중 <b>기후변화와 지속 가능한 세계(사회)</b> 또는 <b>기후변화와 환경생태(과학)</b> 과목을 강력히 추천합니다!',
-            '심화 국어/영어/수학 추천해줘': '3학년 때 개설되는 <b>심화 영어 독해와 작문, 전문 수학, 언어생활 탐구</b> 등의 진로/융합 과목을 수강하면 생활기록부에 학업 역량을 깊이 있게 드러낼 수 있습니다.',
-            '수능에서 유리한 선택과목이 있을까?': '정시(수능)를 주력으로 한다면, 본인이 실제 수능에서 응시할 과목(미적분/확률과통계, 탐구 과목 등)을 학교 수업에서도 똑같이 선택하여 내신과 수능 대비를 병행하는 것이 가장 유리합니다.'
-        };
-
-        const isPredefined = predefinedAnswers.hasOwnProperty(text);
-        const ts = Date.now();
+    function generatePdfRows(semKey) {
+        let courses = Array.from(selectedCourses)
+            .map(id => db.find(c => c.id === id))
+            .filter(c => c && c.sem === semKey && !c.req);
         
-        chatHistory.push({ role: 'user', text: text, timestamp: ts });
-        input.value = '';
-        renderChatHistory();
-        saveChatMemory();
+        courses.sort((a,b) => a.id.localeCompare(b.id));
 
-        if (isPredefined) {
-            chatHistory.push({ role: 'model', text: predefinedAnswers[text], timestamp: Date.now() });
-            saveChatMemory();
-            renderChatHistory();
-            return; 
+        let html = '';
+        for (let i = 0; i < 3; i++) { 
+            let c1 = courses[i * 2];
+            let c2 = courses[i * 2 + 1];
+
+            let td1 = c1 ? `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${getPdfCategoryName(c1.cat)}</td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${c1.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td>`;
+            let td2 = c2 ? `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${getPdfCategoryName(c2.cat)}</td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${c2.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td>`;
+            
+            html += `<tr>${td1}${td2}</tr>`;
         }
+        return html;
+    }
 
-        if (text.includes('견범')) {
-            chatHistory.push({ role: 'model', text: "의자왕", timestamp: Date.now() });
-            saveChatMemory();
-            renderChatHistory();
-            return;
-        } else if (text.includes('송율근')) {
-            chatHistory.push({ role: 'model', text: "최고의 프로그래머이자 이 수강신청 도우미 웹사이트를 기획, 제작, 디자인한 핵심 총괄 개발자입니다.", timestamp: Date.now() });
-            saveChatMemory();
-            renderChatHistory();
+    // 🔥 PDF 2페이지 잘림 및 빈 종이 방지 렌더링 최적화
+    window.downloadPDF = function() {
+        if (!auth.currentUser) {
+            showToast("과목 파일 다운로드는 로그인 후 이용 가능합니다.");
             return;
         }
 
-        // 로딩 말풍선 직접 삽입 (History 배열에는 넣지 않음)
-        const loadingId = 'loading-' + Date.now();
-        const container = document.getElementById('chatContainer');
-        const loadingTimeStr = formatTime(Date.now());
-        
-        container.innerHTML += `
-            <div class="msg-container-wrap" id="${loadingId}">
-                <div class="msg-row ai">
-                    <div class="chat-bubble chat-ai">답변을 생각하는 중입니다...</div>
-                    <div class="msg-time">${loadingTimeStr}</div>
+        showToast("PDF 파일을 생성 중입니다. 잠시만 기다려주세요.");
+
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}년 ${String(today.getMonth() + 1).padStart(2, '0')}월 ${String(today.getDate()).padStart(2, '0')}일`;
+        // 🔥 이메일 제거 및 이름 포맷팅 완료 (1학년 O반 O번 OOO)
+        const studentInfoStr = `1학년 ${currentUserInfo}`; 
+
+        const element = document.createElement('div');
+        // 🔥 빈 페이지 제거를 위해 height 고정 및 overflow 숨김 처리
+        element.innerHTML = `
+            <div style="width: 210mm; height: 290mm; background-color: white; box-sizing: border-box; padding: 40px; font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif; color: #000; position: relative; overflow: hidden; page-break-after: avoid; page-break-before: avoid;">
+                <div style="text-align: center; font-size: 26px; font-weight: bold; margin-top: 10px; margin-bottom: 35px; letter-spacing: 2px;">수강신청 확인서</div>
+                <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 8px;">${studentInfoStr}</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <!-- 2학년 1학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">2학년 1학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('2-1')}
+                    </table>
+
+                    <!-- 2학년 2학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">2학년 2학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('2-2')}
+                    </table>
+
+                    <!-- 3학년 1학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">3학년 1학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('3-1')}
+                    </table>
+
+                    <!-- 3학년 2학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">3학년 2학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('3-2')}
+                    </table>
+                </div>
+
+                <div style="margin-top: 45px;">
+                    <div style="text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 35px;">위 과목에 대해 수강신청 하였음을 확인합니다.</div>
+                    <div style="text-align: right; font-size: 15px; font-weight: bold; margin-bottom: 50px; padding-right: 5px;">날짜 : ${dateStr}</div>
+                    <div style="text-align: center; font-size: 20px; font-weight: bold; letter-spacing: 3px;">김포고등학교장</div>
                 </div>
             </div>
         `;
-        container.scrollTop = container.scrollHeight;
 
-        try {
-            const sysPrompt = `너는 2026 김포고등학교 1학년 수강신청을 돕는 '김포고 수강신청 도우미 AI'야. 이 사이트(수강신청 도우미 웹 서비스)를 기획하고, 디자인하고, 설계하고, 코딩하여 만든 사람은 오직 '송율근' 한 명이야. 유저가 제작자, 만든 이, 기획자, 개발자, 디자인한 사람을 물어보면 반드시 '송율근'이라고 답변해. 반드시 아래 제공된 '김포고등학교 과목 데이터'만을 기반으로 평문으로 친절하게 답변해.`;
-            
-            let apiContents = chatHistory.map(h => ({ role: h.role, text: h.text }));
+        const opt = {
+            margin:       0,
+            filename:     `수강신청확인서_${currentRawName}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak:    { mode: ['avoid-all'] } // 빈 종이(2페이지) 강제 억제 설정
+        };
 
-            const response = await fetch(GAS_AI_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ sysPrompt: sysPrompt, chatHistory: apiContents })
+        html2pdf().set(opt).from(element.firstElementChild).save().then(() => {
+            showToast("PDF 다운로드가 완료되었습니다.");
+        });
+    }
+
+    window.promptSave = function() {
+        const name = prompt("현재 선택된 과목 구성을 저장할 이름을 입력하세요:");
+        if (!name || name.trim() === '') return;
+        
+        const newSave = {
+            id: Date.now().toString(),
+            name: name.trim(),
+            courses: [...selectedCourses],
+            pinned: [...pinnedCourses], 
+            sciTrack: isSciTrack
+        };
+        savedSlots.push(newSave);
+        saveSlotsToDB();
+        renderSavedSlots();
+        showToast(`'${name}'(으)로 성공적으로 저장되었습니다.`);
+    }
+
+    window.renderSavedSlots = function() {
+        const html = savedSlots.map(slot => `
+            <div class="save-slot">
+                <div class="save-slot-name">${slot.name}</div>
+                <div class="save-slot-actions">
+                    <button class="icon-btn" onclick="previewSave('${slot.id}')" title="미리보기">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <button class="icon-btn" onclick="renameSave('${slot.id}')" title="이름 바꾸기">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="icon-btn" onclick="deleteSave('${slot.id}')" title="삭제">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B95A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
+                    <button class="load-btn" onclick="loadSave('${slot.id}')">불러오기</button>
+                </div>
+            </div>
+        `).join('');
+
+        const container1 = document.getElementById('saveSlotList');
+        const container2 = document.getElementById('aiSaveSlotList');
+        if (container1) container1.innerHTML = html;
+        if (container2) container2.innerHTML = html;
+    }
+
+    window.deleteSave = function(id) {
+        if(confirm("정말 이 저장된 과목 구성을 휴지통에 버리시겠습니까?")) {
+            savedSlots = savedSlots.filter(s => s.id !== id);
+            saveSlotsToDB();
+            renderSavedSlots();
+            showToast("삭제되었습니다.");
+        }
+    }
+
+    window.renameSave = function(id) {
+        const slot = savedSlots.find(s => s.id === id);
+        if(!slot) return;
+        const newName = prompt("새로운 이름을 지정해주세요:", slot.name);
+        if(newName && newName.trim() !== '') {
+            slot.name = newName.trim();
+            saveSlotsToDB();
+            renderSavedSlots();
+        }
+    }
+
+    window.loadSave = function(id) {
+        if(!confirm("이 구성을 불러오시겠습니까? 현재 선택 중인 내용들은 지워집니다.")) return;
+        const slot = savedSlots.find(s => s.id === id);
+        if(!slot) return;
+
+        selectedCourses.clear();
+        pinnedCourses.clear();
+        slot.courses.forEach(cId => selectedCourses.add(cId));
+        if (slot.pinned) slot.pinned.forEach(cId => pinnedCourses.add(cId));
+        isSciTrack = slot.sciTrack;
+
+        saveData();
+        applyConstraints();
+        updateStats();
+        updateCircles();
+        
+        if(isSciTrack) {
+            document.getElementById('scTrackCheck').classList.add('checked');
+            document.getElementById('aiScTrackCheck').classList.add('checked');
+        } else {
+            document.getElementById('scTrackCheck').classList.remove('checked');
+            document.getElementById('aiScTrackCheck').classList.remove('checked');
+        }
+
+        showToast(`'${slot.name}' 구성을 불러왔습니다.`);
+    }
+
+    window.previewSave = function(id) {
+        const slot = savedSlots.find(s => s.id === id);
+        if(!slot) return;
+        
+        let previewText = `<div style="font-weight:900; font-size:18px; margin-bottom:12px; color:var(--text-black);">[${slot.name}] 요약</div>`;
+        previewText += `<div style="margin-bottom:16px; font-size:14px; color:var(--primary-dark); font-weight:bold;">과학 중점 과정: ${slot.sciTrack ? '신청 O' : '신청 X'}</div>`;
+        
+        let elecCourses = slot.courses.filter(cId => {
+            let course = db.find(x => x.id === cId);
+            return course && !course.req; 
+        });
+
+        if(elecCourses.length === 0) {
+            previewText += `<div style="font-size:14px; color:#444;">선택한 과목이 없습니다.</div>`;
+        } else {
+            let grouped = {};
+            elecCourses.forEach(cId => {
+                let course = db.find(x => x.id === cId);
+                if(!grouped[course.sem]) grouped[course.sem] = [];
+                grouped[course.sem].push(course);
             });
-            
-            const data = await response.json();
-            document.getElementById(loadingId).remove();
-            
-            if (data.error) {
-                let errorMsg = "앗, AI 서버가 혼잡합니다. 잠시 후 다시 질문해 주세요!";
-                let errStr = typeof data.error === 'object' ? JSON.stringify(data.error) : String(data.error);
-                if (errStr.includes("429") || errStr.includes("RESOURCE_EXHAUSTED") || errStr.includes("exceeded")) {
-                    errorMsg = "현재 질문하는 학생이 너무 많습니다! ⏳ 1분만 기다렸다가 다시 질문해 주세요.";
-                }
-                chatHistory.push({ role: 'model', text: errorMsg, timestamp: Date.now() });
-            } else {
-                let answer = data.candidates[0].content.parts[0].text;
-                answer = answer.replace(/\*/g, ''); 
-                chatHistory.push({ role: 'model', text: answer, timestamp: Date.now() });
-            }
-            saveChatMemory();
-            renderChatHistory();
 
-        } catch (e) {
-            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            chatHistory.push({ role: 'model', text: "앗, 통신 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.", timestamp: Date.now() });
+            let courseCardsHtml = "";
+            const semNames = {'2-1':'2학년 1학기', '2-2':'2학년 2학기', '3-1':'3학년 1학기', '3-2':'3학년 2학기'};
+            
+            for (let semKey in semNames) {
+                if(grouped[semKey] && grouped[semKey].length > 0) {
+                    courseCardsHtml += `<div style="font-size: 15px; font-weight: 900; color: var(--text-black); margin: 12px 0 8px 4px;">${semNames[semKey]}</div>`;
+                    grouped[semKey].forEach(course => {
+                        courseCardsHtml += createPreviewCard(course);
+                    });
+                }
+            }
+            previewText += `<div style="max-height: 55vh; overflow-y: auto; overflow-x: hidden; padding-right: 4px; display: flex; flex-direction: column;">${courseCardsHtml}</div>`;
+        }
+
+        document.getElementById('previewModalContent').innerHTML = previewText;
+        document.getElementById('previewModalOverlay').style.display = 'flex';
+    }
+
+    window.closePreviewModal = function() {
+        document.getElementById('previewModalOverlay').style.display = 'none';
+    }
+
+    function clearChat() {
+        if (confirm("대화 기록을 모두 삭제하시겠습니까?")) {
+            chatHistory = [];
             saveChatMemory();
             renderChatHistory();
+            showToast("대화 기록이 삭제되었습니다.");
+        }
+    }
+
+    window.openEditProfile = function() {
+        if (!auth.currentUser) {
+            showToast("로그인이 필요한 기능입니다.");
+            return;
+        }
+        
+        document.getElementById('editProfileName').value = currentRawName;
+        const match = currentUserInfo.match(/^(\d+)반\s+(\d+)번/);
+        if (match) {
+            document.getElementById('editProfileClass').value = match[1];
+            document.getElementById('editProfileNum').value = match[2];
+        }
+        
+        document.getElementById('editProfileOverlay').style.display = 'flex';
+    }
+
+    window.closeEditProfile = function() {
+        document.getElementById('editProfileOverlay').style.display = 'none';
+    }
+
+    window.saveEditProfile = function() {
+        const nm = document.getElementById('editProfileName').value.trim();
+        const cn = document.getElementById('editProfileClass').value;
+        const sn = document.getElementById('editProfileNum').value;
+        
+        if(!nm || !cn || !sn) return showToast('모든 정보를 정확히 입력/선택해주세요.');
+        
+        database.ref('user_data/' + auth.currentUser.uid).update({
+            name: nm, classNum: cn, studentNum: sn
+        }).then(() => {
+            currentRawName = nm;
+            currentUserInfo = `${cn}반 ${sn}번 ${nm}`;
+            const userEmailRaw = auth.currentUser.email;
+            document.getElementById('userEmailSpan').innerText = `[${userEmailRaw}] ${currentUserInfo}`;
+            closeEditProfile();
+            showToast("프로필이 성공적으로 수정되었습니다.");
+        });
+    }
+
+    auth.onAuthStateChanged((user) => {
+        const loginBtn = document.getElementById('loginBtn');
+        const dashBanner = document.getElementById('dashboardBanner');
+        
+        if (user) {
+            loginBtn.innerText = '로그아웃';
+            loginBtn.onclick = handleLogout;
+            dashBanner.style.display = 'block';
+
+            database.ref('user_data/' + user.uid).once('value', (snap) => {
+                const data = snap.val() || {};
+                if(data.name && data.classNum && data.studentNum) {
+                    currentRawName = data.name; 
+                    currentUserInfo = `${data.classNum}반 ${data.studentNum}번 ${data.name}`;
+                    completeLoginFlow(user, data); 
+                } else {
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('signupBox').style.display = 'none';
+                    document.getElementById('resetPwBox').style.display = 'none';
+                    document.getElementById('infoBox').style.display = 'flex';
+                    document.getElementById('authScreenOverlay').style.display = 'flex';
+                }
+            });
+
+        } else {
+            loginBtn.innerText = '로그인';
+            loginBtn.onclick = () => { window.location.hash = '#login'; };
+            dashBanner.style.display = 'none';
+            currentUserInfo = "";
+            currentRawName = "";
+
+            if (window.location.hash === '#dashboard') {
+                window.location.hash = ''; 
+            }
+        }
+        handleRouting();
+    });
+
+    function completeLoginFlow(user, immediateData = null) {
+        document.getElementById('authScreenOverlay').style.display = 'none';
+        document.getElementById('userEmailSpan').innerText = `[${user.email}] ${currentUserInfo}`;
+        
+        if(window.location.hash === '#login' || window.location.hash === '#signup' || window.location.hash === '#resetPw') {
+            window.location.hash = '#dashboard';
+        }
+
+        if (immediateData) {
+            syncDBData(immediateData);
+        } else {
+            database.ref('user_data/' + user.uid).once('value').then((snap) => {
+                syncDBData(snap.val());
+            });
+        }
+        
+        loadInquiryChat();
+    }
+
+    function saveGoogleInfo(e) {
+        e.preventDefault();
+        const nm = document.getElementById('infoName').value.trim();
+        const cn = document.getElementById('infoClass').value;
+        const sn = document.getElementById('infoNum').value;
+        
+        if(!nm || !cn || !sn) return showToast('모든 정보를 정확히 입력/선택해주세요.');
+        
+        database.ref('user_data/' + auth.currentUser.uid).update({
+            name: nm, classNum: cn, studentNum: sn
+        }).then(() => {
+            currentRawName = nm;
+            currentUserInfo = `${cn}반 ${sn}번 ${nm}`;
+            completeLoginFlow(auth.currentUser);
+            showToast("환영합니다!");
+        });
+    }
+
+    function handleRouting() {
+        const hash = window.location.hash;
+        const app = document.getElementById('app');
+        const authScreen = document.getElementById('authScreenOverlay');
+        const loginBox = document.getElementById('loginBox');
+        const signupBox = document.getElementById('signupBox');
+        const resetPwBox = document.getElementById('resetPwBox');
+        const infoBox = document.getElementById('infoBox');
+
+        if (hash === '#login') {
+            app.style.display = 'none';
+            authScreen.style.display = 'flex';
+            loginBox.style.display = 'flex';
+            signupBox.style.display = 'none';
+            resetPwBox.style.display = 'none';
+            infoBox.style.display = 'none';
+            clearAuthErrors();
+        } else if (hash === '#signup') {
+            app.style.display = 'none';
+            authScreen.style.display = 'flex';
+            loginBox.style.display = 'none';
+            signupBox.style.display = 'flex';
+            resetPwBox.style.display = 'none';
+            infoBox.style.display = 'none';
+            clearAuthErrors();
+        } else if (hash === '#resetPw') {
+            app.style.display = 'none';
+            authScreen.style.display = 'flex';
+            loginBox.style.display = 'none';
+            signupBox.style.display = 'none';
+            resetPwBox.style.display = 'flex';
+            infoBox.style.display = 'none';
+            clearAuthErrors();
+        } else {
+            app.style.display = 'flex';
+            authScreen.style.display = 'none';
+        }
+    }
+    window.addEventListener('hashchange', handleRouting);
+
+    function showAuthError(box, msg) {
+        const errDiv = document.getElementById(box + 'Error');
+        errDiv.innerText = msg;
+        errDiv.style.display = 'block';
+    }
+
+    function clearAuthErrors() {
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('signupError').style.display = 'none';
+        document.getElementById('resetPwError').style.display = 'none';
+    }
+
+    function translateAuthError(error) {
+        if (error.code === 'auth/invalid-login-credentials' || 
+            error.code === 'auth/invalid-credential' || 
+            (error.message && error.message.includes('INVALID_LOGIN_CREDENTIALS'))) {
+            return '이메일 또는 비밀번호가 올바르지 않습니다.';
+        }
+
+        switch(error.code) {
+            case 'auth/email-already-in-use': return '이미 가입된 이메일입니다.';
+            case 'auth/invalid-email': return '유효하지 않은 이메일 형식입니다.';
+            case 'auth/weak-password': return '비밀번호는 6자리 이상이어야 합니다.';
+            case 'auth/user-not-found': return '가입되지 않은 이메일입니다.';
+            case 'auth/wrong-password': return '비밀번호가 올바르지 않습니다.';
+            case 'auth/network-request-failed': return '인터넷 연결을 확인해주세요.';
+            case 'auth/too-many-requests': return '시도가 너무 많습니다. 잠시 후 다시 시도해주세요.';
+            case 'auth/user-disabled': return '관리자에 의해 정지된 계정입니다.';
+            case 'auth/popup-closed-by-user': return '로그인 창이 닫혔습니다. 다시 시도해주세요.';
+            case 'auth/popup-blocked': return '브라우저의 팝업 차단을 해제해주세요.';
+            case 'auth/operation-not-allowed': return '서버 설정 오류: 해당 로그인 방식이 비활성화되어 있습니다.';
+            default: return '오류가 발생했습니다. 다시 시도해주세요. (' + error.code + ')';
+        }
+    }
+
+    function handleLogin(e) {
+        e.preventDefault(); 
+        const email = document.getElementById('loginEmail').value;
+        const pw = document.getElementById('loginPw').value;
+        if(!email || !pw) return showAuthError('login', '이메일과 비밀번호를 모두 입력해주세요.');
+
+        auth.signInWithEmailAndPassword(email, pw)
+            .then(() => { 
+                document.getElementById('loginPw').value = '';
+                showToast("로그인 성공!"); 
+            })
+            .catch(err => { showAuthError('login', translateAuthError(err)); });
+    }
+
+    function handleSignup(e) {
+        e.preventDefault();
+        const email = document.getElementById('signupEmail').value;
+        const name = document.getElementById('signupName').value.trim();
+        const cn = document.getElementById('signupClass').value;
+        const sn = document.getElementById('signupNum').value;
+        
+        const pw = document.getElementById('signupPw').value;
+        const pwConfirm = document.getElementById('signupPwConfirm').value;
+
+        if(!email || !pw || !pwConfirm || !name || !cn || !sn) return showAuthError('signup', '모든 필드를 빠짐없이 입력해주세요.');
+        if(pw.length < 6) return showAuthError('signup', '비밀번호는 6자리 이상이어야 합니다.');
+        if(pw !== pwConfirm) return showAuthError('signup', '입력한 두 비밀번호가 일치하지 않습니다.');
+
+        auth.createUserWithEmailAndPassword(email, pw)
+            .then((cred) => { 
+                document.getElementById('signupPw').value = '';
+                document.getElementById('signupPwConfirm').value = '';
+                
+                database.ref('user_data/' + cred.user.uid).update({
+                    name: name, classNum: cn, studentNum: sn
+                }).then(() => {
+                    currentRawName = name;
+                    currentUserInfo = `${cn}반 ${sn}번 ${name}`;
+                    showToast("회원가입이 완료되어 자동 로그인되었습니다.");
+                    completeLoginFlow(cred.user); 
+                });
+            })
+            .catch(err => { showAuthError('signup', translateAuthError(err)); });
+    }
+
+    function handleResetPw(e) {
+        e.preventDefault();
+        const email = document.getElementById('resetPwEmail').value.trim();
+        if(!email) return showAuthError('resetPw', '가입하신 이메일을 입력해주세요.');
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                showToast("비밀번호 재설정 링크가 이메일로 발송되었습니다.");
+                window.location.hash = '#login';
+            })
+            .catch(err => {
+                showAuthError('resetPw', translateAuthError(err));
+            });
+    }
+
+    function handleGoogleAuth() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then(() => { 
+                showToast("Google 계정으로 로그인했습니다.");
+            })
+            .catch(err => {
+                const msg = translateAuthError(err);
+                showAuthError('login', msg);
+                showAuthError('signup', msg);
+            });
+    }
+
+    function handleLogout() {
+        if (confirm("로그아웃 하시겠습니까?\n저장된 과목과 대화 내용은 데이터베이스에 유지됩니다.")) {
+            auth.signOut().then(() => {
+                showToast("로그아웃 되었습니다.");
+                
+                selectedCourses.clear();
+                pinnedCourses.clear();
+                db.forEach(c => { if(c.req) selectedCourses.add(c.id); }); 
+                
+                chatHistory = [];
+                isSciTrack = false;
+                document.getElementById('scTrackCheck').classList.remove('checked');
+                document.getElementById('aiScTrackCheck').classList.remove('checked');
+                
+                currentUserInfo = ""; 
+                currentRawName = "";
+                savedSlots = []; 
+                renderSavedSlots();
+
+                saveData(); 
+                
+                renderCourseList();
+                renderAiCourseList();
+                updateStats();
+                updateCircles();
+                renderChatHistory();
+                
+                loadInquiryChat(); 
+            });
         }
     }
 
     let inquiryListener = null;
     let currentInquiryRef = null;
-    let lastInquiryDateStr = "";
 
     function loadInquiryChat() {
         const container = document.getElementById('inquiryChatContainer');
-        container.innerHTML = `
-            <div class="msg-container-wrap" style="align-self: flex-start; margin-bottom: 16px;">
-                <div class="msg-row ai">
-                    <div class="chat-bubble chat-ai">개발자와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요! (사진 첨부 가능)</div>
-                </div>
-            </div>
-        `;
-        lastInquiryDateStr = "";
+        container.innerHTML = `<div class="chat-bubble chat-ai">개발자와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!</div>`;
         
         let targetUid = null;
 
@@ -2339,87 +2714,18 @@
         currentInquiryRef = database.ref('inquiries/' + targetUid);
         inquiryListener = currentInquiryRef.on('child_added', snap => {
             const msg = snap.val();
-            if (!msg.timestamp) msg.timestamp = Date.now();
-            
-            const msgDate = formatDate(msg.timestamp);
-            if (msgDate !== lastInquiryDateStr) {
-                container.innerHTML += `<div class="date-separator">${calendarIcon} ${msgDate}</div>`;
-                lastInquiryDateStr = msgDate;
-            }
-
-            const timeStr = formatTime(msg.timestamp);
-            const isAdmin = msg.role === 'admin';
-            const roleClass = isAdmin ? 'chat-ai' : 'chat-user';
-            
-            let contentHtml = msg.text ? msg.text.replace(/\n/g, '<br>') : '';
-            if (msg.images && msg.images.length > 0) {
-                const imgTags = msg.images.map(url => `<img src="${url}" class="chat-image" onclick="window.open('${url}')">`).join('');
-                contentHtml += (contentHtml ? '<br>' : '') + `<div class="img-grid">${imgTags}</div>`;
-            }
-
-            let rowHtml = '';
-            if (isAdmin) {
-                rowHtml = `
-                    <div class="msg-row ai">
-                        <div class="chat-bubble ${roleClass}">${contentHtml}</div>
-                        <div class="msg-time">${timeStr}</div>
-                    </div>
-                `;
-            } else {
-                rowHtml = `
-                    <div class="msg-row user">
-                        <div class="msg-time">${timeStr}</div>
-                        <div class="chat-bubble ${roleClass}">${contentHtml}</div>
-                    </div>
-                `;
-            }
-            container.innerHTML += `<div class="msg-container-wrap">${rowHtml}</div>`;
+            const roleClass = msg.role === 'user' ? 'chat-user' : 'chat-ai';
+            container.innerHTML += `<div class="chat-bubble ${roleClass}">${msg.text.replace(/\n/g, '<br>')}</div>`;
             container.scrollTop = container.scrollHeight;
         });
     }
 
-    // 🔥 이미지 첨부 및 미리보기 핸들링
-    let selectedInquiryFiles = [];
-    
-    window.handleFileSelect = function(e) {
-        const files = Array.from(e.target.files);
-        if(files.length === 0) return;
-        selectedInquiryFiles = selectedInquiryFiles.concat(files);
-        renderPreview();
-        e.target.value = '';
-    }
-
-    window.removeFile = function(index) {
-        selectedInquiryFiles.splice(index, 1);
-        renderPreview();
-    }
-
-    function renderPreview() {
-        const area = document.getElementById('previewArea');
-        if (selectedInquiryFiles.length === 0) {
-            area.style.display = 'none';
-            area.innerHTML = '';
-            return;
-        }
-        
-        area.style.display = 'flex';
-        area.innerHTML = selectedInquiryFiles.map((file, idx) => `
-            <div class="preview-img-wrap">
-                <img src="${URL.createObjectURL(file)}" class="preview-img">
-                <div class="preview-del" onclick="removeFile(${idx})">✖</div>
-            </div>
-        `).join('');
-    }
-
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyIsvs49HBMqYVjV0XPH5rMBWYNaIRYbOlWy-z4Bv0cOXh1Fp6oOGDW1S_b9vyXIffiEA/exec";
     
-    // 🔥 텍스트 및 다중 이미지 비동기 전송 처리
-    window.sendInquiryMsg = async function() {
+    function sendInquiryMsg() {
         const input = document.getElementById('inquiryInput');
-        const btn = document.getElementById('inquirySendBtn');
         const text = input.value.trim();
-        
-        if(!text && selectedInquiryFiles.length === 0) return;
+        if(!text) return;
         
         if(!auth.currentUser) {
             if(!anonName || !anonUid) {
@@ -2432,57 +2738,27 @@
         }
     }
 
-    async function executeSendToDB(uid, text, senderName) {
+    function executeSendToDB(uid, text, senderName) {
         const input = document.getElementById('inquiryInput');
-        const btn = document.getElementById('inquirySendBtn');
         
-        btn.innerText = "⏳";
-        btn.disabled = true;
+        database.ref('inquiries/' + uid).push({
+            role: 'user',
+            text: text,
+            senderName: senderName, 
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
         
-        try {
-            let imageUrls = [];
-            if (selectedInquiryFiles.length > 0) {
-                for(let file of selectedInquiryFiles) {
-                    const fileRef = storage.ref().child(`chat_images/${uid}/${Date.now()}_${file.name}`);
-                    await fileRef.put(file);
-                    const url = await fileRef.getDownloadURL();
-                    imageUrls.push(url);
-                }
-            }
+        input.value = '';
 
-            const payload = {
-                role: 'user',
-                text: text,
-                senderName: senderName, 
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            };
-            if(imageUrls.length > 0) payload.images = imageUrls;
-
-            await database.ref('inquiries/' + uid).push(payload);
-            
-            input.value = '';
-            selectedInquiryFiles = [];
-            renderPreview();
-
-            let displayInfo = auth.currentUser ? currentUserInfo : `익명 - ${senderName}`;
-            let alertText = text || '(사진 전송)';
-            fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${displayInfo}]님의 새로운 문의 채팅: ${alertText}` }) });
-
-        } catch (err) {
-            console.error(err);
-            showToast("메시지 전송에 실패했습니다.");
-        } finally {
-            btn.innerText = "➤";
-            btn.disabled = false;
-            input.focus();
-        }
+        let displayInfo = auth.currentUser ? currentUserInfo : `익명 - ${senderName}`;
+        fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${displayInfo}]님의 새로운 문의 채팅: ${text}` }) });
     }
 
     function closeAnonNameModal() {
         document.getElementById('anonNameOverlay').style.display = 'none';
     }
 
-    window.saveAnonName = function() {
+    function saveAnonName() {
         const inputVal = document.getElementById('anonNameInput').value.trim();
         if(!inputVal) return showToast("익명 닉네임을 입력해주세요.");
         
