@@ -341,9 +341,10 @@
         <button type="submit" class="auth-btn auth-btn-primary">로그인</button>
         <button type="button" onclick="handleGoogleAuth()" class="auth-btn auth-btn-google">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            Google 계정으로 가입
+            Google 계정으로 로그인
         </button>
-        <div class="auth-link" onclick="window.location.hash='#login'">이미 계정이 있으신가요? <b>로그인</b></div>
+        <div class="auth-link" onclick="window.location.hash='#signup'">계정이 없으신가요? <b>회원가입</b></div>
+        <div class="auth-link" onclick="window.location.hash='#resetPw'" style="margin-top:2px;">계정 및 비밀번호 찾기</div>
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
@@ -407,7 +408,7 @@
                 변경할 이름, 반, 번호를 설정해주세요.
             </div>
             <!-- 엔터키 연동 -->
-            <input type="text" id="editProfileName" placeholder="이름 (실명 입력)" class="auth-input" onkeydown="if(event.key==='Enter') saveEditProfile()" required>
+            <input type="text" id="editProfileName" placeholder="이름 (실명 입력)" class="auth-input" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveEditProfile();}" required>
             <div class="auth-row" style="margin-top: 8px;">
                 <select id="editProfileClass" class="auth-input" required></select>
                 <select id="editProfileNum" class="auth-input" required></select>
@@ -428,7 +429,8 @@
             <div style="font-size:14px; margin-bottom:10px; color:#191F28; line-height:1.4;">
                 로그인하지 않고 문의를 남기시려면<br>채팅에 사용할 익명 닉네임을 입력해주세요.
             </div>
-            <input type="text" id="anonNameInput" placeholder="예: 익명의 누군가" class="auth-input">
+            <!-- 엔터키 연동 -->
+            <input type="text" id="anonNameInput" placeholder="예: 익명의 누군가" class="auth-input" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveAnonName();}">
         </div>
         <div class="update-modal-footer" onclick="saveAnonName()">설정 완료 후 채팅 보내기</div>
     </div>
@@ -442,12 +444,11 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">Ver. 1.10 핵심 업데이트</div>
+                <div class="update-modal-title">Ver. 1.11 핵심 업데이트</div>
                 <div class="update-modal-desc">
-                    <span class="middle-asterisk">*</span> <b>과목 파일(PDF) 다운로드:</b> 작성한 수강신청 내역을 A4 사이즈의 공식 확인서 양식으로 다운로드할 수 있습니다.<br>
-                    <span class="middle-asterisk">*</span> <b>AI 추천 초고속 로직:</b> 통신 에러 없이 0.1초 만에 진로를 분석하여 핵심 과목을 1순위로 즉시 추천합니다.<br>
-                    <span class="middle-asterisk">*</span> 자동 과중 체크 시 2-2/3학년 과목이 고정되던 버그를 수정했습니다. (2-1 필수만 고정)<br>
-                    <span class="middle-asterisk">*</span> 대시보드 프로필 수정 기능 및 팝업창 엔터키 연동이 완벽하게 적용되었습니다.
+                    <span class="middle-asterisk">*</span> <b>채팅 중복 방지:</b> 엔터키를 누를 때 메시지가 2개씩 전송되던 버그를 완벽하게 수정했습니다.<br>
+                    <span class="middle-asterisk">*</span> <b>PDF 디자인 이식:</b> 제공해주신 A4 공식 양식을 100% 반영하였으며, 빈 종이(2페이지)가 출력되던 현상을 해결했습니다.<br>
+                    <span class="middle-asterisk">*</span> <b>PDF 과목명 정렬:</b> '기술·가정/정보' 등이 표 안에서 깔끔하게 줄바꿈되도록 디테일을 추가했습니다.
                 </div>
             </div>
             <div class="update-modal-footer" onclick="closeUpdateModalAlways()">
@@ -535,7 +536,7 @@
                     <div class="example-chip" onclick="fillAndSend('수능에서 유리한 선택과목이 있을까?')">🎓 수능 유리한 과목</div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" class="chat-input" id="aiInput" placeholder="자유롭게 질문을 입력하세요">
+                    <input type="text" class="chat-input" id="aiInput" placeholder="자유롭게 질문을 입력하세요" onkeydown="if(event.key==='Enter'){event.preventDefault(); sendAiMsg();}">
                     <button class="chat-send" id="aiSendBtn" onclick="sendAiMsg()">➤</button>
                 </div>
             </div>
@@ -626,8 +627,8 @@
             <div id="aiCourseListContainer"></div>
 
             <div class="ai-roll-section">
+                <input type="text" id="aiRollInput" class="ai-roll-input" placeholder="원하시는 진로나 키워드 입력 (예: 컴공, 경영)" onkeydown="if(event.key==='Enter'){event.preventDefault(); rollAiRecommendation();}">
                 <button class="submit-btn ai-roll-btn" onclick="rollAiRecommendation()">AI 추천 돌리기</button>
-                <input type="text" id="aiRollInput" class="ai-roll-input" placeholder="원하시는 진로나 키워드 입력 (예: 컴공, 경영)">
             </div>
             
             <div class="custom-save-section">
@@ -653,7 +654,7 @@
             
             <div class="chat-bottom-wrapper">
                 <div class="chat-input-area">
-                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요. (사람입니다. 최대한 빨리 답변하겠습니다.)">
+                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요. (사람입니다. 최대한 빨리 답변하겠습니다.)" onkeydown="if(event.key==='Enter'){event.preventDefault(); sendInquiryMsg();}">
                     <button class="chat-send" onclick="sendInquiryMsg()">➤</button>
                 </div>
             </div>
@@ -685,7 +686,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.10"; 
+    const APP_VERSION = "1.11"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -974,20 +975,7 @@
             console.log("DB 통신 실패");
         }
 
-        // 엔터키 연동
-        document.getElementById('aiInput').addEventListener('keydown', function(e) {
-            if(e.key === 'Enter') { e.preventDefault(); sendAiMsg(); }
-        });
-        document.getElementById('inquiryInput').addEventListener('keydown', function(e) {
-            if(e.key === 'Enter') { e.preventDefault(); sendInquiryMsg(); }
-        });
-        document.getElementById('anonNameInput').addEventListener('keydown', function(e) {
-            if(e.key === 'Enter') { e.preventDefault(); saveAnonName(); }
-        });
-        document.getElementById('aiRollInput').addEventListener('keydown', function(e) {
-            if(e.key === 'Enter') { e.preventDefault(); rollAiRecommendation(); }
-        });
-        
+        // 방향키 이벤트 추가
         document.addEventListener('keydown', handleKeyboardNavigation);
     }
 
@@ -1600,7 +1588,6 @@
         updateCircles();
     }
 
-    // 🔥 자동 과중 체크 완벽 수정 (2-2/3학년 핀 고정 안됨)
     function checkAutoSciTrack() {
         if (!isSciTrack) {
             const baseSci = ['21_s09', '21_s10', '21_s11', '21_s12'];
@@ -1619,7 +1606,6 @@
                 document.getElementById('scTrackCheck').classList.add('checked');
                 document.getElementById('aiScTrackCheck').classList.add('checked');
                 
-                // 오직 2학년 1학기 기본 4과목만 핀 고정 (나머지는 자유)
                 baseSci.forEach(id => pinnedCourses.add(id));
                 
                 showToast("물·화·생·지 및 과학 6과목 이상 조건이 충족되어 과학 중점 과정이 자동 선택되었습니다.");
@@ -2039,15 +2025,15 @@
         showToast("진로와 조건에 맞는 과목을 완벽하게 추천했습니다!");
     }
 
-    // 🔥 PDF 다운로드 기능 함수
+    // 🔥 PDF 전용 교과군 포맷 맞춤 헬퍼
     function getPdfCategoryName(cat) {
         if (cat === '제2외국어') return '제2외국어/<br>한문';
-        if (cat === '정보') return '기술·가정/<br>정보';
-        if (cat === '사회') return '사회(역사/<br>도덕 포함)';
+        if (cat === '정보') return '기술·가정/정<br>보';
+        if (cat === '사회') return '사회(역사/도<br>덕 포함)';
         return cat;
     }
 
-    function generateTableRowsHtml(semKey) {
+    function generatePdfRows(semKey) {
         let courses = Array.from(selectedCourses)
             .map(id => db.find(c => c.id === id))
             .filter(c => c && c.sem === semKey && !c.req);
@@ -2055,20 +2041,14 @@
         courses.sort((a,b) => a.id.localeCompare(b.id));
 
         let html = '';
-        for (let i = 0; i < courses.length; i += 2) {
-            let c1 = courses[i];
-            let c2 = courses[i+1];
+        for (let i = 0; i < 3; i++) { 
+            let c1 = courses[i * 2];
+            let c2 = courses[i * 2 + 1];
 
-            let td1 = `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${getPdfCategoryName(c1.cat)}</td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${c1.name.replace(/(\D)(\d)$/, '$1 $2')}</td>`;
-            let td2 = c2 ? `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${getPdfCategoryName(c2.cat)}</td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${c2.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;"></td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;"></td>`;
+            let td1 = c1 ? `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${getPdfCategoryName(c1.cat)}</td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${c1.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td>`;
+            let td2 = c2 ? `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${getPdfCategoryName(c2.cat)}</td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">${c2.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td><td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;"></td>`;
             
             html += `<tr>${td1}${td2}</tr>`;
-        }
-        
-        const minRows = 3;
-        let currentRows = Math.ceil(courses.length / 2);
-        for(let i = currentRows; i < minRows; i++) {
-            html += `<tr><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td></tr>`;
         }
         return html;
     }
@@ -2083,86 +2063,102 @@
 
         const today = new Date();
         const dateStr = `${today.getFullYear()}년 ${String(today.getMonth() + 1).padStart(2, '0')}월 ${String(today.getDate()).padStart(2, '0')}일`;
-        const studentInfoStr = `1학년 ${currentUserInfo}`; 
+        const userEmailRaw = auth.currentUser ? auth.currentUser.email : "";
+        const studentInfoStr = `${userEmailRaw} 1학년 ${currentUserInfo}`; 
 
         const element = document.createElement('div');
+        // 🔥 빈 페이지 제거를 위해 height 고정 및 overflow 숨김 처리
         element.innerHTML = `
-            <div style="width: 210mm; height: 297mm; background-color: white; box-sizing: border-box; padding: 20mm 15mm; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: black; position: relative;">
-                <div style="text-align: center; margin-bottom: 25px; margin-top: 10mm; position: relative; height: 40px;">
-                    <h1 style="margin: 0; font-size: 24pt; letter-spacing: 2px;">수강신청 확인서</h1>
-                    <div style="position: absolute; right: 0; bottom: 0; font-size: 11pt; font-weight: bold;">${studentInfoStr}</div>
+            <div style="width: 210mm; height: 296mm; background-color: white; box-sizing: border-box; padding: 40px; font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif; color: #000; position: relative; overflow: hidden;">
+                <div style="text-align: center; font-size: 26px; font-weight: bold; margin-top: 10px; margin-bottom: 35px; letter-spacing: 2px;">수강신청 확인서</div>
+                <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 8px;">${studentInfoStr}</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <!-- 2학년 1학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">2학년 1학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('2-1')}
+                    </table>
+
+                    <!-- 2학년 2학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">2학년 2학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('2-2')}
+                    </table>
+
+                    <!-- 3학년 1학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">3학년 1학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('3-1')}
+                    </table>
+
+                    <!-- 3학년 2학기 -->
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed;">
+                        <colgroup>
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                            <col style="width: 22%;">
+                            <col style="width: 28%;">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="border: 1px solid #000; border-bottom: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 4px; word-wrap: break-word; line-height: 1.4;">3학년 2학기</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">교과군</td>
+                            <td style="border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold; padding: 6px 2px; word-wrap: break-word; line-height: 1.4;">과목</td>
+                        </tr>
+                        ${generatePdfRows('3-2')}
+                    </table>
                 </div>
 
-                <div style="width: 100%; margin-bottom: 15px; clear: both; display: table;">
-                    <div style="width: 48.5%; float: left;">
-                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
-                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
-                            <thead>
-                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">2학년 1학기</th></tr>
-                                <tr>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                </tr>
-                            </thead>
-                            <tbody style="border: 1px solid black;">
-                                ${generateTableRowsHtml('2-1')}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="width: 48.5%; float: right;">
-                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
-                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
-                            <thead>
-                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">2학년 2학기</th></tr>
-                                <tr>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${generateTableRowsHtml('2-2')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div style="width: 100%; margin-bottom: 15px; clear: both; display: table;">
-                    <div style="width: 48.5%; float: left;">
-                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
-                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
-                            <thead>
-                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">3학년 1학기</th></tr>
-                                <tr>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${generateTableRowsHtml('3-1')}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="width: 48.5%; float: right;">
-                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
-                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
-                            <thead>
-                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">3학년 2학기</th></tr>
-                                <tr>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${generateTableRowsHtml('3-2')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div style="margin-top: 40px; clear: both;">
-                    <div style="text-align: center; font-size: 13pt; margin-bottom: 25px;">위 과목에 대해 수강신청 하였음을 확인합니다.</div>
-                    <div style="text-align: right; font-size: 12pt; margin-bottom: 35px; padding-right: 5mm;">날짜 : ${dateStr}</div>
-                    <div style="text-align: center; font-size: 16pt; font-weight: bold; letter-spacing: 3px;">김포고등학교장</div>
+                <div style="margin-top: 45px;">
+                    <div style="text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 35px;">위 과목에 대해 수강신청 하였음을 확인합니다.</div>
+                    <div style="text-align: right; font-size: 15px; font-weight: bold; margin-bottom: 50px; padding-right: 5px;">날짜 : ${dateStr}</div>
+                    <div style="text-align: center; font-size: 20px; font-weight: bold; letter-spacing: 3px;">김포고등학교장</div>
                 </div>
             </div>
         `;
@@ -2617,6 +2613,7 @@
     }
 
     let inquiryListener = null;
+    let currentInquiryRef = null;
 
     function loadInquiryChat() {
         const container = document.getElementById('inquiryChatContainer');
@@ -2632,10 +2629,13 @@
             return; 
         }
 
-        const ref = database.ref('inquiries/' + targetUid);
-        if(inquiryListener) ref.off('child_added', inquiryListener);
-        
-        inquiryListener = ref.on('child_added', snap => {
+        // 🔥 기존 리스너가 있다면 완벽하게 제거 (중복 전송 방지)
+        if (currentInquiryRef && inquiryListener) {
+            currentInquiryRef.off('child_added', inquiryListener);
+        }
+
+        currentInquiryRef = database.ref('inquiries/' + targetUid);
+        inquiryListener = currentInquiryRef.on('child_added', snap => {
             const msg = snap.val();
             const roleClass = msg.role === 'user' ? 'chat-user' : 'chat-ai';
             container.innerHTML += `<div class="chat-bubble ${roleClass}">${msg.text.replace(/\n/g, '<br>')}</div>`;
