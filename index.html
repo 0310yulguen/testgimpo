@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- 모바일 주소창/상태바 색상 동기화 -->
     <meta name="theme-color" content="#2A52BE">
     <title>2026 김포고 수강신청 도우미(1학년)</title>
     <!-- 🔥 파이어베이스 데이터베이스 및 인증 엔진 탑재 -->
@@ -65,7 +64,6 @@
 
         #app { width: 100%; height: 100dvh; margin: 0 auto; background-color: var(--bg-color); display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
         
-        /* 🔥 상단 헤더: 버튼을 고려한 제목 줄바꿈(들여쓰기) 완벽 반응형 구현 */
         .header { 
             width: 100%; 
             background-color: var(--primary-dark); 
@@ -87,7 +85,7 @@
             text-align: center;
             line-height: 1.3;
             word-break: keep-all; 
-            padding: 0 85px; /* 양옆 버튼 공간 확보 */
+            padding: 0 85px; 
             width: 100%;
         }
 
@@ -105,10 +103,7 @@
 
         .header-btn-left:active, .header-btn-right:active { background-color: var(--primary-light); }
 
-        @media (max-width: 400px) {
-            .header-title { font-size: 14.5px; padding: 0 75px; }
-        }
-
+        @media (max-width: 400px) { .header-title { font-size: 14.5px; padding: 0 75px; } }
         @media (max-width: 360px) {
             .header-title { font-size: 13px; padding: 0 65px; }
             .header-btn-left, .header-btn-right { padding: 5px 8px; font-size: 10px; }
@@ -119,22 +114,23 @@
         .live-counter-wrap { text-align: right; padding: 8px 16px 8px; background-color: var(--bg-color); font-size: 10px; color: var(--text-light-gray); font-weight: bold; z-index: 100; position: relative; }
 
         .tab-wrapper { flex: 1; position: relative; overflow: hidden; background-color: var(--bg-color); width: 100%; z-index: 10; }
-        .tab-content { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; padding: 0 16px 12px 16px; background-color: var(--bg-color); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; }
+        
+        /* 탭 스크롤 부드럽게 지정 */
+        .tab-content { scroll-behavior: smooth; position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; padding: 0 16px 12px 16px; background-color: var(--bg-color); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; }
         .tab-hidden-left { transform: translateX(-100%); }
         .tab-hidden-right { transform: translateX(100%); }
         .tab-active { transform: translateX(0); z-index: 10; }
 
-        /* 🔥 하단 네비게이션 5개 탭 (선택률 추가) */
         .bottom-nav { 
             position: relative; flex-shrink: 0; width: 100%; background-color: var(--box-bg); 
             display: flex; justify-content: space-between; 
             padding: 8px 0; border-top: 1px solid #E5E8EB; z-index: 1000; 
             padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
         }
-        .nav-indicator { position: absolute; top: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 20%; background-color: var(--primary-dark); border-radius: 12px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 0; transform: translateX(100%); }
-        .nav-item { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--text-light-gray); cursor: pointer; padding: 6px 0; transition: color 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); word-break: keep-all; text-align: center; }
+        .nav-indicator { position: absolute; top: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 20%; background-color: var(--primary-dark); border-radius: 12px; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 0; transform: translateX(200%); }
+        .nav-item { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--text-light-gray); cursor: pointer; padding: 6px 0; transition: color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); word-break: keep-all; text-align: center; }
         .nav-item.active { color: white; font-weight: bold; }
-        .nav-icon { font-size: 18px; margin-bottom: 4px; transition: filter 0.5s; }
+        .nav-icon { font-size: 18px; margin-bottom: 4px; transition: filter 0.3s; }
 
         #tab-0, #tab-4 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
         .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
@@ -151,7 +147,7 @@
         .chat-input { flex: 1; border: 1px solid #E5E8EB; border-radius: 24px; padding: 12px 16px; outline: none; font-size: 14px; background-color: var(--bg-color); width: 100%; transition: opacity 0.2s; }
         .chat-send { background-color: var(--primary-dark); color: white; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; transition: background-color 0.2s; }
 
-        #tab-1 { padding-bottom: 10px; } 
+        #tab-2 { padding-bottom: 10px; } 
         .warning-banner { background-color: var(--light-orange); color: var(--dark-orange); padding: 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; margin-bottom: 12px; font-weight: 600; flex-shrink: 0; word-break: keep-all; }
         
         .stats-wrapper { position: sticky; top: -1px; z-index: 100; background-color: var(--bg-color); padding: 4px 0; margin-bottom: 4px; width: 100%; }
@@ -177,12 +173,11 @@
         .custom-checkbox.disabled { background-color: #F2F4F6; border-color: #E5E8EB; }
         .custom-checkbox.disabled.checked { background-color: #D1D6DB; border-color: #D1D6DB; }
 
-        /* 🔥 AI 추천 탭 모서리 고정 핀 체크박스 디자인 */
         .pin-box {
             position: absolute;
             top: 0;
             right: 0;
-            transform: translate(50%, -50%); /* 우측 상단 모서리 정중앙으로 완벽 배치 */
+            transform: translate(50%, -50%);
             width: 22px; 
             height: 22px;
             background: white;
@@ -193,13 +188,10 @@
             z-index: 5;
             transition: all 0.2s;
         }
-        .pin-box.pinned {
-            border-color: #8B95A1;
-            background-color: #E5E8EB; /* 살짝 회색 배경 */
-        }
+        .pin-box.pinned { border-color: #8B95A1; background-color: #E5E8EB; }
         .pin-box svg { fill: transparent; width: 14px; height: 14px; transition: fill 0.2s; }
-        .pin-box.pinned svg { fill: #4E5968; } /* 핀 꽂혔을 때 진한 회색 */
-        .pin-box.locked { opacity: 0.5; pointer-events: none; } /* 잠긴 필수과목 핀 */
+        .pin-box.pinned svg { fill: #4E5968; }
+        .pin-box.locked { opacity: 0.5; pointer-events: none; }
 
         .accordion { background-color: var(--box-bg); border-radius: 12px; margin-bottom: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.03); width: 100%; }
         .accordion-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; cursor: pointer; background-color: #FFFFFF; transition: background 0.2s; width: 100%; }
@@ -208,7 +200,6 @@
         .accordion-content { max-height: 0px; overflow: hidden; transition: max-height 0.3s ease-in-out; width: 100%; }
         .accordion-inner { padding: 16px 12px 16px 12px; display: flex; flex-direction: column; gap: 16px; }
 
-        /* AI 추천 탭 전용 (항상 열려있음) */
         .ai-semester-wrap { margin-bottom: 24px; background: transparent; }
         .ai-semester-title { font-size: 16px; font-weight: 900; color: var(--text-black); padding-left: 4px; margin-bottom: 12px; margin-top: 8px; display: flex; align-items: center; }
         .ai-semester-title .sem-circle { margin-left: 8px; font-size: 14px; }
@@ -217,7 +208,6 @@
         .circle-red { color: var(--dark-red); }
         .circle-green { color: var(--dark-green); }
 
-        /* 🔥 과목 박스와 학년 박스를 모두 완전한 흰색으로 지정 */
         .course-card { display: flex; align-items: center; padding: 12px 14px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; background-color: #FFFFFF; transition: all 0.2s; position: relative; cursor: pointer; width: 100%; margin-right: 12px; width: calc(100% - 12px); box-sizing: border-box; }
         .course-card.disabled-card { opacity: 0.5; filter: grayscale(80%); } 
         
@@ -243,7 +233,7 @@
         .tag-select-type.elec { background-color: var(--light-green); color: var(--dark-green); }
         .tag-credits { font-size: 9px; padding: 3px; border-radius: 4px; font-weight: bold; text-align: center; width: 100%; background-color: var(--light-blue); color: var(--dark-blue); }
 
-        /* 🔥 과목 선택률 (통계) 전용 UI */
+        /* 🔥 과목 선택률 전용 UI */
         .stat-rate-card { display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; background-color: #FFFFFF; margin-bottom: 12px; width: 100%; box-sizing: border-box; }
         .stat-rate-main { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
         .stat-rate-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; flex-shrink: 0; min-width: 80px; }
@@ -255,14 +245,13 @@
         .submit-btn:active { background-color: var(--primary-light); color: white; }
         .submit-desc { font-size: 11px; font-weight: bold; color: var(--text-black); line-height: 1.4; word-break: keep-all; }
         
-        /* 🔥 AI 추천 돌리기 및 텍스트 박스 UI */
         .ai-roll-section { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 16px; margin-bottom: 16px; width: 100%; display: flex; flex-direction: row; gap: 8px; align-items: stretch; box-sizing: border-box; }
         .ai-roll-input { flex: 1; border: 1px solid #E5E8EB; border-radius: 10px; padding: 12px 14px; font-size: 13px; outline: none; transition: border 0.2s; background-color: var(--bg-color); min-width: 0; }
         .ai-roll-input:focus { border-color: var(--primary-dark); }
         .ai-roll-btn { background-color: var(--primary-dark); color: white; height: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; }
         
         @media (max-width: 600px) {
-            .ai-roll-section { flex-direction: column; } /* 모바일에서는 세로 배치 (버튼 위, 입력 아래) */
+            .ai-roll-section { flex-direction: column; }
             .ai-roll-input { min-height: 44px; }
         }
 
@@ -336,14 +325,13 @@
             .save-slot-list-container { grid-template-columns: repeat(4, 1fr); }
             .chat-bubble { font-size: 15px; padding: 14px 20px; max-width: 60%; }
             .ai-roll-section { flex-direction: row; }
-            .stat-rate-card { width: auto; } /* 통계 박스 그리드 맞춤용 */
+            .stat-rate-card { width: auto; } 
         }
     </style>
 </head>
 <body>
 
 <div id="authScreenOverlay" class="auth-screen-overlay">
-    
     <!-- 로그인 폼 -->
     <form id="loginBox" class="auth-box" onsubmit="handleLogin(event)">
         <h2>로그인</h2>
@@ -360,7 +348,6 @@
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
-    <!-- 비밀번호 찾기(계정 찾기) 폼 -->
     <form id="resetPwBox" class="auth-box" style="display: none;" onsubmit="handleResetPw(event)">
         <h2>비밀번호 찾기</h2>
         <div style="font-size:12px; color:var(--text-dark-gray); text-align:center; margin-bottom:10px; line-height:1.4;">
@@ -378,16 +365,13 @@
         <h2>회원가입</h2>
         <div id="signupError" class="auth-error"></div>
         <input type="email" id="signupEmail" placeholder="사용할 이메일" class="auth-input" autocomplete="username" required>
-        
         <input type="text" id="signupName" placeholder="이름 (실명 입력)" class="auth-input" autocomplete="off" required>
         <div class="auth-row">
             <select id="signupClass" class="auth-input" required></select>
             <select id="signupNum" class="auth-input" required></select>
         </div>
-
         <input type="password" id="signupPw" placeholder="비밀번호 (6자리 이상)" class="auth-input" autocomplete="new-password" required>
         <input type="password" id="signupPwConfirm" placeholder="비밀번호 확인" class="auth-input" autocomplete="new-password" required>
-        
         <button type="submit" class="auth-btn auth-btn-primary">가입하기</button>
         <button type="button" onclick="handleGoogleAuth()" class="auth-btn auth-btn-google">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -412,7 +396,7 @@
     </form>
 </div>
 
-<!-- 🔥 익명 아이디 설정 모달 추가 (비로그인 채팅용) -->
+<!-- 🔥 익명 아이디 설정 모달 -->
 <div id="anonNameOverlay" class="update-modal-overlay">
     <div class="update-modal" onclick="event.stopPropagation()">
         <div class="update-modal-header">
@@ -423,7 +407,6 @@
             <div style="font-size:14px; margin-bottom:10px; color:#191F28; line-height:1.4;">
                 로그인하지 않고 문의를 남기시려면<br>채팅에 사용할 익명 닉네임을 입력해주세요.
             </div>
-            <!-- placeholder '익명의 누군가'로 변경 완료 -->
             <input type="text" id="anonNameInput" placeholder="예: 익명의 누군가" class="auth-input">
         </div>
         <div class="update-modal-footer" onclick="saveAnonName()">설정 완료 후 채팅 보내기</div>
@@ -438,11 +421,11 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.06</div>
+                <div class="update-modal-title">2026 김포고 수강신청 도우미(1학년) Ver. 1.07</div>
                 <div class="update-modal-desc">
+                    <span class="middle-asterisk">*</span> 키보드 방향키(좌/우, 상/하) 조작 기능이 새롭게 추가되었습니다.<br>
+                    <span class="middle-asterisk">*</span> 로그인된 1계정 기준의 정확한 [과목 선택률] 통계를 지원합니다.<br>
                     <span class="middle-asterisk">*</span> AI 통신 속도 및 정확도가 개선된 새로운 알고리즘이 적용되었습니다.<br>
-                    <span class="middle-asterisk">*</span> 로그인된 전체 학생들의 통계를 확인할 수 있는 [과목 선택률] 탭이 신설되었습니다.<br>
-                    <span class="middle-asterisk">*</span> AI 추천 돌리기 시 원하는 키워드에 따라 똑똑하게 작동합니다.<br>
                     <span class="middle-asterisk">*</span> AI 채팅의 횟수 제한이 완전히 해제되었습니다.
                 </div>
             </div>
@@ -465,7 +448,7 @@
         </div>
     </div>
 
-    <!-- 🔥 헤더 (로그인/로그아웃 항시 표시 및 반응형 줄바꿈 적용) -->
+    <!-- 🔥 헤더 -->
     <div class="header">
         <button id="loginBtn" class="header-btn-left" onclick="window.location.hash='#login'" style="display: block;">로그인</button>
         <div class="header-title">2026 김포고 수강신청 도우미(1학년)</div>
@@ -482,7 +465,7 @@
     </div>
 
     <div class="tab-wrapper">
-        <!-- 🔥 AI 채팅 탭 (제한 해제) -->
+        <!-- 🔥 AI 채팅 탭 (Tab 0) -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
                 <div class="chat-bubble chat-ai">
@@ -533,8 +516,23 @@
             </div>
         </div>
 
-        <!-- 🔥 수강연습 탭 -->
-        <div id="tab-1" class="tab-content tab-active">
+        <!-- 🔥 과목 선택률 탭 (Tab 1, 기존 Tab 2에서 자리 변경) -->
+        <div id="tab-1" class="tab-content tab-hidden-left">
+            <div class="warning-banner" style="background-color: var(--light-blue); color: var(--dark-blue);">
+                💡 이 화면의 통계는 로그인 계정 한 명당 하나의 선택 과목의 지표이므로 확실하지 않으니, 주의하여 주세요.
+            </div>
+            
+            <div id="rateListContainer">
+                <!-- 여기에 JS로 통계 카드가 항상 열린 형태로 렌더링됩니다 -->
+            </div>
+            
+            <div class="easter-egg-wrap">
+                <a href="https://gimpohigh.github.io/easteregg/" class="easter-egg">made by 10616 송율근</a>
+            </div>
+        </div>
+
+        <!-- 🔥 수강연습 탭 (Tab 2, 초기 중앙 고정 탭) -->
+        <div id="tab-2" class="tab-content tab-active">
             <div class="warning-banner">
                 💡 이 화면은 실제 수강 신청이 아니며, 선택한 내역은 학교 시스템에 저장되지 않습니다. 아래에서 희망하는 선택 과목을 체크한 후 필수 이수학점 만족 여부를 확인해보세요.
             </div>
@@ -593,24 +591,8 @@
             </div>
         </div>
 
-        <!-- 🔥 새롭게 추가된 [과목 선택률] 통계 탭 -->
-        <div id="tab-2" class="tab-content tab-hidden-right">
-            <div class="warning-banner" style="background-color: var(--light-blue); color: var(--dark-blue);">
-                💡 이 화면의 통계는 로그인 계정 한 명당 하나의 선택 과목 지표이므로 확실하지 않으니, 주의하여 주세요.
-            </div>
-            
-            <div id="rateListContainer">
-                <!-- 여기에 JS로 통계 카드가 렌더링됩니다 -->
-            </div>
-            
-            <div class="easter-egg-wrap">
-                <a href="https://gimpohigh.github.io/easteregg/" class="easter-egg">made by 10616 송율근</a>
-            </div>
-        </div>
-
-        <!-- 🔥 [AI 추천] 탭 -->
+        <!-- 🔥 AI 추천 탭 (Tab 3) -->
         <div id="tab-3" class="tab-content tab-hidden-right">
-            
             <div class="science-track-wrap" style="margin-top: 12px;">
                 <div class="custom-checkbox" id="aiScTrackCheck" onclick="toggleScienceTrack()"></div>
                 과학 중점 과정을 신청하시나요?
@@ -618,18 +600,15 @@
 
             <div id="aiCourseListContainer"></div>
 
-            <!-- 🔥 AI 추천 돌리기 및 텍스트 박스 구역 -->
             <div class="ai-roll-section">
                 <button class="submit-btn ai-roll-btn" onclick="rollAiRecommendation()">AI 추천 돌리기</button>
                 <input type="text" id="aiRollInput" class="ai-roll-input" placeholder="원하시는 진로나 키워드 입력 (예: 컴공, 경영)">
             </div>
             
-            <!-- 저장 및 불러오기 구역 -->
             <div class="custom-save-section">
                 <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
                 </div>
-                <!-- 저장 슬롯 공유 렌더링 -->
                 <div id="aiSaveSlotList" class="save-slot-list-container"></div>
             </div>
             
@@ -638,7 +617,7 @@
             </div>
         </div>
 
-        <!-- 🔥 문의 탭(Tab 4) 1:1 실시간 채팅방 -->
+        <!-- 🔥 문의 탭(Tab 4) -->
         <div id="tab-4" class="tab-content tab-hidden-right">
             <div class="chat-container" id="inquiryChatContainer">
                 <div class="chat-bubble chat-ai">
@@ -655,28 +634,25 @@
         </div>
     </div>
 
-    <!-- 🔥 애니메이션 하단 네비게이션 바 (5개 탭 완벽 대응) -->
+    <!-- 🔥 애니메이션 하단 네비게이션 바 -->
     <div class="bottom-nav">
-        <div class="nav-indicator" id="navIndicator" style="width: 20%;"></div>
+        <!-- 초기 수강연습 탭(Index 2) 위치에 맞게 200% 로 시작 -->
+        <div class="nav-indicator" id="navIndicator" style="width: 20%; transform: translateX(200%);"></div>
         <div class="nav-item" id="nav-0" onclick="switchTab(0)">
-            <div class="nav-icon">⚙️</div>
-            AI 채팅
+            <div class="nav-icon">⚙️</div>AI 채팅
         </div>
-        <div class="nav-item active" id="nav-1" onclick="switchTab(1)">
-            <div class="nav-icon">📊</div>
-            수강연습
+        <div class="nav-item" id="nav-1" onclick="switchTab(1)">
+            <div class="nav-icon">📈</div>과목 선택률
         </div>
-        <div class="nav-item" id="nav-2" onclick="switchTab(2)">
-            <div class="nav-icon">📈</div>
-            선택률
+        <!-- 💡 수강연습 탭 중앙 기본 고정 -->
+        <div class="nav-item active" id="nav-2" onclick="switchTab(2)">
+            <div class="nav-icon">📊</div>수강연습
         </div>
         <div class="nav-item" id="nav-3" onclick="switchTab(3)">
-            <div class="nav-icon">💡</div>
-            AI 추천
+            <div class="nav-icon">💡</div>AI 추천
         </div>
         <div class="nav-item" id="nav-4" onclick="switchTab(4)">
-            <div class="nav-icon">✉️</div>
-            문의
+            <div class="nav-icon">✉️</div>문의
         </div>
     </div>
     <div id="toast"></div>
@@ -684,7 +660,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.06"; 
+    const APP_VERSION = "1.07"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -718,18 +694,15 @@
     const database = firebase.database();
     const auth = firebase.auth();
 
-    // 🔥 최신 AI 추천 서버 주소 적용
     const GAS_AI_RECOMMEND_URL = "https://script.google.com/macros/s/AKfycbyIRMp-MuUWW6cBOWAKAjskIKeMANUxe0vNirE32XEAdNwNmO1s2m2Fdv0N1EjHOItncw/exec";
 
     let userIP = "local_storage_only";
     let currentUserInfo = ""; 
     let currentRawName = ""; 
-    
-    // 익명 유저 정보
     let anonUid = localStorage.getItem('gimpo_anon_uid') || null;
     let anonName = localStorage.getItem('gimpo_anon_name') || null;
 
-    // 전체 통계 보관용 전역 객체
+    // 🔥 전역 통계 객체 (1계정 1개 한정 반영)
     let globalStats = { totalUsers: 0, courses: {} };
 
     // 🔥 전체 과목 DB
@@ -861,7 +834,7 @@
     let selectedCourses = new Set();
     let pinnedCourses = new Set(); 
     let isSciTrack = false;
-    let currentTabIndex = 1;
+    let currentTabIndex = 2; // 초기 탭 수강연습 (Index 2)
     let chatHistory = []; 
     let savedSlots = []; 
 
@@ -969,13 +942,14 @@
                 document.getElementById('liveCountNum').innerText = snap.numChildren();
             });
 
-            // 🔥 전체 사용자 통계 불러오기 시작
+            // 🔥 로그인 유저 기반 전체 통계 불러오기
             loadGlobalStats();
 
         } catch(e) {
             console.log("DB 통신 실패");
         }
 
+        // 키보드 엔터키 이벤트 (입력칸)
         document.getElementById('aiInput').addEventListener('keydown', function(e) {
             if(e.key === 'Enter') { e.preventDefault(); sendAiMsg(); }
         });
@@ -988,6 +962,34 @@
         document.getElementById('aiRollInput').addEventListener('keydown', function(e) {
             if(e.key === 'Enter') { e.preventDefault(); rollAiRecommendation(); }
         });
+        
+        // 🔥 화살표 키보드 조작 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyboardNavigation);
+    }
+
+    // 🔥 키보드 조작 핸들러
+    function handleKeyboardNavigation(e) {
+        // 입력 박스(채팅 등)에 포커스가 있을 때는 방향키 이벤트 무시
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        // 좌/우 탭 이동
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            let nextIdx = (currentTabIndex - 1 + 5) % 5;
+            switchTab(nextIdx);
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            let nextIdx = (currentTabIndex + 1) % 5;
+            switchTab(nextIdx);
+        } 
+        // 상/하 스크롤 이동
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            document.getElementById(`tab-${currentTabIndex}`).scrollTop -= 60;
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            document.getElementById(`tab-${currentTabIndex}`).scrollTop += 60;
+        }
     }
 
     // 🔥 전체 유저 데이터 로드 및 통계(과목 선택률) 계산
@@ -1000,8 +1002,10 @@
             let counts = {};
             
             for (let uid in data) {
+                // 비로그인 상태로 임시 저장된 IP기반 데이터(192_168_...)는 집계에서 제외하고 순수 로그인 계정만 필터링
+                if (uid.includes('_')) continue; 
+                
                 const userData = data[uid];
-                // 강제 추가가 아닌, 실제로 선택한 이력이 있는 유저만 카운팅
                 if (userData.courses && Array.isArray(userData.courses)) {
                     users++;
                     userData.courses.forEach(id => {
@@ -1123,7 +1127,7 @@
         return div;
     }
 
-    // 🔥 수강연습 (Tab 1) 렌더링
+    // 🔥 수강연습 (Tab 2) 렌더링
     function renderCourseList() {
         const container = document.getElementById('courseListContainer');
         container.innerHTML = '';
@@ -1178,7 +1182,7 @@
         applyConstraints();
     }
 
-    // 🔥 과목 선택률 탭 (Tab 2) 렌더링
+    // 🔥 과목 선택률 탭 (Tab 1) 렌더링 - 항상 열림
     function renderStatsTab() {
         const container = document.getElementById('rateListContainer');
         if(!container) return;
@@ -1188,23 +1192,26 @@
             const coursesInSem = db.filter(c => c.sem === sem.key && !c.req);
             if(coursesInSem.length === 0) return;
             
-            // 퍼센티지(인기순) 내림차순 정렬
             coursesInSem.sort((a, b) => {
                 const countA = globalStats.courses[a.id] || 0;
                 const countB = globalStats.courses[b.id] || 0;
-                return countB - countA;
+                return countB - countA; // 내림차순 정렬
             });
             
             const acc = document.createElement('div');
-            acc.className = 'accordion';
+            acc.className = 'accordion open'; // 강제 오픈 클래스 적용
+            acc.style.boxShadow = 'none'; // 깔끔하게 보이기 위해 그림자 제거
+            acc.style.marginBottom = '16px';
             
             const header = document.createElement('div');
             header.className = 'accordion-header';
-            header.innerHTML = `<div><span>${sem.title}</span></div><span class="icon">▼</span>`;
-            header.onclick = () => toggleAccordion(acc);
+            header.style.cursor = 'default'; // 클릭 비활성화
+            header.innerHTML = `<div style="font-size:16px;"><span>${sem.title}</span></div>`; // 화살표 제거
             
             const contentWrap = document.createElement('div');
             contentWrap.className = 'accordion-content';
+            contentWrap.style.maxHeight = 'none'; // 항상 최대 높이로 고정
+            
             const inner = document.createElement('div');
             inner.className = 'accordion-inner';
             
@@ -1404,32 +1411,81 @@
         }
     }
 
+    let indicatorTimeout = null;
     function switchTab(newIndex) {
         if(currentTabIndex === newIndex) return;
 
         const oldTab = document.getElementById(`tab-${currentTabIndex}`);
         const newTab = document.getElementById(`tab-${newIndex}`);
+        const indicator = document.getElementById('navIndicator');
         
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         document.getElementById(`nav-${newIndex}`).classList.add('active');
         
-        document.getElementById('navIndicator').style.transform = `translateX(${newIndex * 100}%)`;
+        clearTimeout(indicatorTimeout); // 연속 클릭 꼬임 방지
         
-        if(newIndex > currentTabIndex) {
+        // 🔥 무한 랩핑(순환) 애니메이션 로직
+        if (currentTabIndex === 4 && newIndex === 0) {
+            // 오른쪽으로 슬라이드 아웃
+            indicator.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            indicator.style.transform = `translateX(500%)`;
+            indicatorTimeout = setTimeout(() => {
+                indicator.style.transition = 'none'; // 잠시 애니메이션 끄고
+                indicator.style.transform = `translateX(-100%)`; // 왼쪽 밖으로 점프
+                void indicator.offsetWidth; // 브라우저 리플로우 강제
+                indicator.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)'; // 켜고 들어오기
+                indicator.style.transform = `translateX(0%)`;
+            }, 200);
+
+            // 탭 화면도 동일하게 랩핑 처리
             oldTab.className = 'tab-content tab-hidden-left';
+            newTab.style.transition = 'none';
+            newTab.className = 'tab-content tab-hidden-right';
+            void newTab.offsetWidth;
+            newTab.style.transition = '';
             newTab.className = 'tab-content tab-active';
-        } else {
+
+        } else if (currentTabIndex === 0 && newIndex === 4) {
+            // 왼쪽으로 슬라이드 아웃
+            indicator.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            indicator.style.transform = `translateX(-100%)`;
+            indicatorTimeout = setTimeout(() => {
+                indicator.style.transition = 'none';
+                indicator.style.transform = `translateX(500%)`;
+                void indicator.offsetWidth;
+                indicator.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                indicator.style.transform = `translateX(400%)`;
+            }, 200);
+
             oldTab.className = 'tab-content tab-hidden-right';
+            newTab.style.transition = 'none';
+            newTab.className = 'tab-content tab-hidden-left';
+            void newTab.offsetWidth;
+            newTab.style.transition = '';
             newTab.className = 'tab-content tab-active';
+            
+        } else {
+            // 기본 애니메이션
+            indicator.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            indicator.style.transform = `translateX(${newIndex * 100}%)`;
+
+            if (newIndex > currentTabIndex) {
+                oldTab.className = 'tab-content tab-hidden-left';
+                newTab.className = 'tab-content tab-active';
+            } else {
+                oldTab.className = 'tab-content tab-hidden-right';
+                newTab.className = 'tab-content tab-active';
+            }
         }
 
+        // 버튼 표시 관리
         const clearBtn = document.getElementById('clearChatBtn');
         const resetBtn = document.getElementById('resetSelectionBtn');
         
         if (newIndex === 0) {
             clearBtn.style.display = 'block';
             resetBtn.style.display = 'none';
-        } else if (newIndex === 1 || newIndex === 3) { // 수강연습, AI 추천 탭 리셋버튼 허용
+        } else if (newIndex === 2 || newIndex === 3) { // 수강연습(2), AI 추천(3)
             clearBtn.style.display = 'none';
             resetBtn.style.display = 'block';
         } else {
@@ -1447,15 +1503,20 @@
     }
 
     function toggleAccordion(acc) {
+        // [과목 선택률] 탭의 아코디언은 강제 오픈이므로 토글 방지
+        if(acc.classList.contains('open') && acc.querySelector('.accordion-content').style.maxHeight === 'none') {
+            return; 
+        }
+
         acc.classList.toggle('open');
         const icon = acc.querySelector('.icon');
         const contentWrap = acc.querySelector('.accordion-content');
         
         if (acc.classList.contains('open')) {
-            icon.innerText = '▲';
+            if(icon) icon.innerText = '▲';
             contentWrap.style.maxHeight = contentWrap.scrollHeight + "px";
         } else {
-            icon.innerText = '▼';
+            if(icon) icon.innerText = '▼';
             contentWrap.style.maxHeight = "0px";
         }
     }
@@ -1560,7 +1621,6 @@
         return cnt;
     }
 
-    // 양쪽 탭 동시 업데이트
     function applyConstraints() {
         db.forEach(c => {
             let disabled = false;
@@ -1795,17 +1855,15 @@
         resBox.innerHTML = msgs.join('');
         
         setTimeout(() => {
-            const tab1 = document.getElementById('tab-1');
-            tab1.scrollTo({ top: tab1.scrollHeight, behavior: 'smooth' });
+            const tab2 = document.getElementById('tab-2');
+            tab2.scrollTo({ top: tab2.scrollHeight, behavior: 'smooth' });
         }, 100);
     }
 
-    // 🔥 AI 추천 돌리기 알고리즘 (하이브리드)
     async function rollAiRecommendation() {
         const inputTxt = document.getElementById('aiRollInput').value.trim();
         const btn = document.querySelector('.ai-roll-btn');
         
-        // 1. 기존 선택 초기화 (필수 및 고정 핀 제외)
         let newSelection = new Set();
         db.forEach(c => {
             if (c.req) newSelection.add(c.id);
@@ -1823,7 +1881,6 @@
         btn.disabled = true;
 
         try {
-            // 선택 가능한 빈자리 과목 리스트를 만들어 AI에게 전송
             const availableCourses = db.filter(c => !c.req && !selectedCourses.has(c.id)).map(c => c.id + ":" + c.name).join(", ");
             
             const response = await fetch(GAS_AI_RECOMMEND_URL, {
@@ -1837,7 +1894,6 @@
                 data.recommendedIds.forEach(id => {
                     const c = db.find(x => x.id === id);
                     if(c && !selectedCourses.has(id)) {
-                        // AI가 뱉어낸 ID를 교차 검증 (학점/개수 한도 초과 방지)
                         if(c.sem === '3-2') {
                             const limit = (c.g === 0) ? 4 : 1;
                             if(countSelectedIn32Group(c.g) < limit) selectedCourses.add(id);
@@ -1853,7 +1909,6 @@
             showToast("AI 통신 중 오류가 발생하여 안전한 랜덤으로 대체합니다.");
         }
 
-        // 2. AI가 추천해주고도 남은 빈자리는 프로그램(랜덤)이 완벽하게 채워줌
         fillRandomCourses();
         
         btn.innerText = "AI 추천 돌리기";
@@ -1880,7 +1935,6 @@
 
         const pickCourses = (available, count) => {
             if (count <= 0) return;
-            // 섞기
             available.sort(() => Math.random() - 0.5);
             for(let i=0; i<count && i<available.length; i++) {
                 selectedCourses.add(available[i].id);
@@ -2039,10 +2093,6 @@
             showToast("대화 기록이 삭제되었습니다.");
         }
     }
-
-    // ==========================================
-    // 🔥 Firebase Auth, 학생정보, 문의 채팅 로직
-    // ==========================================
 
     auth.onAuthStateChanged((user) => {
         const loginBtn = document.getElementById('loginBtn');
@@ -2299,9 +2349,6 @@
         }
     }
 
-    // ----------------------------------------------------
-    // 🔥 문의하기 실시간 채팅 로직 (Tab 4) - 비로그인 지원
-    // ----------------------------------------------------
     let inquiryListener = null;
 
     function loadInquiryChat() {
