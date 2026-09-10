@@ -63,13 +63,14 @@
 
         #app { width: 100%; height: 100dvh; margin: 0 auto; background-color: var(--bg-color); display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
         
-        /* 🔥 상단 헤더: 비율 조절 */
+        /* 🔥 상단 헤더: 버튼을 고려한 제목 줄바꿈(들여쓰기) 완벽 반응형 구현 */
         .header { 
             width: 100%; 
             background-color: var(--primary-dark); 
             color: white; 
-            padding: 0 16px; 
-            height: 52px; 
+            padding: 8px 12px; 
+            min-height: 52px; 
+            height: auto;
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -81,11 +82,10 @@
         .header-title {
             font-size: 16px; 
             font-weight: bold; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            padding: 0 75px; 
             text-align: center;
+            line-height: 1.3;
+            word-break: keep-all; 
+            padding: 0 80px; /* 양옆 버튼 공간 확보 */
             width: 100%;
         }
 
@@ -103,15 +103,12 @@
 
         .header-btn-left:active, .header-btn-right:active { background-color: var(--primary-light); }
 
-        /* 🔥 모바일 화면 제목 숨김 제거, 폰트/간격 최적화 */
         @media (max-width: 360px) {
-            .header-title { font-size: 13px; padding: 0 65px; }
+            .header-title { font-size: 13.5px; padding: 0 65px; }
             .header-btn-left, .header-btn-right { padding: 5px 8px; font-size: 10px; }
         }
 
-        .dashboard-banner { 
-            background-color: var(--light-blue); color: var(--dark-blue); text-align: center; font-size: 12px; font-weight: bold; padding: 10px 16px; display: none; width: 100%; box-sizing: border-box; 
-        }
+        .dashboard-banner { background-color: var(--light-blue); color: var(--dark-blue); text-align: center; font-size: 12px; font-weight: bold; padding: 10px 16px; display: none; width: 100%; box-sizing: border-box; }
 
         .live-counter-wrap { text-align: right; padding: 8px 16px 8px; background-color: var(--bg-color); font-size: 10px; color: var(--text-light-gray); font-weight: bold; z-index: 100; position: relative; }
 
@@ -121,18 +118,19 @@
         .tab-hidden-right { transform: translateX(100%); }
         .tab-active { transform: translateX(0); z-index: 10; }
 
+        /* 🔥 하단 네비게이션 4개 탭 (AI 추천 탭 추가) */
         .bottom-nav { 
             position: relative; flex-shrink: 0; width: 100%; background-color: var(--box-bg); 
             display: flex; justify-content: space-between; 
             padding: 8px 0; border-top: 1px solid #E5E8EB; z-index: 1000; 
             padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
         }
-        .nav-indicator { position: absolute; top: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 33.333%; background-color: var(--primary-dark); border-radius: 12px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 0; transform: translateX(100%); }
+        .nav-indicator { position: absolute; top: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 25%; background-color: var(--primary-dark); border-radius: 12px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 0; transform: translateX(100%); }
         .nav-item { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; color: var(--text-light-gray); cursor: pointer; padding: 6px 0; transition: color 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .nav-item.active { color: white; font-weight: bold; }
         .nav-icon { font-size: 20px; margin-bottom: 4px; transition: filter 0.5s; }
 
-        #tab-0, #tab-2 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
+        #tab-0, #tab-3 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
         .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; font-size: 14px; line-height: 1.5; word-break: break-word; }
         .chat-ai { background-color: white; color: var(--text-black); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -150,7 +148,6 @@
         #tab-1 { padding-bottom: 10px; } 
         .warning-banner { background-color: var(--light-orange); color: var(--dark-orange); padding: 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; margin-bottom: 12px; font-weight: 600; flex-shrink: 0; word-break: keep-all; }
         
-        /* 🔥 통계 박스 세로 비율 축소 */
         .stats-wrapper { position: sticky; top: -1px; z-index: 100; background-color: var(--bg-color); padding: 4px 0; margin-bottom: 4px; width: 100%; }
         .stats-box { background-color: var(--box-bg); border-radius: 12px; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 4px; width: 100%; }
         
@@ -174,6 +171,30 @@
         .custom-checkbox.disabled { background-color: #F2F4F6; border-color: #E5E8EB; }
         .custom-checkbox.disabled.checked { background-color: #D1D6DB; border-color: #D1D6DB; }
 
+        /* 🔥 AI 추천 탭 모서리 고정 핀 체크박스 디자인 */
+        .pin-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%); /* 우측 상단 모서리 정중앙으로 완벽 배치 */
+            width: 22px; 
+            height: 22px;
+            background: white;
+            border: 2px solid #D1D6DB;
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.2s;
+        }
+        .pin-box.pinned {
+            border-color: #8B95A1;
+            background-color: #E5E8EB; /* 살짝 회색 배경 */
+        }
+        .pin-box svg { fill: transparent; width: 14px; height: 14px; transition: fill 0.2s; }
+        .pin-box.pinned svg { fill: #4E5968; } /* 핀 꽂혔을 때 진한 회색 */
+        .pin-box.locked { opacity: 0.5; pointer-events: none; } /* 잠긴 필수과목 핀 */
+
         .accordion { background-color: var(--box-bg); border-radius: 12px; margin-bottom: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.03); width: 100%; }
         .accordion-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; cursor: pointer; background-color: white; transition: background 0.2s; width: 100%; }
         .accordion.open .accordion-header { background-color: var(--light-blue); color: var(--dark-blue); }
@@ -181,11 +202,16 @@
         .accordion-content { max-height: 0px; overflow: hidden; transition: max-height 0.3s ease-in-out; width: 100%; }
         .accordion-inner { padding: 16px 12px 16px 12px; display: flex; flex-direction: column; gap: 16px; }
 
+        /* AI 추천 탭 전용 (항상 열려있음) */
+        .ai-semester-wrap { margin-bottom: 24px; background: transparent; }
+        .ai-semester-title { font-size: 16px; font-weight: 900; color: var(--text-black); padding-left: 4px; margin-bottom: 12px; margin-top: 8px; display: flex; align-items: center; }
+        .ai-semester-title .sem-circle { margin-left: 8px; font-size: 14px; }
+
         .sem-circle { font-size: 12px; margin-left: 6px; transition: color 0.3s; }
         .circle-red { color: var(--dark-red); }
         .circle-green { color: var(--dark-green); }
 
-        .course-card { display: flex; align-items: center; padding: 12px 14px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; transition: all 0.2s; position: relative; cursor: pointer; width: 100%; }
+        .course-card { display: flex; align-items: center; padding: 12px 14px; border: 1px solid #E5E8EB; border-radius: 10px; gap: 16px; transition: all 0.2s; position: relative; cursor: pointer; width: 100%; margin-right: 12px; /* 핀 넘침 방지 */ width: calc(100% - 12px); box-sizing: border-box; }
         .course-card.disabled-card { opacity: 0.5; filter: grayscale(80%); } 
         
         .course-main { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -215,6 +241,17 @@
         .submit-btn:active { background-color: var(--primary-light); color: white; }
         .submit-desc { font-size: 11px; font-weight: bold; color: var(--text-black); line-height: 1.4; word-break: keep-all; }
         
+        /* 🔥 AI 추천 돌리기 및 텍스트 박스 UI */
+        .ai-roll-section { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 16px; margin-bottom: 16px; width: 100%; display: flex; flex-direction: row; gap: 8px; align-items: stretch; box-sizing: border-box; }
+        .ai-roll-input { flex: 1; border: 1px solid #E5E8EB; border-radius: 10px; padding: 12px 14px; font-size: 13px; outline: none; transition: border 0.2s; background-color: var(--bg-color); min-width: 0; }
+        .ai-roll-input:focus { border-color: var(--primary-dark); }
+        .ai-roll-btn { background-color: var(--primary-dark); color: white; height: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+        
+        @media (max-width: 600px) {
+            .ai-roll-section { flex-direction: column; } /* 모바일에서는 세로 배치 */
+            .ai-roll-input { min-height: 44px; }
+        }
+
         .validation-results { display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: bold; padding: 0 8px 10px 8px; flex-shrink: 0; }
         .msg-error { color: var(--dark-red); }
         .msg-warn { color: var(--dark-orange); }
@@ -236,7 +273,7 @@
         .load-btn { flex: 1; background: var(--primary-mid); color: white; font-size: 13px; font-weight: bold; padding: 8px; border-radius: 8px; border: none; cursor: pointer; text-align: center; margin-left: 4px; }
         .load-btn:active { background: var(--primary-dark); transform: scale(0.96); }
 
-        .special-select-label { background-color: var(--light-blue); color: var(--primary-dark); padding: 8px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; display: flex; justify-content: center; align-items: center; width: 100%; box-sizing: border-box; margin-top: 4px; margin-bottom: 0px; }
+        .special-select-label { background-color: var(--light-blue); color: var(--primary-dark); padding: 8px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; display: flex; justify-content: center; align-items: center; width: calc(100% - 12px); box-sizing: border-box; margin-top: 4px; margin-bottom: 0px; }
         
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: bold; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 
@@ -280,9 +317,11 @@
             .stat-value { font-size: 16px; }
             .accordion-header { padding: 16px 24px; font-size: 15px; }
             .accordion-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px 24px 24px 24px; }
-            .special-select-label { grid-column: 1 / -1; }
+            .special-select-label { grid-column: 1 / -1; width: 100%; margin-right: 0;}
+            .course-card { margin-right: 0; width: 100%; }
             .save-slot-list-container { grid-template-columns: repeat(4, 1fr); }
             .chat-bubble { font-size: 15px; padding: 14px 20px; max-width: 60%; }
+            .ai-roll-section { flex-direction: row; }
         }
     </style>
 </head>
@@ -302,7 +341,6 @@
             Google 계정으로 로그인
         </button>
         <div class="auth-link" onclick="window.location.hash='#signup'">계정이 없으신가요? <b>회원가입</b></div>
-        <!-- 🔥 비밀번호 찾기 (계정 찾기) 링크 추가 -->
         <div class="auth-link" onclick="window.location.hash='#resetPw'" style="margin-top:2px;">계정 및 비밀번호 찾기</div>
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
@@ -311,7 +349,8 @@
     <form id="resetPwBox" class="auth-box" style="display: none;" onsubmit="handleResetPw(event)">
         <h2>비밀번호 찾기</h2>
         <div style="font-size:12px; color:var(--text-dark-gray); text-align:center; margin-bottom:10px; line-height:1.4;">
-            가입하신 이메일 주소를 입력하시면,<br>비밀번호 재설정 링크를 보내드립니다.
+            가입하신 이메일 주소를 입력하시면,<br>비밀번호 재설정 링크를 보내드립니다.<br>
+            <span style="color:var(--dark-red); font-weight:bold;">(※ 메일이 안 오면 '스팸 메일함'을 꼭 확인해주세요!)</span>
         </div>
         <div id="resetPwError" class="auth-error"></div>
         <input type="email" id="resetPwEmail" placeholder="가입한 이메일" class="auth-input" required>
@@ -369,7 +408,8 @@
             <div style="font-size:14px; margin-bottom:10px; color:#191F28; line-height:1.4;">
                 로그인하지 않고 문의를 남기시려면<br>채팅에 사용할 익명 닉네임을 입력해주세요.
             </div>
-            <input type="text" id="anonNameInput" placeholder="예: 익명의 율근이" class="auth-input">
+            <!-- placeholder '익명의 누군가'로 변경 -->
+            <input type="text" id="anonNameInput" placeholder="예: 익명의 누군가" class="auth-input">
         </div>
         <div class="update-modal-footer" onclick="saveAnonName()">설정 완료 후 채팅 보내기</div>
     </div>
@@ -412,13 +452,14 @@
 
     <!-- 🔥 헤더 -->
     <div class="header">
-        <button id="loginBtn" class="header-btn-left" onclick="window.location.hash='#login'" style="display: block;">로그인</button>
-        <span class="header-title">2026 김포고 수강신청 도우미(1학년)</span>
+        <!-- 로그인/로그아웃 버튼 항시 유지 -->
+        <button id="loginBtn" class="header-btn-left" onclick="window.location.hash='#login'">로그인</button>
+        <div class="header-title">2026 김포고 수강신청<br>도우미(1학년)</div>
+        <!-- 우측 버튼들 -->
         <button id="clearChatBtn" class="header-btn-right" onclick="clearChat()" style="display: none;">대화 삭제</button>
         <button id="resetSelectionBtn" class="header-btn-right" onclick="resetSelection()" style="display: block;">선택 초기화</button>
     </div>
     
-    <!-- 대시보드 상태 알림 (하늘색 직사각형 꽉 차게 변경) -->
     <div id="dashboardBanner" class="dashboard-banner">
         <span id="userEmailSpan"></span> (과목/대화 자동저장)
     </div>
@@ -479,7 +520,7 @@
             </div>
         </div>
 
-        <!-- 수강연습 탭 -->
+        <!-- 🔥 수강연습 탭 -->
         <div id="tab-1" class="tab-content tab-active">
             <div class="warning-banner">
                 💡 이 화면은 실제 수강 신청이 아니며, 선택한 내역은 학교 시스템에 저장되지 않습니다. 아래에서 희망하는 선택 과목을 체크한 후 필수 이수학점 만족 여부를 확인해보세요.
@@ -527,13 +568,10 @@
             
             <div id="validationResult" class="validation-results"></div>
             
-            <!-- 🔥 저장하기 및 불러오기 UI 영역 -->
             <div class="custom-save-section">
-                <!-- 가로 길이 1/3로 축소 & 좌측 정렬 -> 텍스트 삐져나옴 수정 width: auto 적용 -->
                 <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
                 </div>
-                <!-- 🔥 저장 슬롯 리스트 컨테이너 -->
                 <div id="saveSlotList" class="save-slot-list-container"></div>
             </div>
 
@@ -542,8 +580,34 @@
             </div>
         </div>
 
-        <!-- 🔥 문의 탭(Tab 2) 1:1 실시간 채팅방 -->
+        <!-- 🔥 새롭게 추가된 [AI 추천] 탭 -->
         <div id="tab-2" class="tab-content tab-hidden-right">
+            
+            <div class="science-track-wrap" style="margin-top: 12px;">
+                <div class="custom-checkbox" id="aiScTrackCheck" onclick="toggleScienceTrack()"></div>
+                과학 중점 과정을 신청하시나요?
+            </div>
+
+            <div id="aiCourseListContainer"></div>
+
+            <!-- 🔥 AI 야추 다이스 추천 돌리기 및 텍스트 박스 구역 -->
+            <div class="ai-roll-section">
+                <button class="submit-btn ai-roll-btn" onclick="rollAiRecommendation()">AI 추천 돌리기</button>
+                <input type="text" id="aiRollInput" class="ai-roll-input" placeholder="원하시는 진로나 키워드 입력 (예: 컴공, 경영)">
+            </div>
+            
+            <!-- 저장 및 불러오기 구역 -->
+            <div class="custom-save-section">
+                <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
+                    <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
+                </div>
+                <!-- 저장 슬롯 공유 렌더링 -->
+                <div id="aiSaveSlotList" class="save-slot-list-container"></div>
+            </div>
+        </div>
+
+        <!-- 🔥 문의 탭(Tab 3) 1:1 실시간 채팅방 -->
+        <div id="tab-3" class="tab-content tab-hidden-right">
             <div class="chat-container" id="inquiryChatContainer">
                 <div class="chat-bubble chat-ai">
                     개발자와의 1:1 문의 채팅방입니다.<br>오류 제보나 궁금한 점을 편하게 남겨주세요!
@@ -559,9 +623,9 @@
         </div>
     </div>
 
-    <!-- 🔥 애니메이션 하단 네비게이션 바 -->
+    <!-- 🔥 애니메이션 하단 네비게이션 바 (4개 탭 대응) -->
     <div class="bottom-nav">
-        <div class="nav-indicator" id="navIndicator"></div>
+        <div class="nav-indicator" id="navIndicator" style="width: 25%;"></div>
         <div class="nav-item" id="nav-0" onclick="switchTab(0)">
             <div class="nav-icon">⚙️</div>
             AI 채팅
@@ -571,6 +635,10 @@
             수강연습
         </div>
         <div class="nav-item" id="nav-2" onclick="switchTab(2)">
+            <div class="nav-icon">💡</div>
+            AI 추천
+        </div>
+        <div class="nav-item" id="nav-3" onclick="switchTab(3)">
             <div class="nav-icon">✉️</div>
             문의
         </div>
@@ -599,7 +667,7 @@
         document.getElementById('updateModalOverlay').style.display = 'none';
     }
 
-    // 🔥 풀 파이어베이스 설정
+    // 🔥 파이어베이스 설정
     const firebaseConfig = {
       apiKey: "AIzaSyD-IyAGGXQ69d8LupTU2mKmr87yoenahRo",
       authDomain: "gimpo-monitoring.firebaseapp.com",
@@ -615,14 +683,14 @@
     const auth = firebase.auth();
 
     let userIP = "local_storage_only";
-    let currentUserInfo = ""; // 이름,반,번호 조합 문자열 저장용
-    let currentRawName = ""; // 문의 시 전송할 순수 이름
+    let currentUserInfo = ""; 
+    let currentRawName = ""; 
     
     // 익명 유저 정보
     let anonUid = localStorage.getItem('gimpo_anon_uid') || null;
     let anonName = localStorage.getItem('gimpo_anon_name') || null;
 
-    // 🔥 수강신청 전체 과목 DB (관광 일본어 -> 심화 일본어 변경)
+    // 🔥 전체 과목 DB
     const db = [
         { id:'11_01', sem:'1-1', name:'공통국어 1', type:'공통', cat:'국어', grade:'5단계/등급O', req:true, cred:4 },
         { id:'11_02', sem:'1-1', name:'공통수학 1', type:'공통', cat:'수학', grade:'5단계/등급O', req:true, cred:4 },
@@ -749,18 +817,17 @@
     ];
 
     let selectedCourses = new Set();
+    let pinnedCourses = new Set(); // 🔥 고정된 핀 과목 저장소
     let isSciTrack = false;
     let currentTabIndex = 1;
     let chatHistory = []; 
     let savedSlots = []; 
 
-    // 날짜 도출 유틸
     function getTodayStr() {
         const d = new Date();
         return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
     }
 
-    // 동적으로 반/번호 셀렉트 옵션 생성
     function populateSelects() {
         const maxClass = 12; 
         const maxNum = 35;  
@@ -788,10 +855,18 @@
                 const parsed = JSON.parse(savedData);
                 if(Array.isArray(parsed)) parsed.forEach(id => selectedCourses.add(id));
             }
+            
+            const savedPins = localStorage.getItem('gimpo_pinned_courses');
+            if (savedPins) {
+                const parsedPins = JSON.parse(savedPins);
+                if(Array.isArray(parsedPins)) parsedPins.forEach(id => pinnedCourses.add(id));
+            }
+
             const localSaves = localStorage.getItem('gimpo_saved_slots');
             if (localSaves) savedSlots = JSON.parse(localSaves);
         } catch(e) {
             localStorage.removeItem('gimpo_courses');
+            localStorage.removeItem('gimpo_pinned_courses');
             localStorage.removeItem('gimpo_saved_slots');
         }
 
@@ -803,9 +878,15 @@
         }
 
         db.forEach(c => { if(c.req) selectedCourses.add(c.id); }); 
-        if(isSciTrack) document.getElementById('scTrackCheck').classList.add('checked');
+        if(isSciTrack) {
+            document.getElementById('scTrackCheck').classList.add('checked');
+            document.getElementById('aiScTrackCheck').classList.add('checked');
+            // 과중반 고정 핀 자동화
+            db.filter(c => c.sciReq).forEach(c => pinnedCourses.add(c.id));
+        }
         
         renderCourseList();
+        renderAiCourseList(); // 🔥 AI 탭 렌더링
         updateStats();
         updateCircles();
         renderSavedSlots(); 
@@ -830,7 +911,7 @@
                 database.ref('user_data/' + userIP).once('value', (snap) => {
                     syncDBData(snap.val());
                 });
-                loadInquiryChat(); // 비로그인 시 문의창 상태 반영
+                loadInquiryChat(); 
             }
 
             const connectedRef = database.ref('.info/connected');
@@ -860,20 +941,32 @@
         document.getElementById('anonNameInput').addEventListener('keydown', function(e) {
             if(e.key === 'Enter') { e.preventDefault(); saveAnonName(); }
         });
+        document.getElementById('aiRollInput').addEventListener('keydown', function(e) {
+            if(e.key === 'Enter') { e.preventDefault(); rollAiRecommendation(); }
+        });
     }
 
     function syncDBData(val) {
         if (val) {
             selectedCourses.clear();
+            pinnedCourses.clear();
             if (val.courses) val.courses.forEach(id => selectedCourses.add(id));
+            if (val.pinned) val.pinned.forEach(id => pinnedCourses.add(id));
             if (val.sciTrack !== undefined) isSciTrack = val.sciTrack;
             if (val.savedSlots) savedSlots = val.savedSlots; 
             
             db.forEach(c => { if(c.req) selectedCourses.add(c.id); }); 
-            if(isSciTrack) document.getElementById('scTrackCheck').classList.add('checked');
-            else document.getElementById('scTrackCheck').classList.remove('checked');
+            if(isSciTrack) {
+                document.getElementById('scTrackCheck').classList.add('checked');
+                document.getElementById('aiScTrackCheck').classList.add('checked');
+                db.filter(c => c.sciReq).forEach(c => pinnedCourses.add(c.id));
+            } else {
+                document.getElementById('scTrackCheck').classList.remove('checked');
+                document.getElementById('aiScTrackCheck').classList.remove('checked');
+            }
             
             renderCourseList();
+            renderAiCourseList();
             updateStats();
             updateCircles();
             renderSavedSlots();
@@ -887,6 +980,7 @@
 
     function saveData() {
         localStorage.setItem('gimpo_courses', JSON.stringify([...selectedCourses]));
+        localStorage.setItem('gimpo_pinned_courses', JSON.stringify([...pinnedCourses]));
         localStorage.setItem('gimpo_scitrack', isSciTrack);
         
         let saveKey = userIP;
@@ -896,6 +990,7 @@
             try {
                 database.ref('user_data/' + saveKey).update({
                     courses: [...selectedCourses],
+                    pinned: [...pinnedCourses],
                     sciTrack: isSciTrack
                 });
             } catch(e) {}
@@ -958,6 +1053,7 @@
         return div;
     }
 
+    // 🔥 수강연습 (Tab 1) 렌더링
     function renderCourseList() {
         const container = document.getElementById('courseListContainer');
         container.innerHTML = '';
@@ -982,7 +1078,7 @@
             inner.className = 'accordion-inner';
 
             const reqs = coursesInSem.filter(c => c.req);
-            reqs.forEach(c => inner.appendChild(createCourseCard(c)));
+            reqs.forEach(c => inner.appendChild(createCourseCard(c, false)));
 
             if(sem.key === '3-2') {
                 const g0 = coursesInSem.filter(c => !c.req && c.g === 0);
@@ -990,16 +1086,16 @@
                 const g2 = coursesInSem.filter(c => c.g === 2);
 
                 inner.appendChild(createLabel('선택 택 4'));
-                g0.forEach(c => inner.appendChild(createCourseCard(c)));
+                g0.forEach(c => inner.appendChild(createCourseCard(c, false)));
                 inner.appendChild(createLabel('선택 택 1 (1)'));
-                g1.forEach(c => inner.appendChild(createCourseCard(c)));
+                g1.forEach(c => inner.appendChild(createCourseCard(c, false)));
                 inner.appendChild(createLabel('선택 택 1 (2)'));
-                g2.forEach(c => inner.appendChild(createCourseCard(c)));
+                g2.forEach(c => inner.appendChild(createCourseCard(c, false)));
             } else {
                 const elecs = coursesInSem.filter(c => !c.req);
                 if (elecs.length > 0) {
                     inner.appendChild(createLabel(`선택 택 ${sem.limit}`));
-                    elecs.forEach(c => inner.appendChild(createCourseCard(c)));
+                    elecs.forEach(c => inner.appendChild(createCourseCard(c, false)));
                 }
             }
 
@@ -1012,13 +1108,66 @@
         applyConstraints();
     }
 
-    function createCourseCard(c) {
+    // 🔥 AI 추천 (Tab 2) 렌더링
+    function renderAiCourseList() {
+        const container = document.getElementById('aiCourseListContainer');
+        container.innerHTML = '';
+        
+        // 2-1, 2-2, 3-1, 3-2만 노출
+        const aiSemesters = semesters.slice(2);
+        
+        aiSemesters.forEach(sem => {
+            const coursesInSem = db.filter(c => c.sem === sem.key);
+            const wrap = document.createElement('div');
+            wrap.className = 'ai-semester-wrap';
+
+            const title = document.createElement('div');
+            title.className = 'ai-semester-title';
+            title.innerHTML = `<span>${sem.title}</span><span class="sem-circle" id="ai-circle-${sem.key}">●</span>`;
+            wrap.appendChild(title);
+
+            const inner = document.createElement('div');
+            inner.className = 'accordion-inner'; 
+            inner.style.paddingTop = '0px'; // 위아래 간격 최적화
+
+            const reqs = coursesInSem.filter(c => c.req);
+            reqs.forEach(c => inner.appendChild(createCourseCard(c, true)));
+
+            if(sem.key === '3-2') {
+                const g0 = coursesInSem.filter(c => !c.req && c.g === 0);
+                const g1 = coursesInSem.filter(c => c.g === 1);
+                const g2 = coursesInSem.filter(c => c.g === 2);
+
+                inner.appendChild(createLabel('선택 택 4'));
+                g0.forEach(c => inner.appendChild(createCourseCard(c, true)));
+                inner.appendChild(createLabel('선택 택 1 (1)'));
+                g1.forEach(c => inner.appendChild(createCourseCard(c, true)));
+                inner.appendChild(createLabel('선택 택 1 (2)'));
+                g2.forEach(c => inner.appendChild(createCourseCard(c, true)));
+            } else {
+                const elecs = coursesInSem.filter(c => !c.req);
+                if (elecs.length > 0) {
+                    inner.appendChild(createLabel(`선택 택 ${sem.limit}`));
+                    elecs.forEach(c => inner.appendChild(createCourseCard(c, true)));
+                }
+            }
+            wrap.appendChild(inner);
+            container.appendChild(wrap);
+        });
+
+        applyConstraints();
+    }
+
+    function createCourseCard(c, isAiTab) {
         const div = document.createElement('div');
         div.className = 'course-card';
-        div.id = `card-${c.id}`;
+        // Tab에 따른 ID 분리
+        const cardIdPrefix = isAiTab ? 'ai-' : '';
+        div.id = `${cardIdPrefix}card-${c.id}`;
         div.onclick = () => handleCourseClick(c.id);
 
         const isChecked = selectedCourses.has(c.id);
+        const isPinned = pinnedCourses.has(c.id);
         const reqClass = c.req ? 'req' : 'elec';
         const reqText = c.req ? '지정' : '선택';
         
@@ -1030,8 +1179,23 @@
 
         let displayName = c.name.replace(/(\D)(\d)$/, '$1 $2');
 
+        // 🔥 AI 탭일 경우 핀(Pin) 체크박스 추가
+        let pinHtml = '';
+        if (isAiTab) {
+            // 필수과목이나 과학중점 고정과목은 잠김(locked) 처리
+            const isLocked = c.req || (isSciTrack && c.sciReq);
+            pinHtml = `
+                <div class="pin-box ${isPinned || isLocked ? 'pinned' : ''} ${isLocked ? 'locked' : ''}" id="pin-${c.id}" onclick="togglePin('${c.id}', event)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.222v6h1.556v-6H18v-2l-2-2z" />
+                    </svg>
+                </div>
+            `;
+        }
+
         div.innerHTML = `
-            <div class="custom-checkbox ${isChecked ? 'checked' : ''} ${c.req ? 'disabled' : ''}" id="check-${c.id}"></div>
+            ${pinHtml}
+            <div class="custom-checkbox ${isChecked ? 'checked' : ''} ${c.req ? 'disabled' : ''}" id="${cardIdPrefix}check-${c.id}"></div>
             <div class="course-main">
                 <div class="course-top"><span class="course-name">${displayName}</span></div>
                 <div class="course-tags">
@@ -1048,20 +1212,61 @@
         return div;
     }
 
+    // 🔥 핀 체크박스 클릭 핸들러
+    function togglePin(id, event) {
+        event.stopPropagation(); // 카드 클릭 중복 방지
+        const c = db.find(x => x.id === id);
+        if(c.req) return;
+        if(isSciTrack && c.sciReq) return;
+
+        if(pinnedCourses.has(id)) {
+            pinnedCourses.delete(id);
+        } else {
+            pinnedCourses.add(id);
+            // 핀 꽂을 때 선택 안되어있으면 한도 검사 후 선택
+            if(!selectedCourses.has(id)) {
+                if(c.sem === '3-2') {
+                    const limit = (c.g === 0) ? 4 : 1;
+                    if(countSelectedIn32Group(c.g) >= limit) { showToast("학기/그룹 선택 한도를 초과했습니다."); pinnedCourses.delete(id); return; }
+                } else {
+                    const sem = semesters.find(s => s.key === c.sem);
+                    if(sem.limit > 0 && countSelectedInSem(c.sem) >= sem.limit) { showToast("해당 학기 선택 한도를 초과했습니다."); pinnedCourses.delete(id); return; }
+                }
+
+                if(c.pair) {
+                    const hasPair = Array.from(selectedCourses).some(sid => {
+                        const sc = db.find(x => x.id === sid);
+                        return sc && sc.pair === c.pair && sc.id !== c.id;
+                    });
+                    if(hasPair) { showToast("이미 다른 학기에 연계 과목을 선택했습니다."); pinnedCourses.delete(id); return; }
+                }
+                selectedCourses.add(id);
+            }
+        }
+        saveData();
+        applyConstraints();
+        updateStats();
+        updateCircles();
+    }
+
     function resetSelection() {
-        if (confirm("선택한 과목을 모두 초기화하시겠습니까?")) {
+        if (confirm("선택한 과목과 고정 핀을 모두 초기화하시겠습니까?")) {
             selectedCourses.clear();
+            pinnedCourses.clear();
             db.forEach(c => { if(c.req) selectedCourses.add(c.id); });
             
             if (isSciTrack) {
-                db.filter(c => c.sciReq).forEach(c => selectedCourses.add(c.id));
+                db.filter(c => c.sciReq).forEach(c => {
+                    selectedCourses.add(c.id);
+                    pinnedCourses.add(c.id);
+                });
             }
             
             saveData();
             applyConstraints();
             updateStats();
             updateCircles();
-            showToast("모든 선택 과목이 초기화되었습니다.");
+            showToast("초기화가 완료되었습니다.");
         }
     }
 
@@ -1086,20 +1291,16 @@
 
         const clearBtn = document.getElementById('clearChatBtn');
         const resetBtn = document.getElementById('resetSelectionBtn');
-        const loginBtn = document.getElementById('loginBtn');
         
         if (newIndex === 0) {
             clearBtn.style.display = 'block';
             resetBtn.style.display = 'none';
-            loginBtn.style.display = 'none';
-        } else if (newIndex === 1) {
+        } else if (newIndex === 1 || newIndex === 2) { // 수강연습, AI 추천 탭 모두 리셋 허용
             clearBtn.style.display = 'none';
             resetBtn.style.display = 'block';
-            loginBtn.style.display = 'block';
         } else {
             clearBtn.style.display = 'none';
             resetBtn.style.display = 'none';
-            loginBtn.style.display = 'none';
             setTimeout(() => {
                 const c = document.getElementById('inquiryChatContainer');
                 c.scrollTop = c.scrollHeight;
@@ -1125,13 +1326,21 @@
 
     function toggleScienceTrack() {
         isSciTrack = !isSciTrack;
-        const cb = document.getElementById('scTrackCheck');
-        if(isSciTrack) cb.classList.add('checked');
-        else cb.classList.remove('checked');
+        
+        if(isSciTrack) {
+            document.getElementById('scTrackCheck').classList.add('checked');
+            document.getElementById('aiScTrackCheck').classList.add('checked');
+        } else {
+            document.getElementById('scTrackCheck').classList.remove('checked');
+            document.getElementById('aiScTrackCheck').classList.remove('checked');
+        }
 
         const sciReqs = db.filter(c => c.sciReq);
         if(isSciTrack) {
-            sciReqs.forEach(c => selectedCourses.add(c.id));
+            sciReqs.forEach(c => {
+                selectedCourses.add(c.id);
+                pinnedCourses.add(c.id);
+            });
             let count21 = countSelectedInSem('2-1');
             if (count21 > 5) {
                 let toRemove = count21 - 5;
@@ -1139,7 +1348,7 @@
                 for(let id of arr) {
                     if(toRemove <= 0) break;
                     let c = db.find(x => x.id === id);
-                    if(c && c.sem === '2-1' && !c.req && !c.sciReq) {
+                    if(c && c.sem === '2-1' && !c.req && !c.sciReq && !pinnedCourses.has(id)) {
                         selectedCourses.delete(id);
                         toRemove--;
                     }
@@ -1147,7 +1356,10 @@
                 showToast("과학 중점 필수 지정으로 인해 기존 선택 과목이 취소되었습니다.");
             }
         } else {
-            sciReqs.forEach(c => selectedCourses.delete(c.id));
+            sciReqs.forEach(c => {
+                selectedCourses.delete(c.id);
+                pinnedCourses.delete(c.id);
+            });
         }
         
         saveData();
@@ -1182,6 +1394,9 @@
             }
             selectedCourses.add(id);
         } else {
+            if(pinnedCourses.has(id)) {
+                showToast("고정된 과목입니다. 핀을 먼저 해제해주세요."); return;
+            }
             selectedCourses.delete(id);
         }
 
@@ -1209,14 +1424,12 @@
         return cnt;
     }
 
+    // 🔥 양쪽 탭(수강연습, AI 추천) DOM 동시 업데이트
     function applyConstraints() {
         db.forEach(c => {
-            const card = document.getElementById(`card-${c.id}`);
-            const cb = document.getElementById(`check-${c.id}`);
-            if(!card || !cb) return;
-
             let disabled = false;
             let isChecked = selectedCourses.has(c.id);
+            let isPinned = pinnedCourses.has(c.id);
 
             if(c.req) disabled = true;
             if(isSciTrack && c.sciReq) disabled = true;
@@ -1238,16 +1451,37 @@
                 }
             }
 
-            if(isChecked) cb.classList.add('checked');
-            else cb.classList.remove('checked');
+            // Tab 1 Update
+            const card = document.getElementById(`card-${c.id}`);
+            const cb = document.getElementById(`check-${c.id}`);
+            if(card && cb) {
+                if(isChecked) cb.classList.add('checked'); else cb.classList.remove('checked');
+                if(disabled && !isChecked) {
+                    card.classList.add('disabled-card'); cb.classList.add('disabled');
+                } else {
+                    card.classList.remove('disabled-card');
+                    if(!c.req && !(isSciTrack && c.sciReq) && !isPinned) cb.classList.remove('disabled');
+                    else cb.classList.add('disabled');
+                }
+            }
 
-            if(disabled && !isChecked) {
-                card.classList.add('disabled-card');
-                cb.classList.add('disabled');
-            } else {
-                card.classList.remove('disabled-card');
-                if(!c.req && !(isSciTrack && c.sciReq)) cb.classList.remove('disabled');
-                else cb.classList.add('disabled');
+            // Tab 2 Update
+            const aiCard = document.getElementById(`ai-card-${c.id}`);
+            const aiCb = document.getElementById(`ai-check-${c.id}`);
+            const pinBox = document.getElementById(`pin-${c.id}`);
+            if(aiCard && aiCb) {
+                if(isChecked) aiCb.classList.add('checked'); else aiCb.classList.remove('checked');
+                if(disabled && !isChecked) {
+                    aiCard.classList.add('disabled-card'); aiCb.classList.add('disabled');
+                } else {
+                    aiCard.classList.remove('disabled-card');
+                    if(!c.req && !(isSciTrack && c.sciReq) && !isPinned) aiCb.classList.remove('disabled');
+                    else aiCb.classList.add('disabled');
+                }
+            }
+            if(pinBox) {
+                if(isPinned || c.req || (isSciTrack && c.sciReq)) pinBox.classList.add('pinned');
+                else pinBox.classList.remove('pinned');
             }
         });
     }
@@ -1255,14 +1489,15 @@
     function updateCircles() {
         semesters.forEach(sem => {
             const el = document.getElementById(`circle-${sem.key}`);
-            if(!el) return;
-            if(sem.limit === 0) { el.className = 'sem-circle circle-green'; return; }
+            const aiEl = document.getElementById(`ai-circle-${sem.key}`);
             
             let isFull = false;
-            if(sem.key === '3-2') isFull = (countSelectedIn32Group(0) === 4 && countSelectedIn32Group(1) === 1 && countSelectedIn32Group(2) === 1);
+            if(sem.limit === 0) isFull = true;
+            else if(sem.key === '3-2') isFull = (countSelectedIn32Group(0) === 4 && countSelectedIn32Group(1) === 1 && countSelectedIn32Group(2) === 1);
             else isFull = (countSelectedInSem(sem.key) === sem.limit);
             
-            el.className = isFull ? 'sem-circle circle-green' : 'sem-circle circle-red';
+            if(el) el.className = isFull ? 'sem-circle circle-green' : 'sem-circle circle-red';
+            if(aiEl) aiEl.className = isFull ? 'sem-circle circle-green' : 'sem-circle circle-red';
         });
     }
 
@@ -1431,7 +1666,95 @@
         }, 100);
     }
 
-    // 🔥 커스텀 세이브 기능들
+    // 🔥 AI 추천 알고리즘 (야추 다이스)
+    function rollAiRecommendation() {
+        const inputTxt = document.getElementById('aiRollInput').value.trim();
+        let weights = calculateWeights(inputTxt);
+
+        // 1. 고정 핀과 필수 과목을 제외한 모든 선택 해제
+        let newSelection = new Set();
+        db.forEach(c => {
+            if (c.req) newSelection.add(c.id);
+            else if (isSciTrack && c.sciReq) newSelection.add(c.id);
+            else if (pinnedCourses.has(c.id)) newSelection.add(c.id);
+        });
+        selectedCourses = newSelection;
+
+        // 2. 사용 가능한 과목 필터링 헬퍼
+        const getAvailableCourses = (sem, g = null) => {
+            return db.filter(c => {
+                if (c.req) return false;
+                if (c.sem !== sem) return false;
+                if (g !== null && c.g !== g) return false;
+                if (selectedCourses.has(c.id)) return false; 
+                if (c.pair) {
+                    const hasPair = Array.from(selectedCourses).some(sid => {
+                        const sc = db.find(x => x.id === sid);
+                        return sc && sc.pair === c.pair;
+                    });
+                    if (hasPair) return false;
+                }
+                return true;
+            });
+        };
+
+        // 3. 점수 가중치 부여 및 랜덤 픽
+        const pickCourses = (available, count) => {
+            if (count <= 0) return;
+            available.forEach(c => {
+                c.score = Math.random(); // 기본 랜덤 점수
+                if (weights[c.cat]) c.score += 1.5;
+                if (weights[c.name]) c.score += 2.0;
+            });
+            available.sort((a, b) => b.score - a.score);
+            for(let i=0; i<count && i<available.length; i++) {
+                selectedCourses.add(available[i].id);
+            }
+        };
+
+        let cnt21 = countSelectedInSem('2-1');
+        pickCourses(getAvailableCourses('2-1'), 5 - cnt21);
+
+        let cnt22 = countSelectedInSem('2-2');
+        pickCourses(getAvailableCourses('2-2'), 5 - cnt22);
+
+        let cnt31 = countSelectedInSem('3-1');
+        pickCourses(getAvailableCourses('3-1'), 6 - cnt31);
+
+        let cnt32_0 = countSelectedIn32Group(0);
+        pickCourses(getAvailableCourses('3-2', 0), 4 - cnt32_0);
+
+        let cnt32_1 = countSelectedIn32Group(1);
+        pickCourses(getAvailableCourses('3-2', 1), 1 - cnt32_1);
+
+        let cnt32_2 = countSelectedIn32Group(2);
+        pickCourses(getAvailableCourses('3-2', 2), 1 - cnt32_2);
+
+        saveData();
+        applyConstraints();
+        updateStats();
+        updateCircles();
+        showToast("AI가 학점과 조건에 맞게 과목을 자동 추천했습니다!");
+    }
+
+    function calculateWeights(text) {
+        let w = {};
+        if(!text) return w;
+        if(text.includes('컴공') || text.includes('소프트') || text.includes('개발') || text.includes('공학') || text.includes('IT')) {
+            w['과학'] = 1; w['물리학'] = 1; w['정보'] = 1; w['수학'] = 1; w['미적분 II'] = 1; w['기하'] = 1; w['인공지능 수학'] = 1; w['데이터 과학'] = 1;
+        }
+        if(text.includes('의학') || text.includes('간호') || text.includes('생명') || text.includes('약대')) {
+            w['과학'] = 1; w['생명과학'] = 1; w['화학'] = 1;
+        }
+        if(text.includes('경영') || text.includes('경제') || text.includes('문과') || text.includes('인문')) {
+            w['사회'] = 1; w['경제'] = 1; w['정치'] = 1; w['세계사'] = 1; w['제2외국어'] = 1; w['경제 수학'] = 1;
+        }
+        if(text.includes('예체능') || text.includes('미술') || text.includes('음악') || text.includes('체육') || text.includes('미대') || text.includes('체대')) {
+            w['예술'] = 1; w['체육'] = 1;
+        }
+        return w;
+    }
+
     window.promptSave = function() {
         const name = prompt("현재 선택된 과목 구성을 저장할 이름을 입력하세요:");
         if (!name || name.trim() === '') return;
@@ -1440,6 +1763,7 @@
             id: Date.now().toString(),
             name: name.trim(),
             courses: [...selectedCourses],
+            pinned: [...pinnedCourses], // 고정 핀 상태도 같이 저장
             sciTrack: isSciTrack
         };
         savedSlots.push(newSave);
@@ -1449,13 +1773,9 @@
     }
 
     window.renderSavedSlots = function() {
-        const container = document.getElementById('saveSlotList');
-        if (!container) return;
-        container.innerHTML = '';
-        savedSlots.forEach(slot => {
-            const div = document.createElement('div');
-            div.className = 'save-slot';
-            div.innerHTML = `
+        // Tab 1, Tab 2 공유 렌더링
+        const html = savedSlots.map(slot => `
+            <div class="save-slot">
                 <div class="save-slot-name">${slot.name}</div>
                 <div class="save-slot-actions">
                     <button class="icon-btn" onclick="previewSave('${slot.id}')" title="미리보기">
@@ -1469,9 +1789,13 @@
                     </button>
                     <button class="load-btn" onclick="loadSave('${slot.id}')">불러오기</button>
                 </div>
-            `;
-            container.appendChild(div);
-        });
+            </div>
+        `).join('');
+
+        const container1 = document.getElementById('saveSlotList');
+        const container2 = document.getElementById('aiSaveSlotList');
+        if (container1) container1.innerHTML = html;
+        if (container2) container2.innerHTML = html;
     }
 
     window.deleteSave = function(id) {
@@ -1500,7 +1824,9 @@
         if(!slot) return;
 
         selectedCourses.clear();
+        pinnedCourses.clear();
         slot.courses.forEach(cId => selectedCourses.add(cId));
+        if (slot.pinned) slot.pinned.forEach(cId => pinnedCourses.add(cId));
         isSciTrack = slot.sciTrack;
 
         saveData();
@@ -1508,8 +1834,13 @@
         updateStats();
         updateCircles();
         
-        if(isSciTrack) document.getElementById('scTrackCheck').classList.add('checked');
-        else document.getElementById('scTrackCheck').classList.remove('checked');
+        if(isSciTrack) {
+            document.getElementById('scTrackCheck').classList.add('checked');
+            document.getElementById('aiScTrackCheck').classList.add('checked');
+        } else {
+            document.getElementById('scTrackCheck').classList.remove('checked');
+            document.getElementById('aiScTrackCheck').classList.remove('checked');
+        }
 
         showToast(`'${slot.name}' 구성을 불러왔습니다.`);
     }
@@ -1731,7 +2062,7 @@
     }
 
     // ==========================================
-    // 🔥 Firebase Auth, 학생정보(이름/반/번호), 문의 채팅 로직
+    // 🔥 Firebase Auth, 학생정보, 문의 채팅 로직
     // ==========================================
 
     auth.onAuthStateChanged((user) => {
@@ -1929,7 +2260,6 @@
             .catch(err => { showAuthError('signup', translateAuthError(err)); });
     }
 
-    // 🔥 비밀번호 찾기 (계정 찾기) 핸들러
     function handleResetPw(e) {
         e.preventDefault();
         const email = document.getElementById('resetPwEmail').value.trim();
@@ -1964,11 +2294,13 @@
                 showToast("로그아웃 되었습니다.");
                 
                 selectedCourses.clear();
+                pinnedCourses.clear();
                 db.forEach(c => { if(c.req) selectedCourses.add(c.id); }); 
                 
                 chatHistory = [];
                 isSciTrack = false;
                 document.getElementById('scTrackCheck').classList.remove('checked');
+                document.getElementById('aiScTrackCheck').classList.remove('checked');
                 
                 currentUserInfo = ""; 
                 currentRawName = "";
@@ -1978,17 +2310,18 @@
                 saveData(); 
                 
                 renderCourseList();
+                renderAiCourseList();
                 updateStats();
                 updateCircles();
                 renderChatHistory();
                 
-                loadInquiryChat(); // 로그아웃 시 문의창 갱신
+                loadInquiryChat(); 
             });
         }
     }
 
     // ----------------------------------------------------
-    // 🔥 문의하기 실시간 채팅 로직 (Tab 2) - 비로그인 지원
+    // 🔥 문의하기 실시간 채팅 로직 (Tab 3) - 비로그인 지원
     // ----------------------------------------------------
     let inquiryListener = null;
 
@@ -2003,7 +2336,7 @@
         } else if (anonUid) {
             targetUid = anonUid;
         } else {
-            return; // 익명 닉네임 설정 안 함 -> 기록 없음
+            return; 
         }
 
         const ref = database.ref('inquiries/' + targetUid);
@@ -2019,27 +2352,22 @@
 
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyIsvs49HBMqYVjV0XPH5rMBWYNaIRYbOlWy-z4Bv0cOXh1Fp6oOGDW1S_b9vyXIffiEA/exec";
     
-    // 문의 폼 전송 함수
     function sendInquiryMsg() {
         const input = document.getElementById('inquiryInput');
         const text = input.value.trim();
         if(!text) return;
         
         if(!auth.currentUser) {
-            // 비로그인 상태일 때, 닉네임이 없으면 모달 표시
             if(!anonName || !anonUid) {
                 document.getElementById('anonNameOverlay').style.display = 'flex';
                 return;
             }
-            // 닉네임이 있으면 익명으로 전송
             executeSendToDB(anonUid, text, anonName);
         } else {
-            // 로그인 상태일 때
             executeSendToDB(auth.currentUser.uid, text, currentRawName);
         }
     }
 
-    // 실제 DB로 보내는 로직
     function executeSendToDB(uid, text, senderName) {
         const input = document.getElementById('inquiryInput');
         
@@ -2056,12 +2384,10 @@
         fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${displayInfo}]님의 새로운 문의 채팅: ${text}` }) });
     }
 
-    // 익명 모달창 닫기
     function closeAnonNameModal() {
         document.getElementById('anonNameOverlay').style.display = 'none';
     }
 
-    // 익명 아이디 설정 저장
     function saveAnonName() {
         const inputVal = document.getElementById('anonNameInput').value.trim();
         if(!inputVal) return showToast("익명 닉네임을 입력해주세요.");
@@ -2072,8 +2398,8 @@
         localStorage.setItem('gimpo_anon_uid', anonUid);
         
         closeAnonNameModal();
-        loadInquiryChat(); // 리스너 재설정
-        sendInquiryMsg(); // 입력했던 메시지 바로 전송
+        loadInquiryChat(); 
+        sendInquiryMsg(); 
     }
 
     window.onload = init;
