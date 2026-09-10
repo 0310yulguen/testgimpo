@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2A52BE">
     <title>2026 김포고 수강신청 도우미(1학년)</title>
-    <!-- 🔥 파이어베이스 데이터베이스 및 인증 엔진 탑재 -->
+    <!-- 🔥 파이어베이스 및 PDF 생성 라이브러리 탑재 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* 변수 설정 */
         :root {
@@ -340,10 +341,9 @@
         <button type="submit" class="auth-btn auth-btn-primary">로그인</button>
         <button type="button" onclick="handleGoogleAuth()" class="auth-btn auth-btn-google">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            Google 계정으로 로그인
+            Google 계정으로 가입
         </button>
-        <div class="auth-link" onclick="window.location.hash='#signup'">계정이 없으신가요? <b>회원가입</b></div>
-        <div class="auth-link" onclick="window.location.hash='#resetPw'" style="margin-top:2px;">계정 및 비밀번호 찾기</div>
+        <div class="auth-link" onclick="window.location.hash='#login'">이미 계정이 있으신가요? <b>로그인</b></div>
         <div class="auth-link" onclick="window.location.hash=''" style="margin-top:10px; color:var(--text-light-gray); font-weight: normal;">둘러보기 (로그인 안함)</div>
     </form>
 
@@ -428,7 +428,6 @@
             <div style="font-size:14px; margin-bottom:10px; color:#191F28; line-height:1.4;">
                 로그인하지 않고 문의를 남기시려면<br>채팅에 사용할 익명 닉네임을 입력해주세요.
             </div>
-            <!-- 엔터키 연동은 init() 내부 이벤트 리스너에서 처리됨 -->
             <input type="text" id="anonNameInput" placeholder="예: 익명의 누군가" class="auth-input">
         </div>
         <div class="update-modal-footer" onclick="saveAnonName()">설정 완료 후 채팅 보내기</div>
@@ -443,12 +442,12 @@
                 <button class="update-modal-close" onclick="closeUpdateModalToday()">✖</button>
             </div>
             <div class="update-modal-body">
-                <div class="update-modal-title">Ver. 1.09 핵심 업데이트</div>
+                <div class="update-modal-title">Ver. 1.10 핵심 업데이트</div>
                 <div class="update-modal-desc">
-                    <span class="middle-asterisk">*</span> <b>AI 추천 초고속 & 맞춤형 로직:</b> 통신 에러 없이 0.1초 만에 진로 키워드(컴공, 경영 등)를 분석하여 핵심 과목을 1순위로 즉시 추천합니다.<br>
-                    <span class="middle-asterisk">*</span> 과학중점과정 자동 체크 로직이 2~3학년 조건까지 완벽히 검사하도록 고도화되었습니다.<br>
-                    <span class="middle-asterisk">*</span> 저장 슬롯의 과목 미리보기 UI가 학기별로 구분되어 훨씬 깔끔하게 변경되었습니다.<br>
-                    <span class="middle-asterisk">*</span> 방향키 스크롤 버그 및 엔터키 폼 제출 기능이 모두 최적화되었습니다.
+                    <span class="middle-asterisk">*</span> <b>과목 파일(PDF) 다운로드:</b> 작성한 수강신청 내역을 A4 사이즈의 공식 확인서 양식으로 다운로드할 수 있습니다.<br>
+                    <span class="middle-asterisk">*</span> <b>AI 추천 초고속 로직:</b> 통신 에러 없이 0.1초 만에 진로를 분석하여 핵심 과목을 1순위로 즉시 추천합니다.<br>
+                    <span class="middle-asterisk">*</span> 자동 과중 체크 시 2-2/3학년 과목이 고정되던 버그를 수정했습니다. (2-1 필수만 고정)<br>
+                    <span class="middle-asterisk">*</span> 대시보드 프로필 수정 기능 및 팝업창 엔터키 연동이 완벽하게 적용되었습니다.
                 </div>
             </div>
             <div class="update-modal-footer" onclick="closeUpdateModalAlways()">
@@ -604,8 +603,10 @@
             <div id="validationResult" class="validation-results"></div>
             
             <div class="custom-save-section">
-                <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
+                <!-- 🔥 PDF 다운로드 버튼 추가 -->
+                <div style="display: flex; justify-content: flex-start; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
+                    <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: #8B95A1; color: white;" onclick="downloadPDF()">과목 파일 다운받기</button>
                 </div>
                 <div id="saveSlotList" class="save-slot-list-container"></div>
             </div>
@@ -630,8 +631,9 @@
             </div>
             
             <div class="custom-save-section">
-                <div style="display: flex; justify-content: flex-start; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: flex-start; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
+                    <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: #8B95A1; color: white;" onclick="downloadPDF()">과목 파일 다운받기</button>
                 </div>
                 <div id="aiSaveSlotList" class="save-slot-list-container"></div>
             </div>
@@ -683,7 +685,7 @@
 
 <script>
     // 📢 업데이트 팝업 관리
-    const APP_VERSION = "1.09"; 
+    const APP_VERSION = "1.10"; 
 
     function checkUpdateModal() {
         const savedVersion = localStorage.getItem('gimpo_update_version');
@@ -972,6 +974,7 @@
             console.log("DB 통신 실패");
         }
 
+        // 엔터키 연동
         document.getElementById('aiInput').addEventListener('keydown', function(e) {
             if(e.key === 'Enter') { e.preventDefault(); sendAiMsg(); }
         });
@@ -985,7 +988,6 @@
             if(e.key === 'Enter') { e.preventDefault(); rollAiRecommendation(); }
         });
         
-        // 방향키 이벤트 (스크롤 & 탭 이동)
         document.addEventListener('keydown', handleKeyboardNavigation);
     }
 
@@ -1001,14 +1003,12 @@
             let nextIdx = (currentTabIndex + 1) % 5;
             switchTab(nextIdx);
         } else if (e.key === 'ArrowUp') {
-            // 부드러운 스크롤 대신 즉각 반응하여 끊김 현상 해결
             document.getElementById(`tab-${currentTabIndex}`).scrollBy(0, -60);
         } else if (e.key === 'ArrowDown') {
             document.getElementById(`tab-${currentTabIndex}`).scrollBy(0, 60);
         }
     }
 
-    // 🔥 전체 과목 선택률 로드
     function loadGlobalStats() {
         database.ref('user_data').on('value', snap => {
             const data = snap.val();
@@ -1018,7 +1018,7 @@
             let counts = {};
             
             for (let uid in data) {
-                if (uid.includes('_')) continue; // 비로그인 임시 IP 무시
+                if (uid.includes('_')) continue; 
                 
                 const userData = data[uid];
                 if (userData.courses && Array.isArray(userData.courses)) {
@@ -1142,7 +1142,6 @@
         return div;
     }
 
-    // 🔥 수강연습 탭 렌더링
     function renderCourseList() {
         const container = document.getElementById('courseListContainer');
         container.innerHTML = '';
@@ -1197,7 +1196,6 @@
         applyConstraints();
     }
 
-    // 🔥 과목 선택률 탭 항상 오픈
     function renderStatsTab() {
         const container = document.getElementById('rateListContainer');
         if(!container) return;
@@ -1270,7 +1268,6 @@
         });
     }
 
-    // 🔥 AI 추천 탭 렌더링
     function renderAiCourseList() {
         const container = document.getElementById('aiCourseListContainer');
         container.innerHTML = '';
@@ -1370,7 +1367,6 @@
         return div;
     }
 
-    // 🔥 미리보기 전용 깔끔한 UI 생성기 (학기별 구분 적용)
     function createPreviewCard(c) {
         let typeClass = 'tag-type-' + c.type;
         let gradeClass = 'tag-grade-5';
@@ -1604,18 +1600,15 @@
         updateCircles();
     }
 
-    // 🔥 과학중점과정 자동 체크 고도화 (2학년 물화생지 + 과학 6과목 이상 조건)
+    // 🔥 자동 과중 체크 완벽 수정 (2-2/3학년 핀 고정 안됨)
     function checkAutoSciTrack() {
         if (!isSciTrack) {
-            // 조건 1: 2-1 물,화,생,지 모두 선택 여부
             const baseSci = ['21_s09', '21_s10', '21_s11', '21_s12'];
             const hasAllBaseSci = baseSci.every(id => selectedCourses.has(id));
 
-            // 조건 2: 2-2 및 3학년 과학 과목 6개 이상 선택 여부
             let advSciCount = 0;
             selectedCourses.forEach(id => {
                 const c = db.find(x => x.id === id);
-                // 과학 과목이면서 2학년 2학기이거나 3학년인 경우
                 if (c && c.cat === '과학' && (c.sem === '2-2' || c.sem.startsWith('3-'))) {
                     advSciCount++;
                 }
@@ -1626,16 +1619,12 @@
                 document.getElementById('scTrackCheck').classList.add('checked');
                 document.getElementById('aiScTrackCheck').classList.add('checked');
                 
-                // 해당 과목들 핀 자동 고정
-                selectedCourses.forEach(id => {
-                    const c = db.find(x => x.id === id);
-                    if (c && c.cat === '과학') {
-                        pinnedCourses.add(c.id);
-                    }
-                });
+                // 오직 2학년 1학기 기본 4과목만 핀 고정 (나머지는 자유)
+                baseSci.forEach(id => pinnedCourses.add(id));
                 
                 showToast("물·화·생·지 및 과학 6과목 이상 조건이 충족되어 과학 중점 과정이 자동 선택되었습니다.");
                 applyConstraints();
+                updateStats();
             }
         }
     }
@@ -1936,7 +1925,6 @@
         }, 100);
     }
 
-    // 🔥 초고속 & 맞춤형 로컬 AI 추천 (API 의존 제거)
     async function rollAiRecommendation() {
         const inputTxt = document.getElementById('aiRollInput').value.trim();
         const btn = document.querySelector('.ai-roll-btn');
@@ -1951,28 +1939,23 @@
 
         btn.innerText = "분석 중...";
         
-        // 아주 짧은 딜레이로 연산 체감을 줌
         setTimeout(() => {
             fillSmartCourses(inputTxt);
             btn.innerText = "AI 추천 돌리기";
         }, 300);
     }
 
-    // 💡 키워드를 분석하여 우선순위를 폭발적으로 올리는 스마트 로직
     function fillSmartCourses(keyword) {
-        // 1. 키워드별 가중치(스코어) 맵핑
         let scores = {};
-        db.forEach(c => scores[c.id] = Math.random() * 10); // 기본 랜덤 0~10점
+        db.forEach(c => scores[c.id] = Math.random() * 10);
 
         if (keyword) {
-            const k = keyword.replace(/\s/g, ''); // 공백 제거
+            const k = keyword.replace(/\s/g, ''); 
             
-            // 이과/과중 추세 반영 (기본적으로 수학/과학에 약간의 가산점 부여)
             db.forEach(c => {
                 if(c.cat === '과학' || c.cat === '수학') scores[c.id] += 5;
             });
 
-            // 🎯 전공별 핵심 과목 가스라이팅 (무조건 선택되도록 +100점)
             if (k.includes('컴공') || k.includes('소프트') || k.includes('개발') || k.includes('IT')) {
                 const targets = ['물리학', '인공지능 수학', '정보 과학', '데이터 과학', '미적분 II', '소프트웨어와 생활'];
                 db.forEach(c => { if(targets.includes(c.name)) scores[c.id] += 100; });
@@ -1986,7 +1969,6 @@
                 db.forEach(c => { if(targets.includes(c.name)) scores[c.id] += 100; });
             }
             else if (k.includes('심리') || k.includes('상담')) {
-                // 심리학은 문과/이과 융합
                 const targets = ['생명과학', '현대사회와 윤리', '사회문제 탐구', '논리와 사고', '확률과 통계'];
                 db.forEach(c => { if(targets.includes(c.name)) scores[c.id] += 100; });
             }
@@ -2004,7 +1986,6 @@
             }
         }
 
-        // 2. 가중치가 높은 순서대로 뽑아주는 헬퍼
         const getAvailableCourses = (sem, g = null) => {
             return db.filter(c => {
                 if (c.req) return false;
@@ -2024,14 +2005,12 @@
 
         const pickCourses = (available, count) => {
             if (count <= 0) return;
-            // 점수순 정렬
             available.sort((a, b) => scores[b.id] - scores[a.id]);
             for(let i=0; i<count && i<available.length; i++) {
                 selectedCourses.add(available[i].id);
             }
         };
 
-        // 3. 한도에 맞게 분배
         let cnt21 = countSelectedInSem('2-1');
         pickCourses(getAvailableCourses('2-1'), 5 - cnt21);
 
@@ -2055,9 +2034,150 @@
         updateStats();
         updateCircles();
         
-        checkAutoSciTrack(); // 추천 직후 과중 조건 검사
+        checkAutoSciTrack(); 
         
         showToast("진로와 조건에 맞는 과목을 완벽하게 추천했습니다!");
+    }
+
+    // 🔥 PDF 다운로드 기능 함수
+    function getPdfCategoryName(cat) {
+        if (cat === '제2외국어') return '제2외국어/<br>한문';
+        if (cat === '정보') return '기술·가정/<br>정보';
+        if (cat === '사회') return '사회(역사/<br>도덕 포함)';
+        return cat;
+    }
+
+    function generateTableRowsHtml(semKey) {
+        let courses = Array.from(selectedCourses)
+            .map(id => db.find(c => c.id === id))
+            .filter(c => c && c.sem === semKey && !c.req);
+        
+        courses.sort((a,b) => a.id.localeCompare(b.id));
+
+        let html = '';
+        for (let i = 0; i < courses.length; i += 2) {
+            let c1 = courses[i];
+            let c2 = courses[i+1];
+
+            let td1 = `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${getPdfCategoryName(c1.cat)}</td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${c1.name.replace(/(\D)(\d)$/, '$1 $2')}</td>`;
+            let td2 = c2 ? `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${getPdfCategoryName(c2.cat)}</td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;">${c2.name.replace(/(\D)(\d)$/, '$1 $2')}</td>` : `<td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;"></td><td style="border: 1px solid black; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9.5pt; word-break: keep-all; height: 35px;"></td>`;
+            
+            html += `<tr>${td1}${td2}</tr>`;
+        }
+        
+        const minRows = 3;
+        let currentRows = Math.ceil(courses.length / 2);
+        for(let i = currentRows; i < minRows; i++) {
+            html += `<tr><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td><td style="border: 1px solid black; height: 35px;"></td></tr>`;
+        }
+        return html;
+    }
+
+    window.downloadPDF = function() {
+        if (!auth.currentUser) {
+            showToast("과목 파일 다운로드는 로그인 후 이용 가능합니다.");
+            return;
+        }
+
+        showToast("PDF 파일을 생성 중입니다. 잠시만 기다려주세요.");
+
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}년 ${String(today.getMonth() + 1).padStart(2, '0')}월 ${String(today.getDate()).padStart(2, '0')}일`;
+        const studentInfoStr = `1학년 ${currentUserInfo}`; 
+
+        const element = document.createElement('div');
+        element.innerHTML = `
+            <div style="width: 210mm; height: 297mm; background-color: white; box-sizing: border-box; padding: 20mm 15mm; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: black; position: relative;">
+                <div style="text-align: center; margin-bottom: 25px; margin-top: 10mm; position: relative; height: 40px;">
+                    <h1 style="margin: 0; font-size: 24pt; letter-spacing: 2px;">수강신청 확인서</h1>
+                    <div style="position: absolute; right: 0; bottom: 0; font-size: 11pt; font-weight: bold;">${studentInfoStr}</div>
+                </div>
+
+                <div style="width: 100%; margin-bottom: 15px; clear: both; display: table;">
+                    <div style="width: 48.5%; float: left;">
+                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
+                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
+                            <thead>
+                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">2학년 1학기</th></tr>
+                                <tr>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border: 1px solid black;">
+                                ${generateTableRowsHtml('2-1')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="width: 48.5%; float: right;">
+                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
+                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
+                            <thead>
+                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">2학년 2학기</th></tr>
+                                <tr>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateTableRowsHtml('2-2')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="width: 100%; margin-bottom: 15px; clear: both; display: table;">
+                    <div style="width: 48.5%; float: left;">
+                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
+                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
+                            <thead>
+                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">3학년 1학기</th></tr>
+                                <tr>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateTableRowsHtml('3-1')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="width: 48.5%; float: right;">
+                        <table style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black;">
+                            <colgroup><col style="width: 23%;"><col style="width: 27%;"><col style="width: 23%;"><col style="width: 27%;"></colgroup>
+                            <thead>
+                                <tr><th colspan="4" style="font-size:10.5pt; height:25px; border: 1px solid black;">3학년 2학기</th></tr>
+                                <tr>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; height: 25px; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                    <th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">교과군</th><th style="border: 1px solid black; font-size: 9.5pt; background: #f2f2f2;">과목</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateTableRowsHtml('3-2')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; clear: both;">
+                    <div style="text-align: center; font-size: 13pt; margin-bottom: 25px;">위 과목에 대해 수강신청 하였음을 확인합니다.</div>
+                    <div style="text-align: right; font-size: 12pt; margin-bottom: 35px; padding-right: 5mm;">날짜 : ${dateStr}</div>
+                    <div style="text-align: center; font-size: 16pt; font-weight: bold; letter-spacing: 3px;">김포고등학교장</div>
+                </div>
+            </div>
+        `;
+
+        const opt = {
+            margin:       0,
+            filename:     `수강신청확인서_${currentRawName}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element.firstElementChild).save().then(() => {
+            showToast("PDF 다운로드가 완료되었습니다.");
+        });
     }
 
     window.promptSave = function() {
@@ -2149,7 +2269,6 @@
         showToast(`'${slot.name}' 구성을 불러왔습니다.`);
     }
 
-    // 🔥 미리보기 학기별 그룹핑 및 디자인 적용 완료
     window.previewSave = function(id) {
         const slot = savedSlots.find(s => s.id === id);
         if(!slot) return;
@@ -2165,7 +2284,6 @@
         if(elecCourses.length === 0) {
             previewText += `<div style="font-size:14px; color:#444;">선택한 과목이 없습니다.</div>`;
         } else {
-            // 학기별로 과목 분류
             let grouped = {};
             elecCourses.forEach(cId => {
                 let course = db.find(x => x.id === cId);
