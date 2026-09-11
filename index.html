@@ -1064,7 +1064,7 @@
         }
     }
 
-    // 🔥 수정됨: 과목 선택률 버그 고침 (빈 데이터 시 렌더링 호출 및 IP 저장 무시 로직 삭제)
+    // 🔥 수정됨: 과목 선택률 로그인 계정(UID) 기준 1명 집계 로직
     function loadGlobalStats() {
         database.ref('user_data').on('value', snap => {
             const data = snap.val();
@@ -1077,7 +1077,9 @@
             let counts = {};
             
             for (let uid in data) {
-                // if (uid.includes('_')) continue; // 익명(IP 기반) 저장 데이터도 통계에 반영하도록 조건문 제거
+                // 로그인된 사용자 UID에는 '_'가 포함되지 않음. (IP 주소는 '_'로 치환하여 저장됨)
+                // 따라서 '_'가 포함된 키를 건너뛰면 로그인된 계정만 1명으로 카운트됨.
+                if (uid.includes('_')) continue; 
                 
                 const userData = data[uid];
                 if (userData.courses && Array.isArray(userData.courses)) {
@@ -1092,7 +1094,7 @@
             globalStats.courses = counts;
             renderStatsTab();
         }, (error) => {
-            renderStatsTab(); // 권한 에러 등에서도 빈 화면 렌더링
+            renderStatsTab(); 
         });
     }
 
@@ -2655,8 +2657,7 @@
             case 'auth/user-not-found': return '가입되지 않은 이메일입니다.';
             case 'auth/wrong-password': return '비밀번호가 올바르지 않습니다.';
             case 'auth/network-request-failed': return '인터넷 연결을 확인해주세요.';
-            case 'auth/too-many-requests': return '시도가 너무 많습니다. 잠시 후 다시 시도해주세요.';
-            case 'auth/user-disabled': return '관리자에 의해 정지된 계정입니다.';
+            case 'auth/too-many-requests': return '시도가 너무 많 정지된 계정입니다.';
             case 'auth/popup-closed-by-user': return '로그인 창이 닫혔습니다. 다시 시도해주세요.';
             case 'auth/popup-blocked': return '브라우저의 팝업 차단을 해제해주세요.';
             case 'auth/operation-not-allowed': return '서버 설정 오류: 해당 로그인 방식이 비활성화되어 있습니다.';
@@ -2784,7 +2785,7 @@
             <div class="date-separator">${calendarVector} ${dateStr}</div>
             <div class="msg-row-ai">
                 <div class="chat-bubble chat-ai">
-                    안녕하세요! 개발자 송율근입니다.<br>
+                    안녕하세요! 개발자입니다.<br>
                     수강신청과 관련하여 궁금한 점이나 사이트 오류, 건의사항이 있다면 자유롭게 문의해 주세요.<br>
                     (확인하는 대로 최대한 빠르게 답변드리겠습니다!)
                 </div>
