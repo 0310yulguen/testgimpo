@@ -2964,7 +2964,7 @@
             }
             executeSendToDB(anonUid, text, anonName);
         } else {
-            executeSendToDB(auth.currentUser.uid, text, currentRawName);
+            executeSendToDB(auth.currentUser.uid, text, "1학년 " + currentUserInfo);
         }
     }
 
