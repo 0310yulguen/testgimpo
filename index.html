@@ -670,7 +670,7 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                     </label>
                     <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요." onkeydown="if(event.key==='Enter'){event.preventDefault(); sendInquiryMsg();}">
+                    <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요. (사람입니다. 최대한 빨리 답변하겠습니다.)" onkeydown="if(event.key==='Enter'){event.preventDefault(); sendInquiryMsg();}">
                     <button class="chat-send" id="inquirySendBtn" onclick="sendInquiryMsg()">➤</button>
                 </div>
             </div>
@@ -1064,16 +1064,20 @@
         }
     }
 
+    // 🔥 수정됨: 과목 선택률 버그 고침 (빈 데이터 시 렌더링 호출 및 IP 저장 무시 로직 삭제)
     function loadGlobalStats() {
         database.ref('user_data').on('value', snap => {
             const data = snap.val();
-            if(!data) return;
+            if(!data) {
+                renderStatsTab();
+                return;
+            }
             
             let users = 0;
             let counts = {};
             
             for (let uid in data) {
-                if (uid.includes('_')) continue; 
+                // if (uid.includes('_')) continue; // 익명(IP 기반) 저장 데이터도 통계에 반영하도록 조건문 제거
                 
                 const userData = data[uid];
                 if (userData.courses && Array.isArray(userData.courses)) {
@@ -1087,6 +1091,8 @@
             globalStats.totalUsers = users;
             globalStats.courses = counts;
             renderStatsTab();
+        }, (error) => {
+            renderStatsTab(); // 권한 에러 등에서도 빈 화면 렌더링
         });
     }
 
@@ -2762,6 +2768,83 @@
             });
         }
     }
+
+    // 🔥 추가됨: 문의 탭 로드 및 렌더링 함수
+    let inquiryRef = null;
+    function loadInquiryChat() {
+        const container = document.getElementById('inquiryChatContainer');
+        container.innerHTML = '';
+        lastInquiryDateStr = "";
+
+        const now = Date.now();
+        const dateStr = formatChatDate(now);
+        lastInquiryDateStr = dateStr;
+
+        container.innerHTML += `
+            <div class="date-separator">${calendarVector} ${dateStr}</div>
+            <div class="msg-row-ai">
+                <div class="chat-bubble chat-ai">
+                    안녕하세요! 개발자 송율근입니다.<br>
+                    수강신청과 관련하여 궁금한 점이나 사이트 오류, 건의사항이 있다면 자유롭게 문의해 주세요.<br>
+                    (확인하는 대로 최대한 빠르게 답변드리겠습니다!)
+                </div>
+                <div class="msg-time">${formatChatTime(now)}</div>
+            </div>
+        `;
+
+        let uid = null;
+        if (auth.currentUser) {
+            uid = auth.currentUser.uid;
+        } else if (anonUid) {
+            uid = anonUid;
+        }
+
+        if (inquiryRef) {
+            inquiryRef.off();
+        }
+
+        if (uid) {
+            inquiryRef = database.ref('inquiries/' + uid);
+            inquiryRef.on('child_added', (snap) => {
+                const chat = snap.val();
+                appendInquiryMsgUI(chat);
+            });
+        }
+    }
+
+    // 🔥 추가됨: 문의 메시지 UI 추가 함수
+    function appendInquiryMsgUI(chat) {
+        const container = document.getElementById('inquiryChatContainer');
+        if(!chat.timestamp) chat.timestamp = Date.now();
+        const dateStr = formatChatDate(chat.timestamp);
+        const timeStr = formatChatTime(chat.timestamp);
+        
+        if (dateStr !== lastInquiryDateStr) {
+            container.innerHTML += `<div class="date-separator">${calendarVector} ${dateStr}</div>`;
+            lastInquiryDateStr = dateStr;
+        }
+
+        let contentHtml = '';
+        if (chat.text) {
+            contentHtml += `<div>${chat.text.replace(/\n/g, '<br>')}</div>`;
+        }
+        if (chat.images && chat.images.length > 0) {
+            contentHtml += `<div class="chat-image-wrap">`;
+            chat.images.forEach(url => {
+                contentHtml += `<img src="${url}" class="chat-image" onclick="window.open('${url}', '_blank')">`;
+                contentHtml += `<a href="${url}" target="_blank" class="img-download-btn">원본 다운로드</a>`;
+            });
+            contentHtml += `</div>`;
+        }
+
+        if (chat.role === 'user') {
+            container.innerHTML += `<div class="msg-row-user"><div class="msg-time">${timeStr}</div><div class="chat-bubble chat-user">${contentHtml}</div></div>`;
+        } else {
+            container.innerHTML += `<div class="msg-row-ai"><div class="chat-bubble chat-ai">${contentHtml}</div><div class="msg-time">${timeStr}</div></div>`;
+        }
+        container.scrollTop = container.scrollHeight;
+    }
+
 
     // 🔥 이미지 파일 선택 및 렌더링 기능 (벡터 X 아이콘 적용)
     window.handleFileSelect = function(e) {
