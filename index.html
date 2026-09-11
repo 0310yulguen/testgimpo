@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2A52BE">
     <title>2026 김포고 수강신청 도우미(1학년)</title>
-    <!-- 🔥 파이어베이스 및 PDF 생성 라이브러리 탑재 (Storage 완전 제거) -->
+    <!-- 🔥 파이어베이스 및 PDF 생성 라이브러리 탑재 (Storage 의존성 제거) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- 🔥 다크모드 초기화 스크립트 -->
+    <!-- 🔥 다크모드 초기화 스크립트 (화면 깜빡임 방지) -->
     <script>
         const savedTheme = localStorage.getItem('gimpo_theme');
         if (savedTheme === 'dark') {
@@ -137,7 +137,7 @@
         #tab-0, #tab-4 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
         .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
 
-        /* 🔥 날짜 구분선 및 채팅 메시지 CSS */
+        /* 🔥 날짜 구분선 및 채팅 메시지 (시간 추가) CSS */
         .date-separator {
             align-self: center; background-color: var(--light-gray-box); color: var(--text-dark-gray); font-size: 11px;
             font-weight: bold; padding: 6px 16px; border-radius: 20px; margin: 8px 0; display: flex; align-items: center; gap: 6px;
@@ -418,6 +418,7 @@
             <div style="font-size:14px; margin-bottom:10px; line-height:1.4;">
                 변경할 이름, 반, 번호를 설정해주세요.
             </div>
+            <!-- 중복 방지를 위해 자바스크립트 측에서만 처리하도록 onkeydown 속성 제거 -->
             <input type="text" id="editProfileName" placeholder="이름 (실명 입력)" class="auth-input" required>
             <div class="auth-row" style="margin-top: 8px;">
                 <select id="editProfileClass" class="auth-input" required></select>
@@ -504,7 +505,7 @@
         <!-- 🔥 AI 채팅 탭 (Tab 0) -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
-                <!-- JS 동적 렌더링 -->
+                <!-- JS에서 동적으로 날짜/시간을 포함해 렌더링 됩니다. -->
             </div>
             
             <div class="chat-bottom-wrapper">
@@ -531,7 +532,7 @@
                     <div class="example-chip" onclick="fillAndSend('각 교과군별 필수 학점이 뭐야?')">📌 교과별 필수 학점</div>
                     <div class="example-chip" onclick="fillAndSend('등급(9등급제) 안 나오는 과목도 있어?')">📊 등급 산출 안 되는 과목</div>
                     <div class="example-chip" onclick="fillAndSend('P/F 과목이 무슨 뜻이야?')">✅ P/F 과목이란?</div>
-                    <div class="example-chip" onclick="fillAndSend('경제 수학이랑 전문 수학 차이가 뭐야?')">📐 경제수학 vs 전문수학</div>
+                    <div class="example-chip" onclick="fillAndSend('경제 수학랑 전문 수학 차이가 뭐야?')">📐 경제수학 vs 전문수학</div>
                     <div class="example-chip" onclick="fillAndSend('물리학 꼭 들어야 할까?')">⚡ 물리학 필수 여부</div>
                     <div class="example-chip" onclick="fillAndSend('제2외국어 꼭 들어야 돼? 중국어/일본어 추천')">🗣️ 제2외국어 추천/필수</div>
                     <div class="example-chip" onclick="fillAndSend('사회문제 탐구는 어떤 과목이야?')">🌍 사회문제 탐구 소개</div>
@@ -541,6 +542,7 @@
                     <div class="example-chip" onclick="fillAndSend('수능에서 유리한 선택과목이 있을까?')">🎓 수능 유리한 과목</div>
                 </div>
                 <div class="chat-input-area">
+                    <!-- HTML 내 인라인 onkeydown 속성 완전히 제거 -->
                     <input type="text" class="chat-input" id="aiInput" placeholder="자유롭게 질문을 입력하세요">
                     <button class="chat-send" id="aiSendBtn" onclick="sendAiMsg()">➤</button>
                 </div>
@@ -607,6 +609,7 @@
             <div id="validationResult" class="validation-results"></div>
             
             <div class="custom-save-section">
+                <!-- 🔥 PDF 다운로드 버튼 추가 -->
                 <div style="display: flex; justify-content: flex-start; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: #8B95A1; color: white;" onclick="downloadPDF()">과목 파일 다운받기</button>
@@ -661,6 +664,7 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </label>
                     <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+                    <!-- HTML 내 인라인 onkeydown 속성 완전히 제거 -->
                     <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요.">
                     <button class="chat-send" id="inquirySendBtn" onclick="sendInquiryMsg()">➤</button>
                 </div>
@@ -668,7 +672,7 @@
         </div>
     </div>
 
-    <!-- 🔥 하단 네비게이션 바 -->
+    <!-- 🔥 애니메이션 하단 네비게이션 바 -->
     <div class="bottom-nav">
         <div class="nav-indicator" id="navIndicator" style="width: 20%; transform: translateX(200%);"></div>
         <div class="nav-item" id="nav-0" onclick="switchTab(0)">
@@ -728,7 +732,7 @@
     const GAS_AI_URL = "https://script.google.com/macros/s/AKfycbxR1hXKaq-LHKmUptx5eHIm98VMfzf5B9-lNiUyBM7_kEIvPQt6s9odbO_rqCcP1z7T/exec";
 
     // 🔴 1단계에서 발급받은 32자리 ImgBB API 키를 아래 쌍따옴표 안에 붙여넣으세요!
-    const IMGBB_API_KEY = "aa1fa62c3d6c1259d4b83394320ce47c";
+    const IMGBB_API_KEY = "여기에_발급받은_API_키_붙여넣기";
 
     let userIP = "local_storage_only";
     let currentUserInfo = ""; 
@@ -738,7 +742,7 @@
 
     let globalStats = { totalUsers: 0, courses: {} };
 
-    // 날짜, 시간 포맷팅
+    // 🔥 전역 유틸 함수 (날짜, 시간 포맷팅)
     function formatChatDate(ts) {
         if(!ts) return '';
         const d = new Date(ts);
@@ -757,15 +761,13 @@
     let selectedCourses = new Set();
     let pinnedCourses = new Set(); 
     let isSciTrack = false;
-    let currentTabIndex = 2;
+    let currentTabIndex = 2; // 초기 탭 수강연습 (Index 2)
     let chatHistory = []; 
     let savedSlots = []; 
     
     let lastAiDateStr = "";
     let lastInquiryDateStr = "";
-    let selectedInquiryFiles = [];
-    let currentInquiryRef = null;
-    let inquiryListener = null;
+    let selectedInquiryFiles = []; // 업로드용 이미지 리스트
 
     // 🔥 전체 과목 DB
     const db = [
@@ -2395,7 +2397,7 @@
             if(text) payload.text = text;
             if(imageUrls.length > 0) payload.images = imageUrls;
 
-            // 파이어베이스 데이터베이스에는 텍스트와 사진 링크(URL)만 저장함 (용량 0 수준)
+            // 파이어베이스 데이터베이스에는 텍스트와 사진 링크(URL)만 저장함
             await database.ref('inquiries/' + uid).push(payload);
             
             input.value = '';
@@ -2483,7 +2485,7 @@
                 const imgTags = msg.images.map((url, i) => `
                     <div class="chat-image-wrap">
                         <img src="${url}" class="chat-image" onclick="window.open('${url}')">
-                        <a href="${url}" download="문의사진_${Date.now()}_${i}.jpg" class="img-download-btn">⬇ 원본 저장</a>
+                        <a href="${url}" download="문의사진_${Date.now()}_${i}.jpg" class="img-download-btn">⬇ 사진 저장</a>
                     </div>
                 `).join('');
                 contentHtml += `<div style="display:flex; flex-direction:column; gap:4px; align-items: ${isUser ? 'flex-end' : 'flex-start'}; margin-top: 4px;">${imgTags}</div>`;
