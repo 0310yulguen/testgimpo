@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2A52BE">
     <title>2026 김포고 수강신청 도우미(1학년)</title>
-    <!-- 🔥 파이어베이스, Storage 및 PDF 생성 라이브러리 탑재 -->
+    <!-- 🔥 파이어베이스 및 PDF 생성 라이브러리 탑재 (Storage 완전 제거) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- 🔥 다크모드 초기화 스크립트 (화면 깜빡임 방지) -->
+    <!-- 🔥 다크모드 초기화 스크립트 -->
     <script>
         const savedTheme = localStorage.getItem('gimpo_theme');
         if (savedTheme === 'dark') {
@@ -138,7 +137,7 @@
         #tab-0, #tab-4 { padding: 0; overflow: hidden; display: flex; flex-direction: column; } 
         .chat-container { flex: 1; padding: 16px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 16px; }
 
-        /* 🔥 날짜 구분선 및 채팅 메시지 (시간 추가) CSS */
+        /* 🔥 날짜 구분선 및 채팅 메시지 CSS */
         .date-separator {
             align-self: center; background-color: var(--light-gray-box); color: var(--text-dark-gray); font-size: 11px;
             font-weight: bold; padding: 6px 16px; border-radius: 20px; margin: 8px 0; display: flex; align-items: center; gap: 6px;
@@ -419,7 +418,6 @@
             <div style="font-size:14px; margin-bottom:10px; line-height:1.4;">
                 변경할 이름, 반, 번호를 설정해주세요.
             </div>
-            <!-- 중복 방지를 위해 자바스크립트 측에서만 처리하도록 onkeydown 속성 제거 -->
             <input type="text" id="editProfileName" placeholder="이름 (실명 입력)" class="auth-input" required>
             <div class="auth-row" style="margin-top: 8px;">
                 <select id="editProfileClass" class="auth-input" required></select>
@@ -506,7 +504,7 @@
         <!-- 🔥 AI 채팅 탭 (Tab 0) -->
         <div id="tab-0" class="tab-content tab-hidden-left">
             <div class="chat-container" id="chatContainer">
-                <!-- JS에서 동적으로 날짜/시간을 포함해 렌더링 됩니다. -->
+                <!-- JS 동적 렌더링 -->
             </div>
             
             <div class="chat-bottom-wrapper">
@@ -543,7 +541,6 @@
                     <div class="example-chip" onclick="fillAndSend('수능에서 유리한 선택과목이 있을까?')">🎓 수능 유리한 과목</div>
                 </div>
                 <div class="chat-input-area">
-                    <!-- HTML 내 인라인 onkeydown 속성 완전히 제거 -->
                     <input type="text" class="chat-input" id="aiInput" placeholder="자유롭게 질문을 입력하세요">
                     <button class="chat-send" id="aiSendBtn" onclick="sendAiMsg()">➤</button>
                 </div>
@@ -610,7 +607,6 @@
             <div id="validationResult" class="validation-results"></div>
             
             <div class="custom-save-section">
-                <!-- 🔥 PDF 다운로드 버튼 추가 -->
                 <div style="display: flex; justify-content: flex-start; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: var(--primary-dark); color: white;" onclick="promptSave()">현재 과목 구성 저장하기</button>
                     <button class="submit-btn" style="width: auto; padding: 10px 16px; background-color: #8B95A1; color: white;" onclick="downloadPDF()">과목 파일 다운받기</button>
@@ -665,7 +661,6 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </label>
                     <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-                    <!-- HTML 내 인라인 onkeydown 속성 완전히 제거 -->
                     <input type="text" class="chat-input" id="inquiryInput" placeholder="문의할 내용을 입력하세요.">
                     <button class="chat-send" id="inquirySendBtn" onclick="sendInquiryMsg()">➤</button>
                 </div>
@@ -673,7 +668,7 @@
         </div>
     </div>
 
-    <!-- 🔥 애니메이션 하단 네비게이션 바 -->
+    <!-- 🔥 하단 네비게이션 바 -->
     <div class="bottom-nav">
         <div class="nav-indicator" id="navIndicator" style="width: 20%; transform: translateX(200%);"></div>
         <div class="nav-item" id="nav-0" onclick="switchTab(0)">
@@ -716,13 +711,12 @@
         document.getElementById('updateModalOverlay').style.display = 'none';
     }
 
-    // 🔥 파이어베이스 설정 (Storage Bucket 필수)
+    // 🔥 파이어베이스 설정 (Storage 완전 제거)
     const firebaseConfig = {
       apiKey: "AIzaSyD-IyAGGXQ69d8LupTU2mKmr87yoenahRo",
       authDomain: "gimpo-monitoring.firebaseapp.com",
       databaseURL: "https://gimpo-monitoring-default-rtdb.firebaseio.com",
       projectId: "gimpo-monitoring",
-      storageBucket: "gimpo-monitoring.firebasestorage.app",
       messagingSenderId: "918422830852",
       appId: "1:918422830852:web:c9d6412cb2fc3dcc619a51",
       measurementId: "G-292HR1LYHY"
@@ -730,9 +724,11 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const auth = firebase.auth();
-    const storage = firebase.storage();
 
     const GAS_AI_URL = "https://script.google.com/macros/s/AKfycbxR1hXKaq-LHKmUptx5eHIm98VMfzf5B9-lNiUyBM7_kEIvPQt6s9odbO_rqCcP1z7T/exec";
+
+    // 🔴 1단계에서 발급받은 32자리 ImgBB API 키를 아래 쌍따옴표 안에 붙여넣으세요!
+    const IMGBB_API_KEY = "aa1fa62c3d6c1259d4b83394320ce47c";
 
     let userIP = "local_storage_only";
     let currentUserInfo = ""; 
@@ -742,7 +738,7 @@
 
     let globalStats = { totalUsers: 0, courses: {} };
 
-    // 🔥 전역 유틸 함수 (날짜, 시간 포맷팅)
+    // 날짜, 시간 포맷팅
     function formatChatDate(ts) {
         if(!ts) return '';
         const d = new Date(ts);
@@ -761,13 +757,15 @@
     let selectedCourses = new Set();
     let pinnedCourses = new Set(); 
     let isSciTrack = false;
-    let currentTabIndex = 2; // 초기 탭 수강연습 (Index 2)
+    let currentTabIndex = 2;
     let chatHistory = []; 
     let savedSlots = []; 
     
     let lastAiDateStr = "";
     let lastInquiryDateStr = "";
-    let selectedInquiryFiles = []; // 업로드용 이미지 리스트
+    let selectedInquiryFiles = [];
+    let currentInquiryRef = null;
+    let inquiryListener = null;
 
     // 🔥 전체 과목 DB
     const db = [
@@ -895,7 +893,7 @@
         { key:'3-2', title:'3학년 2학기', limit:6 }
     ];
 
-    // 🔥 다크 모드 토글 함수
+    // 다크 모드 토글
     window.toggleTheme = function() {
         const root = document.documentElement;
         const btn = document.getElementById('themeToggleBtn');
@@ -994,7 +992,7 @@
                 chatHistory = JSON.parse(savedChat);
                 renderChatHistory();
             } else {
-                renderChatHistory(); // 웰컴 메시지 렌더링
+                renderChatHistory();
             }
         } catch(e) {
             localStorage.removeItem('gimpo_chat_history');
@@ -1034,7 +1032,6 @@
             console.log("DB 통신 실패");
         }
 
-        // JS 단일 이벤트 리스너 (HTML onkeydown 제거로 중복 전송 방지)
         document.getElementById('aiInput').addEventListener('keydown', function(e) {
             if(e.key === 'Enter') { e.preventDefault(); sendAiMsg(); }
         });
@@ -1176,7 +1173,6 @@
         }
     }
 
-    // 🔥 AI 챗 렌더링 및 UI 처리 유틸
     function appendAiMsgUI(chat) {
         const container = document.getElementById('chatContainer');
         if(!chat.timestamp) chat.timestamp = Date.now();
@@ -1215,7 +1211,6 @@
         const now = Date.now();
         lastAiDateStr = formatChatDate(now);
         
-        // 초기 가이드라인 렌더링
         container.innerHTML = `
             <div class="date-separator">
                 <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
@@ -2353,25 +2348,41 @@
         `).join('');
     }
 
-    // 🔥 문의칸 전송 로직 (다중 이미지 업로드 포함)
+    // 🔥 문의칸 전송 로직 (파이어베이스 Storage 제거 -> 무료 ImgBB API로 고화질 전송)
     async function executeSendToDB(uid, text, senderName) {
         const input = document.getElementById('inquiryInput');
         const btn = document.getElementById('inquirySendBtn');
         
         if(!text && selectedInquiryFiles.length === 0) return;
 
+        // 키 입력 확인
+        if(selectedInquiryFiles.length > 0 && IMGBB_API_KEY === "여기에_발급받은_API_키_붙여넣기") {
+            showToast("개발자 설정 오류: ImgBB API 키가 입력되지 않았습니다.");
+            return;
+        }
+
         btn.innerText = "⏳";
         btn.disabled = true;
 
         try {
             let imageUrls = [];
-            // 선택된 이미지가 있다면 차례대로 Firebase Storage 업로드
+            // 선택된 이미지가 있다면 ImgBB 서버로 업로드하여 고화질 원본 링크를 받아옴
             if (selectedInquiryFiles.length > 0) {
                 for(let file of selectedInquiryFiles) {
-                    const fileRef = storage.ref().child(`inquiry_images/${uid}/${Date.now()}_${file.name}`);
-                    await fileRef.put(file);
-                    const url = await fileRef.getDownloadURL();
-                    imageUrls.push(url);
+                    const formData = new FormData();
+                    formData.append("image", file);
+
+                    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await res.json();
+                    
+                    if(data.success) {
+                        imageUrls.push(data.data.url); // ImgBB에서 받은 이미지 URL 저장
+                    } else {
+                        throw new Error("ImgBB Upload Failed");
+                    }
                 }
             }
 
@@ -2384,6 +2395,7 @@
             if(text) payload.text = text;
             if(imageUrls.length > 0) payload.images = imageUrls;
 
+            // 파이어베이스 데이터베이스에는 텍스트와 사진 링크(URL)만 저장함 (용량 0 수준)
             await database.ref('inquiries/' + uid).push(payload);
             
             input.value = '';
@@ -2391,11 +2403,13 @@
             renderInquiryPreview();
 
             let displayInfo = auth.currentUser ? currentUserInfo : `익명 - ${senderName}`;
-            fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${displayInfo}]님의 문의: ${text || '(사진 전송)'}` }) });
+            if (typeof GAS_URL !== 'undefined') {
+                fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ message: `[${displayInfo}]님의 문의: ${text || '(사진 전송)'}` }) });
+            }
 
         } catch (error) {
             console.error("전송 실패:", error);
-            showToast("전송에 실패했습니다. 사진 용량을 확인해주세요.");
+            showToast("전송에 실패했습니다. 사진을 다시 확인해주세요.");
         } finally {
             btn.innerText = "➤";
             btn.disabled = false;
@@ -2466,10 +2480,10 @@
             let contentHtml = msg.text ? `<div class="chat-bubble ${isUser ? 'chat-user' : 'chat-ai'}">${msg.text.replace(/\n/g, '<br>')}</div>` : '';
             
             if (msg.images && msg.images.length > 0) {
-                const imgTags = msg.images.map(url => `
+                const imgTags = msg.images.map((url, i) => `
                     <div class="chat-image-wrap">
                         <img src="${url}" class="chat-image" onclick="window.open('${url}')">
-                        <a href="${url}" target="_blank" download class="img-download-btn">⬇ 원본 다운로드</a>
+                        <a href="${url}" download="문의사진_${Date.now()}_${i}.jpg" class="img-download-btn">⬇ 원본 저장</a>
                     </div>
                 `).join('');
                 contentHtml += `<div style="display:flex; flex-direction:column; gap:4px; align-items: ${isUser ? 'flex-end' : 'flex-start'}; margin-top: 4px;">${imgTags}</div>`;
@@ -2494,7 +2508,6 @@
         });
     }
 
-    // 그 외 기능 함수 모음
     window.promptSave = function() {
         const name = prompt("현재 선택된 과목 구성을 저장할 이름을 입력하세요:");
         if (!name || name.trim() === '') return;
